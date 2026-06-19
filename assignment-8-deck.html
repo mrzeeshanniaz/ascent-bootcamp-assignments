@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assignment 8 — Security, Identity & Capstone · Ascent Foundations</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#e9edf6;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#131a36}
+:root{--navy:#101733;--gold:#b07d10;--gold-bright:#e3b341;--bg:#f6f8fd;--surface:#fff;--ink:#131a36;--ink-dim:#586089;--green:#1f9d63;--blue:#2f6fed;--border:rgba(16,23,51,.10);--shadow-sm:0 1px 3px rgba(16,23,51,.07);--shadow-md:0 8px 24px rgba(16,23,51,.08)}
+.slide{display:none;position:absolute;inset:0;margin:auto;width:min(100vw,177.78vh);height:min(56.25vw,100vh);
+  background:radial-gradient(1100px 560px at 86% -8%,rgba(227,179,65,.13) 0%,rgba(246,248,253,0) 58%),radial-gradient(820px 520px at 0% 0%,rgba(47,111,237,.07) 0%,rgba(246,248,253,0) 55%),var(--bg);
+  padding:4.5% 5.5%;flex-direction:column;overflow:hidden;-webkit-font-smoothing:antialiased}
+.slide.active{display:flex}
+.slide.hero{justify-content:center}
+.weektag{display:inline-block;background:rgba(227,179,65,.16);border:1px solid rgba(227,179,65,.4);color:var(--gold);border-radius:8px;padding:.3em .95em;font-size:.78em;font-weight:700;letter-spacing:.1em;margin-bottom:.9em;align-self:flex-start;text-transform:uppercase}
+.section-kicker{display:block;color:var(--gold);font-size:.8em;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5em}
+h1{font-size:3em;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:.35em;color:var(--navy)}
+h2{font-size:1.95em;font-weight:800;line-height:1.15;margin-bottom:.5em;color:var(--navy)}
+.lead{font-size:1.2em;color:var(--ink-dim);line-height:1.55;max-width:40em}
+.brief{font-size:1.5em;font-weight:700;line-height:1.4;color:var(--navy);max-width:24em;margin-top:.2em}
+ul.check{list-style:none;display:grid;gap:.7em;margin-top:1.1em;align-content:center}
+ul.check li{display:flex;gap:.7em;align-items:flex-start;font-size:1.15em;line-height:1.4;color:var(--ink)}
+ul.check li::before{content:"";flex:0 0 auto;width:1.25em;height:1.25em;margin-top:.1em;border:2px solid var(--gold);border-radius:5px}
+.cards{display:grid;gap:1em;margin-top:1.1em}
+.cards.c2{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1em 1.2em;box-shadow:var(--shadow-sm);border-top:3px solid var(--gold-bright)}
+.card h3{font-size:1.1em;color:var(--navy);margin-bottom:.3em}
+.card p{color:var(--ink-dim);line-height:1.5;font-size:1em}
+.chips{display:flex;flex-wrap:wrap;gap:.5em;margin-top:1.1em}
+.chip{background:rgba(47,111,237,.1);border:1px solid rgba(47,111,237,.3);color:var(--blue);border-radius:999px;padding:.4em 1em;font-size:.95em;font-weight:600}
+.levels{display:grid;grid-template-columns:repeat(4,1fr);gap:.7em;margin-top:1.1em}
+.level{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.8em .9em;box-shadow:var(--shadow-sm)}
+.level b{display:block;color:var(--navy);font-size:1.05em}
+.level span{color:var(--ink-dim);font-size:.9em}
+.note{margin-top:1.2em;color:var(--ink-dim);font-size:1.05em;line-height:1.5;max-width:40em}
+.card.blue{border-top-color:var(--blue)}.card.green{border-top-color:var(--green)}.card.orange{border-top-color:var(--orange)}
+.roadmap{display:grid;grid-template-columns:repeat(2,1fr);gap:.7em;margin-top:1em;align-content:center}
+.ritem{display:flex;gap:.75em;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7em .9em;box-shadow:var(--shadow-sm)}
+.rnum{flex:0 0 auto;width:1.9em;height:1.9em;border-radius:9px;background:var(--gold-bright);color:#2a1f02;font-weight:800;display:grid;place-items:center;font-size:1em}
+.ritem b{display:block;color:var(--navy);font-size:1.05em;line-height:1.2}
+.ritem em{display:block;color:var(--ink-dim);font-size:.84em;line-height:1.3;font-style:normal;margin-top:.1em}
+.hl{color:var(--gold)}
+footer{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:1.1em 2em;font-size:.8em;color:var(--ink-dim)}
+footer .brand{font-weight:700;color:var(--navy)}
+.nav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:10}
+.nav button{background:var(--surface);border:1px solid var(--border);color:var(--ink);border-radius:8px;padding:.4em .8em;font-size:.85em;cursor:pointer;box-shadow:var(--shadow-sm)}
+</style></head><body>
+<section class="slide hero active">
+      <span class="weektag">Session 8 · Homework</span>
+      <h1>Assignment 8<br><span class="hl">Security, Identity & Capstone</span></h1>
+      <p class="lead">Staying safe online, and pulling every skill together. Here's your task for this week. Work on it before the next session.</p><footer><span class="brand">Ascent Foundations · by SwiftRoc</span><span>Assignment 8</span></footer></section>
+<section class="slide ">
+      <span class="section-kicker">Your task</span>
+      <h2>What to build</h2>
+      <p class="brief">Bring every skill together on one topic: form → ledger → PDF → live pitch → zipped folder → professional email.</p>
+      <p class="note">Do all of it in <strong>your own Google Drive sandbox</strong> so your work is safe and you can recover anything.</p><footer><span class="brand">Ascent Foundations · by SwiftRoc</span><span>Assignment 8</span></footer></section>
+<section class="slide ">
+      <span class="section-kicker">Checklist</span>
+      <h2>Tick every item</h2>
+      <ul class="check"><li>Build a form that feeds a ledger (one topic across the whole capstone)</li><li>Produce a semantic, accessible PDF</li><li>Prepare and deliver a live 4-frame pitch</li><li>Package your files into a zipped folder</li><li>Send it all with a professional email</li></ul><footer><span class="brand">Ascent Foundations · by SwiftRoc</span><span>Assignment 8</span></footer></section>
+<section class="slide ">
+      <span class="section-kicker">Submit</span>
+      <h2>How to hand it in</h2>
+      <div class="cards c2">
+        <div class="card"><h3>1 · Get a share link</h3><p>Make sure your file or folder is shared so your facilitator can open it (view access is enough).</p></div>
+        <div class="card"><h3>2 · Paste it in your portal</h3><p>Open your Ascent portal, find <strong>Session 8</strong>, paste the link in the <strong>Submit</strong> box and send. You can resubmit any time to update it.</p></div>
+      </div><footer><span class="brand">Ascent Foundations · by SwiftRoc</span><span>Assignment 8</span></footer></section>
+<section class="slide ">
+      <span class="section-kicker">How it's scored</span>
+      <h2>Structure over decoration</h2>
+      <p class="note">We score the <strong>skills you show</strong>, not how pretty it looks. Your score only ever goes up as you show stronger work (best evidence).</p>
+      <div class="chips"><span class="chip">Security</span><span class="chip">Presentations</span><span class="chip">Spreadsheets</span><span class="chip">Documents</span></div>
+      <div class="levels">
+        <div class="level"><b>0 · Missing</b><span>Not shown yet</span></div>
+        <div class="level"><b>1 · Emerging</b><span>Started, gaps remain</span></div>
+        <div class="level"><b>2 · Proficient</b><span>Solid, meets the bar</span></div>
+        <div class="level"><b>3 · Mastery</b><span>Strong, confident</span></div>
+      </div><footer><span class="brand">Ascent Foundations · by SwiftRoc</span><span>Assignment 8</span></footer></section>
+<section class="slide hero">
+      <span class="weektag">Due before next session</span>
+      <h1>You've got this. 💪</h1>
+      <p class="lead">Start early, ask in the group if you're stuck, and submit in your portal. Reaching <span class="hl">Proficient</span> on every skill earns your SwiftRoc certificate.</p><footer><span class="brand">Ascent Foundations · by SwiftRoc</span><span>Assignment 8</span></footer></section>
+<div class="nav"><button onclick="show(i-1)">‹ Prev</button><button onclick="show(i+1)">Next ›</button></div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];let i=0;
+function show(n){slides[i].classList.remove('active');i=Math.max(0,Math.min(slides.length-1,n));slides[i].classList.add('active');}
+document.addEventListener('keydown',e=>{if(['ArrowRight',' ','PageDown'].includes(e.key)){e.preventDefault();show(i+1);}if(['ArrowLeft','PageUp'].includes(e.key))show(i-1);});
+document.addEventListener('click',e=>{if(e.target.closest('.nav'))return;show(i+1);});
+</script>
+</body></html>
