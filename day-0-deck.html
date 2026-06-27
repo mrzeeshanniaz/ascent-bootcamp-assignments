@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 0 — Welcome & Setup · Ascent Foundations</title>
+<style>
+  :root{
+    --navy:#101733; --navy-soft:#1c2550;
+    --gold:#b07d10; --gold-bright:#e3b341; --gold-dim:#8a6a17;
+    --bg:#f6f8fd; --bg-accent:#eef2fb; --surface:#ffffff; --card:#ffffff;
+    --ink:#131a36; --ink-dim:#586089;
+    --pink:#e23d68; --orange:#e3742f; --blue:#2f6fed; --green:#1f9d63;
+    --border:rgba(16,23,51,.10); --hairline:rgba(16,23,51,.07);
+    --shadow-sm:0 1px 2px rgba(16,23,51,.05), 0 1px 3px rgba(16,23,51,.06);
+    --shadow-md:0 8px 24px rgba(16,23,51,.08), 0 2px 6px rgba(16,23,51,.05);
+    --shadow-lg:0 24px 60px rgba(16,23,51,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#e9edf6;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink)}
+  .slide{
+    display:none;position:absolute;inset:0;margin:auto;
+    width:min(100vw,177.78vh);height:min(56.25vw,100vh);
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.12) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.07) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+    padding:4% 5%;flex-direction:column;justify-content:center;overflow:hidden;-webkit-font-smoothing:antialiased;
+  }
+  .slide.active{display:flex}
+  /* light decks: clean surfaces, no dark photo backgrounds (the --img is ignored) */
+  .slide.img,.slide.img.hero{
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.14) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.08) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+  }
+  .pill{display:inline-block;border:1.5px solid var(--gold);color:var(--gold);
+    border-radius:999px;padding:.45em 1.1em;font-size:.85em;font-weight:700;
+    letter-spacing:.05em;margin-right:.6em;margin-bottom:.5em;white-space:nowrap}
+  .pill.solid{background:var(--gold-bright);color:#2a1f02;border-color:var(--gold-bright)}
+  .weektag{display:inline-block;background:rgba(227,179,65,.16);border:1px solid rgba(227,179,65,.4);
+    color:var(--gold);border-radius:8px;padding:.3em .95em;font-size:.75em;font-weight:700;
+    letter-spacing:.1em;margin-bottom:.7em;align-self:flex-start;text-transform:uppercase}
+  .weektag .sess{color:var(--ink-dim);letter-spacing:.04em;font-weight:600}
+  h1{font-size:3.1em;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:.4em;color:var(--navy)}
+  h2{font-size:1.9em;font-weight:800;line-height:1.15;letter-spacing:-.01em;margin-bottom:.35em;color:var(--navy)}
+  .lead{font-size:1.15em;color:var(--ink-dim);line-height:1.55;max-width:38em}
+  .big-quote{font-size:2.1em;font-weight:800;line-height:1.25;letter-spacing:-.01em;max-width:20em;margin:0;color:var(--navy)}
+  .big-quote .hl{color:var(--gold)}
+  .section-kicker{display:block;color:var(--gold);font-size:.78em;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.45em}
+  .cards{display:grid;gap:1.1em;margin-top:1.2em;align-content:center}
+  .cards.c3{grid-template-columns:repeat(3,1fr)}
+  .cards.c2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:1.05em 1.15em;display:flex;flex-direction:column;box-shadow:var(--shadow-sm);
+    border-top:3px solid var(--gold-bright)}
+  .card.pink{border-top-color:var(--pink)} .card.orange{border-top-color:var(--orange)}
+  .card.blue{border-top-color:var(--blue)} .card.green{border-top-color:var(--green)}
+  .card .ico{font-size:1.9em;margin-bottom:.25em;line-height:1}
+  .card h3{font-size:1.05em;margin-bottom:.45em;color:var(--navy)}
+  .card h3 .step{color:var(--gold);font-weight:800;margin-right:.35em}
+  .card.pink h3 .step{color:var(--pink)} .card.blue h3 .step{color:var(--blue)} .card.green h3 .step{color:var(--green)}
+  .card p,.card li{font-size:.88em;color:var(--ink-dim);line-height:1.45}
+  .card ul{margin-left:1.1em}
+  .card p b,.card li b{color:var(--navy)}
+  .strip{margin-top:1.2em;background:rgba(47,111,237,.08);border:1px solid rgba(47,111,237,.25);
+    border-radius:12px;padding:.75em 1.1em;font-size:.92em;line-height:1.5;color:var(--ink)}
+  .strip b{color:var(--blue)}
+  .strip.judge{background:rgba(227,179,65,.12);border-color:rgba(227,179,65,.45)} .strip.judge b{color:var(--gold)}
+  .strip.key{background:rgba(31,157,99,.1);border-color:rgba(31,157,99,.35)} .strip.key b{color:var(--green)}
+  .strip.warn{background:rgba(226,61,104,.09);border-color:rgba(226,61,104,.35)} .strip.warn b{color:var(--pink)}
+  .two-strips{display:grid;grid-template-columns:1fr 1fr;gap:.9em;margin-top:1.2em}
+  .two-strips .strip{margin-top:0}
+  .stack{display:flex;flex-direction:column;gap:.6em;margin-top:1.2em}
+  .stack .strip{margin-top:0}
+  table{width:100%;border-collapse:collapse;margin-top:.4em;font-size:.9em}
+  th{text-align:left;color:var(--gold);font-weight:700;padding:.5em .7em;border-bottom:2px solid rgba(227,179,65,.4)}
+  td{padding:.45em .7em;border-bottom:1px solid var(--hairline);color:var(--ink-dim);vertical-align:top;line-height:1.4}
+  td:first-child{color:var(--navy);font-weight:600}
+  td b{color:var(--navy)}
+  .agenda td:first-child{color:var(--gold);font-weight:700;width:6.5em;white-space:nowrap}
+  ul.big{margin:1em 0 0 1.2em;display:flex;flex-direction:column;gap:.55em;font-size:1.02em;line-height:1.5;color:var(--ink-dim)}
+  ul.big b{color:var(--navy)}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;
+    border:2px solid var(--gold);border-radius:50%;color:var(--gold);font-weight:700;margin-right:.6em;flex:none}
+  /* visual helpers (session 1) */
+  .bridge{display:grid;grid-template-columns:1fr auto 1fr;gap:.7em 1.4em;align-items:center;margin:0;max-width:46em}
+  .bridge .h{font-size:.78em;letter-spacing:.1em;font-weight:700;text-transform:uppercase;padding-bottom:.3em;border-bottom:2px solid rgba(227,179,65,.4)}
+  .bridge .h.l{color:var(--ink-dim)} .bridge .h.r{color:var(--gold)}
+  .bridge .b{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:.6em .9em;font-size:1.02em;font-weight:600;box-shadow:var(--shadow-sm);color:var(--navy)}
+  .bridge .b.r{border-color:rgba(227,179,65,.5)}
+  .bridge .arrow{color:var(--gold);font-size:1.3em;text-align:center}
+  .tree{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surface);border:1px solid var(--border);
+    border-radius:14px;padding:1.2em 1.5em;font-size:1.15em;line-height:1.9;margin:0;max-width:24em;box-shadow:var(--shadow-sm)}
+  .tree .f{color:var(--gold)} .tree .file{color:var(--ink-dim)} .tree .i{color:#9aa3c4}
+  .keys{display:flex;gap:1.2em;justify-content:center;margin:0;flex-wrap:wrap}
+  .keycap{background:var(--surface);border:1px solid var(--border);border-bottom-width:4px;border-bottom-color:var(--gold-bright);border-radius:12px;
+    padding:.8em 1em;text-align:center;min-width:7.2em;box-shadow:var(--shadow-sm)}
+  .keycap .k{font-size:1.35em;font-weight:800;color:var(--navy)}
+  .keycap .d{font-size:.82em;color:var(--ink-dim);margin-top:.35em}
+  .keycap.save{border-bottom-color:var(--green)} .keycap.save .k{color:var(--green)}
+  .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1em;margin:0;width:100%}
+  .three-col .col{border-radius:13px;padding:.95em 1.05em;border:1px solid;background:var(--surface);box-shadow:var(--shadow-sm)}
+  .col.cloud{border-color:rgba(47,111,237,.4)} .col.local{border-color:rgba(31,157,99,.4)} .col.nowhere{border-color:rgba(226,61,104,.4)}
+  .three-col h3{font-size:1.05em;margin-bottom:.5em}
+  .col.cloud h3{color:var(--blue)} .col.local h3{color:var(--green)} .col.nowhere h3{color:var(--pink)}
+  .three-col li{font-size:.86em;color:var(--ink-dim);line-height:1.5;margin-left:1.1em}
+  /* flow (portal guide) */
+  .flow{display:flex;align-items:center;gap:.5em;margin:0;flex-wrap:wrap}
+  .flow .step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7em .9em;font-size:.9em;font-weight:600;text-align:center;flex:1;min-width:8em;color:var(--navy);box-shadow:var(--shadow-sm)}
+  .flow .step span{display:block;color:var(--ink-dim);font-size:.78em;font-weight:400;margin-top:.2em}
+  .flow .arr{color:var(--gold);font-size:1.3em}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:2.5em}
+  .stat{background:var(--surface);padding:1.3em 1.4em;display:flex;flex-direction:column;gap:.2em}
+  .stat-value{font-size:1.9em;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.02em}
+  .stat-value span{color:var(--gold)}
+  .stat-label{font-size:.85em;color:var(--ink-dim);line-height:1.4}
+  .quick-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1em}
+  .quick-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.4em;box-shadow:var(--shadow-sm);text-decoration:none;color:inherit;display:block}
+  .quick-card h3{font-size:1.12em;color:var(--navy);margin-bottom:.35em}
+  .quick-card p{color:var(--ink-dim);font-size:.93em;line-height:1.5}
+  .quick-card .more{display:inline-block;margin-top:.8em;color:var(--gold);font-weight:700;font-size:.85em}
+  .ico-badge{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.4em;margin-bottom:.5em;background:rgba(227,179,65,.16)}
+  .ico-badge.blue{background:rgba(47,111,237,.12)} .ico-badge.green{background:rgba(31,157,99,.12)} .ico-badge.pink{background:rgba(226,61,104,.12)}
+  /* check grid (day 0) */
+  .check{display:grid;grid-template-columns:1fr 1fr;gap:.6em 1.6em;margin:0;font-size:1.05em;color:var(--ink-dim)}
+  .check div{padding:.2em 0}
+  .check b{color:var(--navy)}
+  /* footer chrome */
+  #bar{position:fixed;left:0;bottom:0;height:3px;background:var(--gold-bright);width:0;transition:width .2s;z-index:30}
+  #counter{position:fixed;right:14px;bottom:10px;font-size:12px;color:var(--ink-dim);z-index:30}
+  #hint{position:fixed;left:14px;bottom:8px;font-size:11px;color:#9aa3c4;z-index:30}
+  #notes{position:fixed;inset:auto 0 0 0;background:#0e1336;border-top:2px solid var(--gold-bright);
+    padding:1.1em 1.6em 1.4em;max-height:42%;overflow:auto;display:none;z-index:40}
+  #notes.show{display:block}
+  #notes h4{color:var(--gold-bright);font-size:.8em;letter-spacing:.14em;margin-bottom:.5em}
+  #notes-body{font-size:1.02em;line-height:1.6;color:#c2c9e6;max-width:60em}
+  @media print{.slide{display:flex;position:relative;page-break-after:always;width:100%;height:100vh}#bar,#counter,#hint,#notes{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  #deck-nav{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:8px;z-index:35}
+  #deck-nav button{background:var(--surface);border:1px solid var(--border);color:var(--ink);border-radius:9px;width:46px;height:36px;font-size:18px;line-height:1;cursor:pointer;box-shadow:var(--shadow-sm)}
+  #deck-nav button:hover{border-color:var(--gold)}
+  @media print{#deck-nav{display:none}}
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide img hero" style="--img:url('assets/s0/slide-1.svg')" data-notes="This is the Day-0 handshake call (or the visual companion to it). Warm and low-pressure. Day 0 is a gear check before the climb — nobody is behind, nobody is being tested. Goal of the call: every student can power on, get online, sign in to a Google account and the portal, and join a call — before Session 1.">
+  <span class="weektag">ASCENT FOUNDATIONS · PRE-INDUCTION <span class="sess">— Day 0</span></span>
+  <h1>Welcome to the climb.<br><span style="color:var(--gold)">Let's get you set up.</span></h1>
+  <p class="lead">Before Session 1, a quick gear check — no pressure, nothing graded. If you can use a phone, you can start here.</p>
+  <div style="margin-top:1.4em">
+    <span class="pill solid">DAY 0</span>
+    <span class="pill">ONLINE · SELF-PACED</span>
+    <span class="pill">8 SESSIONS · 4 WEEKENDS AHEAD</span>
+  </div>
+</section>
+
+<!-- 2 · BIG IDEA -->
+<section class="slide" data-notes="Set the tone: they already know more than they think — they've used a powerful computer for years, it just lived in their pocket. Day 0 isn't class; it's making sure the tech works so Session 1 is about learning, not logging in.">
+  <span class="weektag">WHAT TODAY IS</span>
+  <p class="big-quote">Day 0 is a <span class="hl">gear check</span>, not a test.<br>Three quick missions, one warm-up.</p>
+  <div class="strip key"><b>Why it matters:</b> when the tech just works, Session 1 is about <i>learning</i> — not chasing passwords and links. Let's clear all of that today.</div>
+</section>
+
+<!-- 3 · THE CLIMB AHEAD -->
+<section class="slide" data-notes="Show them the destination so the effort has a shape. Foundations (8 sessions) builds real digital skill; Compass reads what you did and points you at a tech career that fits; Tracks teach that career's skills. You're not just learning apps — you're getting ready for a path.">
+  <h2>Where this is going</h2>
+  <div class="cards c3" style="flex:1">
+    <div class="card"><div class="ico">🏕️</div><h3>Foundations</h3><p><b>8 sessions · 4 weekends · online.</b> Files, web, documents, data, AI, security — and how to think like a builder.</p></div>
+    <div class="card blue"><div class="ico">🧭</div><h3>Compass</h3><p>Reads what you actually did and points you at a tech career that fits — <b>free</b>.</p></div>
+    <div class="card green"><div class="ico">🛤️</div><h3>Tracks</h3><p>Learn the real skills for your path: <b>Data, Web/Software, AI Ops, or Design.</b></p></div>
+  </div>
+  <div class="strip"><b>Today is base camp.</b> Get set up, and the climb starts Saturday.</div>
+</section>
+
+<!-- 4 · THREE MISSIONS -->
+<section class="slide" data-notes="These arrive over three days by WhatsApp/SMS (Day −3, −2, −1). Reply to each so we know you're set. The point isn't difficulty — it's confirming access. If anything blocks you (no device, shared family computer, can't get online), tell us NOW, not on Saturday — we have loaner options and picture guides.">
+  <h2>Three short missions before Session 1</h2>
+  <div class="cards c3" style="flex:1">
+    <div class="card"><div class="ico">🔌</div><h3><span class="step">1</span>Power & device</h3><p>Find the power button. Learn <b>sleep</b> vs <b>shut down</b>. Reply with a photo of your login screen. <span style="color:var(--ink-dim)">(Day −3)</span></p></div>
+    <div class="card blue"><div class="ico">🌐</div><h3><span class="step">2</span>Online + accounts</h3><p>Connect to Wi-Fi, open a browser, <b>create/sign in to a free Google account</b>, and log in to the portal. Reply "IN". <span style="color:var(--ink-dim)">(Day −2)</span></p></div>
+    <div class="card green"><div class="ico">🎥</div><h3><span class="step">3</span>Video handshake</h3><p>Join the practice call: mic on/off, camera on/off, say hi, leave. 3 minutes. Reply "DONE". <span style="color:var(--ink-dim)">(Day −1)</span></p></div>
+  </div>
+  <div class="strip warn"><b>Stuck on any of these? Message us today.</b> No device or a shared one at home is a fixable problem — but only if we know early.</div>
+</section>
+
+<!-- 5 · GEAR CHECKLIST -->
+<section class="slide" data-notes="The full list of what they need ready. Walk it on the call. Headset + quiet spot matters for the live breakout rooms in Sessions 5 and 8. A Google account is non-negotiable — the whole course runs on Google Docs/Sheets/Slides/Forms/Drive.">
+  <h2>Your gear checklist</h2>
+  <div class="check">
+    <div>💻 <b>A laptop or desktop</b> (not just a phone)</div>
+    <div>📶 <b>Reliable Wi-Fi</b> + a quiet spot</div>
+    <div>🔐 <b>A free Google account</b> (we'll use it all course)</div>
+    <div>🪪 <b>Your portal login</b> (we sent the link)</div>
+    <div>🎧 <b>Headphones + mic</b> (for live sessions)</div>
+    <div>🗓️ <b>Your 4 weekends blocked</b> (2 sessions each)</div>
+  </div>
+  <div class="strip"><b>Missing something?</b> Tell your facilitator now — loaner devices and picture guides are available.</div>
+</section>
+
+<!-- 6 · GOOGLE ACCOUNT -->
+<section class="slide" data-notes="The whole course runs on free personal Google tools — Docs, Sheets, Slides, Forms, Drive — so a Google account is the one must-have. Free, no payment. If you're under 13 (varies by country) you need a guardian to set it up and return the consent form. Walk them to accounts.google.com if needed during the handshake call.">
+  <h2>Create your free Google account</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card blue"><h3>Why</h3><p>Everything you build — your folders, documents, ledgers, slides, and forms — lives in <b>free Google tools</b> (Docs, Sheets, Slides, Forms, Drive). One account, no cost.</p></div>
+    <div class="card"><h3>How</h3><ul><li>Go to <b>accounts.google.com</b> → Create account</li><li>Use a name you're happy sharing with a facilitator</li><li>Sign in on the laptop you'll use for class</li></ul></div>
+  </div>
+  <div class="strip warn"><b>Under 13?</b> A parent/guardian sets it up and returns the consent form first — bring it to base camp.</div>
+</section>
+
+<!-- 7 · THE WARM-UP (DIAGNOSTIC) -->
+<section class="slide" data-notes="Read the framing sentence almost word-for-word — wording controls anxiety. It is NOT a test, NOT graded, no wrong answers. 10 minutes, self-paced, from the portal link. It just helps us pair people well and pace the first weekend. Four quick tasks.">
+  <span class="weektag">THE 10-MINUTE WARM-UP</span>
+  <h2>Not a test. No grade. No wrong answers.</h2>
+  <p class="lead">A 10-minute warm-up from your portal link — it just helps us pair people well in Session 1.</p>
+  <div class="cards c2" style="flex:0;margin-top:1em">
+    <div class="card"><h3>🖱️ Move &amp; click</h3><p>Drag a few shapes, double-click, right-click. Pointer warm-up.</p></div>
+    <div class="card"><h3>⌨️ Type a little</h3><p>Type a short paragraph — just so we know your starting speed.</p></div>
+    <div class="card"><h3>📁 Find a file</h3><p>Open a file tucked inside a folder, read one word.</p></div>
+    <div class="card"><h3>🔎 Look something up</h3><p>Find a fact online and paste the link you found it on.</p></div>
+  </div>
+</section>
+
+<!-- 8 · BRIDGE & FOUNDATION -->
+<section class="slide" data-notes="Demystify the tags so nobody reads them as a ranking. Bridge = already phone-fluent, new to desktop file systems. Foundation = newer to computers generally. BOTH are just starting points. We use them only to pair a Bridge with a Foundation early on and to pace support — never for grades, never announced as a score.">
+  <h2>Two starting points — never a ranking</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card blue"><h3>🌉 Bridge</h3><p>Fluent on a phone, new to desktop files &amp; folders. You know how to <i>search</i> — we'll show you the filing cabinet.</p></div>
+    <div class="card green"><h3>🌱 Foundation</h3><p>Newer to computers in general. We start gently and pair you with a partner — you'll move fast once it clicks.</p></div>
+  </div>
+  <div class="strip key"><b>Used only</b> for pairing and pacing in the first weekend. Not a grade, not a label, not announced — just how we set you up to win.</div>
+</section>
+
+<!-- 9 · HOW THE COURSE WORKS -->
+<section class="slide" data-notes="Quick orientation to the model so expectations are right. Live sessions on weekends + homework on weekdays. Graded on a 4-level mastery rubric that rewards GROWTH (best evidence, not early talent). You finish with a real project (capstone) that becomes your first portfolio piece and the evidence Compass uses.">
+  <h2>How Foundations works</h2>
+  <ul class="big" style="list-style:none;margin-left:0;flex:1;justify-content:center">
+    <li><span class="num">1</span><b>Live + self-paced.</b> Two live sessions each weekend, plus homework on the weekdays between.</li>
+    <li><span class="num">2</span><b>Measured for growth.</b> A 4-level mastery rubric — it only ever goes up as you show stronger work. Early stumbles don't count against you.</li>
+    <li><span class="num">3</span><b>You build something real.</b> A final capstone project becomes your first portfolio piece — and the evidence Compass uses.</li>
+  </ul>
+  <div class="strip"><b>No background needed.</b> If you can use a phone, you can start here.</div>
+</section>
+
+<!-- 10 · YOUR PORTAL (the app) -->
+<section class="slide" data-notes="Walk them through the portal live on the handshake call if you can — share your screen on a demo account. The big messages: it's ONE personal link (bookmark it), you submit work by pasting a Google Drive link (not uploading files), your mastery only ever goes up (best-evidence, never averaged), and Compass unlocks at the end. Resubmitting to improve a score is encouraged, not penalised.">
+  <span class="weektag">YOUR PORTAL — THE APP YOU'LL LIVE IN</span>
+  <h2>One link. Everything in one place.</h2>
+  <div class="cards c3" style="flex:1">
+    <div class="card"><div class="ico">📚</div><h3>Each session</h3><p>Open the <b>live session</b>, the <b>recorded walkthrough</b>, and your <b>sandbox</b> — linked per session.</p></div>
+    <div class="card blue"><div class="ico">📤</div><h3>Submit your work</h3><p>Paste your <b>Google Drive link</b> (no uploading). Add your <b>WPM</b> for Sessions 1–4; for talks, mark <b>live or recorded</b>.</p></div>
+    <div class="card green"><div class="ico">📈</div><h3>Your mastery</h3><p>See your <b>best-evidence level</b> per skill — it only ever goes <b>up</b> as you show stronger work.</p></div>
+    <div class="card"><div class="ico">💬</div><h3>Feedback</h3><p>Your facilitator's notes show right on each submission. <b>Resubmit anytime</b> to improve.</p></div>
+    <div class="card orange"><div class="ico">✍️</div><h3>AI-use policy</h3><p>Read &amp; <b>sign once</b> — then it applies to all your work, including the capstone.</p></div>
+    <div class="card pink"><div class="ico">🧭</div><h3>Compass</h3><p>Once you've shown evidence, the portal unlocks your <b>free career direction</b>.</p></div>
+  </div>
+  <div class="strip"><b>Bookmark your portal link</b> — it's personal to you. Lost it? Message the cohort channel.</div>
+</section>
+
+<!-- 11 · SESSION 1 TEASER -->
+<section class="slide" data-notes="Leave them looking forward to Session 1. 'From Phone to Desktop' — the big reveal that the desktop just shows you the filing cabinet your phone hid. Confirm the first weekend's date/time and that the portal is where everything lives.">
+  <h2>First up: From Phone to Desktop</h2>
+  <p class="lead">Session 1 takes everything your phone already taught you and makes it visible on a desktop — files, folders, and how to never lose your work again.</p>
+  <div class="cards c3" style="flex:0;margin-top:1em">
+    <div class="card"><div class="ico">📱➡️🖥️</div><h3>The bridge</h3><p>Your phone hid the filing cabinet. The desktop shows it.</p></div>
+    <div class="card green"><div class="ico">↩️</div><h3>Recovery lab</h3><p>Break three files on purpose — bring every one back.</p></div>
+    <div class="card blue"><div class="ico">🗂️</div><h3>Your system</h3><p>Name and nest files like a professional.</p></div>
+  </div>
+</section>
+
+<!-- 11 · CLOSE -->
+<section class="slide" data-notes="Warm close. Reassure: do the three missions + the warm-up, and you're ready. Give the one contact channel for help. End on belonging — they're part of a cohort now.">
+  <span class="weektag">YOU'RE SET</span>
+  <p class="big-quote">Do the three missions and the warm-up — <span class="hl">that's it.</span> See you Saturday.</p>
+  <div class="strip key"><b>Stuck on anything?</b> Message us on the cohort channel — that's what it's for. Welcome to Ascent.</div>
+</section>
+
+<div id="bar"></div>
+<div id="counter"></div>
+<div id="hint">← → navigate · N speaker notes · P print/PDF</div>
+<div id="notes"><h4>SPEAKER NOTES</h4><div id="notes-body"></div></div>
+<div id="deck-nav"><button onclick="show(i-1)" aria-label="Previous">‹</button><button onclick="show(i+1)" aria-label="Next">›</button></div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  const notes=document.getElementById('notes'),notesBody=document.getElementById('notes-body');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    document.getElementById('counter').textContent=(i+1)+' / '+slides.length;
+    document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+    notesBody.textContent=slides[i].dataset.notes||'(no notes)';
+    location.hash=i+1;
+  }
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(i+1)}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(i-1)}
+    else if(e.key==='Home')show(0);
+    else if(e.key==='End')show(slides.length-1);
+    else if(e.key.toLowerCase()==='n')notes.classList.toggle('show');
+    else if(e.key.toLowerCase()==='p')print();
+  });
+  show(parseInt(location.hash.slice(1))-1||0);
+</script>
+</body>
+</html>

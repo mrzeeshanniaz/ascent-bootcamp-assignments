@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ascent Foundations — Intro (record-over background)</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --navy:#101733;--gold:#b07d10;--gold-bright:#e3b341;--bg:#f6f8fd;--surface:#fff;
+    --ink:#131a36;--ink-dim:#586089;--blue:#2f6fed;--green:#1f9d63;--pink:#e23d68;--orange:#e3742f;
+    --border:rgba(16,23,51,.10);--hairline:rgba(16,23,51,.07);
+    --shadow-sm:0 1px 3px rgba(16,23,51,.07);--shadow-md:0 8px 24px rgba(16,23,51,.08);
+  }
+  html,body{height:100%;background:#e9edf6;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink)}
+  .slide{
+    display:none;position:absolute;inset:0;margin:auto;
+    width:min(100vw,177.78vh);height:min(56.25vw,100vh);
+    background:
+      radial-gradient(1200px 620px at 86% -8%, rgba(227,179,65,.14) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(900px 560px at 0% 0%, rgba(47,111,237,.08) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+    padding:6% 6.5%;flex-direction:column;justify-content:center;overflow:hidden;-webkit-font-smoothing:antialiased;
+    font-size:clamp(15px,2.1vh,30px);
+  }
+  .slide.active{display:flex}
+  .slide.hero{justify-content:center}
+  .kicker{display:inline-block;background:rgba(227,179,65,.16);border:1px solid rgba(227,179,65,.4);
+    color:var(--gold);border-radius:8px;padding:.32em 1em;font-size:.72em;font-weight:700;
+    letter-spacing:.12em;text-transform:uppercase;margin-bottom:1em;align-self:flex-start}
+  h1{font-size:3.6em;font-weight:800;line-height:1.05;letter-spacing:-.02em;color:var(--navy);margin-bottom:.3em}
+  h2{font-size:2.3em;font-weight:800;line-height:1.12;color:var(--navy);margin-bottom:.45em}
+  .lead{font-size:1.45em;color:var(--ink-dim);line-height:1.5;max-width:24em}
+  .big-quote{font-size:3em;font-weight:800;line-height:1.2;letter-spacing:-.01em;color:var(--navy);max-width:16em;margin:auto 0}
+  .hl{color:var(--gold)}
+  /* cover */
+  .cover{align-items:center;justify-content:center;text-align:center}
+  .cover .logo{font-size:7em;font-weight:800;letter-spacing:-.04em;line-height:.95;color:var(--navy)}
+  .cover .logo .dot{color:var(--gold-bright)}
+  .cover .word{margin-top:.15em;font-size:1.7em;font-weight:700;letter-spacing:.42em;
+    text-transform:uppercase;color:var(--gold);padding-left:.42em}
+  .cover .rule{width:4.5em;height:4px;border-radius:999px;background:var(--gold-bright);margin:1.4em 0}
+  .cover .tag{font-size:1.45em;color:var(--ink-dim);line-height:1.5;max-width:22em}
+  .cover .by{margin-top:2.4em;font-size:.72em;font-weight:600;letter-spacing:.16em;
+    text-transform:uppercase;color:#9aa3bd}
+  .cards{display:grid;gap:1em;margin-top:1.4em}
+  .cards.c4{grid-template-columns:repeat(4,1fr)} .cards.c2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--gold-bright);
+    border-radius:14px;padding:1.1em 1.1em;box-shadow:var(--shadow-sm)}
+  .card .ico{font-size:1.9em;display:block;margin-bottom:.15em}
+  .card b{display:block;color:var(--navy);font-size:1.1em}
+  .card.blue{border-top-color:var(--blue)} .card.green{border-top-color:var(--green)}
+  .card.orange{border-top-color:var(--orange)} .card.pink{border-top-color:var(--pink)}
+  .roadmap{display:grid;grid-template-columns:repeat(2,1fr);gap:.7em;margin-top:1.2em;width:100%}
+  .ritem{display:flex;gap:.7em;align-items:center;background:var(--surface);border:1px solid var(--border);
+    border-radius:12px;padding:.6em .9em;box-shadow:var(--shadow-sm)}
+  .rnum{flex:0 0 auto;width:1.8em;height:1.8em;border-radius:8px;background:var(--gold-bright);color:#2a1f02;
+    font-weight:800;display:grid;place-items:center;font-size:.95em}
+  .ritem b{color:var(--navy);font-size:1.02em}
+  .path{display:flex;flex-wrap:wrap;align-items:center;gap:.6em;margin-top:1.4em}
+  .step{background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:.55em 1.2em;
+    font-weight:800;color:var(--navy);font-size:1.15em;box-shadow:var(--shadow-sm)}
+  .step.lit{background:var(--gold-bright);border-color:var(--gold-bright);color:#2a1f02}
+  .arrow{color:var(--gold);font-weight:800;font-size:1.3em}
+  .url{display:inline-block;margin-top:.5em;font-size:1.8em;font-weight:800;color:var(--gold)}
+  footer{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;
+    padding:1.4em 2em;font-size:.78em;color:var(--ink-dim)}
+  footer .brand{font-weight:700;color:var(--navy)}
+  /* presenter chrome (hidden by default so the recording stays clean) */
+  .nav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:20;opacity:.25;transition:opacity .2s}
+  .nav:hover{opacity:1}
+  .nav button{background:var(--surface);border:1px solid var(--border);color:var(--ink);border-radius:8px;
+    padding:.4em .8em;font-size:.85em;cursor:pointer;box-shadow:var(--shadow-sm)}
+  .notes{position:fixed;left:0;right:0;bottom:0;background:#0d1330;color:#e8ecff;padding:1.1em 1.6em;
+    font-size:1rem;line-height:1.5;z-index:30;display:none;box-shadow:0 -8px 30px rgba(0,0,0,.3)}
+  .notes.show{display:block}
+  .notes b{color:var(--gold-bright)}
+  .hint{position:fixed;top:10px;right:12px;font-size:.72rem;color:var(--ink-dim);z-index:20;opacity:.5}
+</style>
+</head>
+<body>
+
+<section class="slide cover hero active" data-notes="Open on this cover for a beat (let any intro/music breathe), then advance and start talking.">
+  <div class="logo">Ascent<span class="dot">.</span></div>
+  <div class="word">Bootcamp</div>
+  <div class="rule"></div>
+  <p class="tag">From your phone to a real tech career.</p>
+  <div class="by">A program by SwiftRoc</div>
+</section>
+
+<section class="slide hero" data-notes="Smile. Warm open: 'Assalam o alaikum / Hi! Welcome. I'm so glad you're here. Let me tell you about Ascent Foundations and how it can change things for you.'">
+  <span class="kicker">Ascent Foundations · by SwiftRoc</span>
+  <h1>From your phone<br>to a real <span class="hl">tech career.</span></h1>
+  <p class="lead">A free digital-skills program for grades 10–12.</p>
+</section>
+
+<section class="slide hero" data-notes="Your story in ~30s: 'I'm Zeeshan, a software engineer and founder of SwiftRoc. I've built 20+ apps and 15+ web platforms. I built Ascent to give you the start I wish I'd had.'">
+  <span class="kicker">Who's behind this</span>
+  <h1>Hi, I'm Zeeshan.</h1>
+  <p class="lead">Software engineer and founder of SwiftRoc. I've shipped 20+ apps and 15+ web platforms, and I built Ascent to help you make the climb I made.</p>
+</section>
+
+<section class="slide hero" data-notes="The hook: 'You've used a powerful computer for years, it just lived in your pocket. But the desktop skills that jobs actually need get skipped. Foundations fixes that.'">
+  <p class="big-quote">You've used a powerful computer for years. It just lived in your <span class="hl">pocket.</span></p>
+</section>
+
+<section class="slide" data-notes="What it is, simply: free, online, on weekends, about two hours, in a small supportive group. No experience needed.">
+  <span class="kicker">What it is</span>
+  <h2>Simple, free, and supportive</h2>
+  <div class="cards c4">
+    <div class="card"><span class="ico">🆓</span><b>Free</b></div>
+    <div class="card blue"><span class="ico">💻</span><b>Online, weekends</b></div>
+    <div class="card green"><span class="ico">🤝</span><b>Small group</b></div>
+    <div class="card orange"><span class="ico">📜</span><b>Certificate</b></div>
+  </div>
+</section>
+
+<section class="slide" data-notes="Walk the journey quickly: 'Eight weekend sessions, one step at a time, from finding your way around a computer to a final project.'">
+  <span class="kicker">8 sessions</span>
+  <h2>What you'll learn</h2>
+  <div class="roadmap">
+    <div class="ritem"><span class="rnum">1</span><b>From Phone to Pro</b></div>
+    <div class="ritem"><span class="rnum">2</span><b>Search Smart</b></div>
+    <div class="ritem"><span class="rnum">3</span><b>Documents That Impress</b></div>
+    <div class="ritem"><span class="rnum">4</span><b>Make Numbers Work for You</b></div>
+    <div class="ritem"><span class="rnum">5</span><b>Own the Room</b></div>
+    <div class="ritem"><span class="rnum">6</span><b>Your AI Co-Pilot</b></div>
+    <div class="ritem"><span class="rnum">7</span><b>Spot the Fake</b></div>
+    <div class="ritem"><span class="rnum">8</span><b>The Big Finish</b></div>
+  </div>
+</section>
+
+<section class="slide hero" data-notes="THE END GOAL. 'Foundations is step one. After it, Compass shows the tech path that fits you, Tracks go deeper, and Mentors guide you in. This is a real climb toward a tech career.'">
+  <span class="kicker">Where it leads</span>
+  <h1>This is <span class="hl">step one.</span></h1>
+  <div class="path">
+    <span class="step lit">Foundations</span><span class="arrow">→</span>
+    <span class="step">Compass</span><span class="arrow">→</span>
+    <span class="step">Tracks</span><span class="arrow">→</span>
+    <span class="step">Mentors</span><span class="arrow">→</span>
+    <span class="step">Tech career</span>
+  </div>
+  <p class="lead" style="margin-top:1.2em">Build the skills, find your path, get guided in.</p>
+</section>
+
+<section class="slide hero" data-notes="Make it credible: 'It's free, and it counts. You earn a certificate issued by SwiftRoc, a registered software studio, that anyone can verify online.'">
+  <span class="kicker">Why it's real</span>
+  <h1>Free. And it <span class="hl">counts.</span></h1>
+  <p class="lead">You earn a certificate issued by SwiftRoc, a registered software studio, verifiable by anyone.</p>
+</section>
+
+<section class="slide" data-notes="Who it's for + what you need. Reassure: 'If you can use a phone, you can do this. We start from zero.'">
+  <span class="kicker">Is this you?</span>
+  <h2>Who it's for</h2>
+  <div class="cards c4">
+    <div class="card"><span class="ico">🎒</span><b>Grades 10–12</b></div>
+    <div class="card blue"><span class="ico">🖥️</span><b>A computer + internet</b></div>
+    <div class="card green"><span class="ico">⏰</span><b>~2 hrs each weekend</b></div>
+    <div class="card orange"><span class="ico">🔥</span><b>Ready to learn</b></div>
+  </div>
+</section>
+
+<section class="slide hero" data-notes="Clear call to action: 'Go to ascentbootcamp.com/start and fill the short form. If you're under 18, a parent just confirms. It takes two minutes.'">
+  <span class="kicker">How to join</span>
+  <h1>Enrol in 2 minutes.</h1>
+  <span class="url">ascentbootcamp.com/start</span>
+  <p class="lead" style="margin-top:.8em">Under 18? A parent just confirms in the form.</p>
+</section>
+
+<section class="slide hero" data-notes="Warm close: 'Follow our WhatsApp channel for updates, enrol today, and I'll see you in Session 1. Let's climb together.'">
+  <span class="kicker">Let's climb</span>
+  <h1>See you in <span class="hl">Session 1.</span> 🏔️</h1>
+  <p class="lead">Free · weekends · certificate by SwiftRoc · ascentbootcamp.com/start</p>
+</section>
+
+<footer><span class="brand">Ascent Foundations · by SwiftRoc</span><span>ascentbootcamp.com</span></footer>
+
+<div class="hint">← → to move · N for speaker notes</div>
+<div class="nav"><button onclick="move(-1)">‹ Prev</button><button onclick="toggleNotes()">Notes (N)</button><button onclick="move(1)">Next ›</button></div>
+<div class="notes" id="notes"></div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0, notesOn=false;
+  const notesEl=document.getElementById('notes');
+  function render(){
+    slides.forEach((s,n)=>s.classList.toggle('active',n===i));
+    if(notesOn){ notesEl.innerHTML='<b>Say:</b> '+(slides[i].dataset.notes||''); }
+  }
+  function move(d){ i=Math.max(0,Math.min(slides.length-1,i+d)); render(); }
+  function toggleNotes(){ notesOn=!notesOn; notesEl.classList.toggle('show',notesOn); render(); }
+  document.addEventListener('keydown',e=>{
+    if(['ArrowRight',' ','PageDown'].includes(e.key)){e.preventDefault();move(1);}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){move(-1);}
+    else if(e.key==='n'||e.key==='N'){toggleNotes();}
+  });
+  render();
+</script>
+</body>
+</html>

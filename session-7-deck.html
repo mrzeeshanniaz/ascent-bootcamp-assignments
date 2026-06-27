@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 7 — Fact-Checking, Synthetic Media &amp; Digital Wellbeing · Ascent Foundations</title>
+<style>
+  :root{
+    --navy:#101733; --navy-soft:#1c2550;
+    --gold:#b07d10; --gold-bright:#e3b341; --gold-dim:#8a6a17;
+    --bg:#f6f8fd; --bg-accent:#eef2fb; --surface:#ffffff; --card:#ffffff;
+    --ink:#131a36; --ink-dim:#586089;
+    --pink:#e23d68; --orange:#e3742f; --blue:#2f6fed; --green:#1f9d63;
+    --border:rgba(16,23,51,.10); --hairline:rgba(16,23,51,.07);
+    --shadow-sm:0 1px 2px rgba(16,23,51,.05), 0 1px 3px rgba(16,23,51,.06);
+    --shadow-md:0 8px 24px rgba(16,23,51,.08), 0 2px 6px rgba(16,23,51,.05);
+    --shadow-lg:0 24px 60px rgba(16,23,51,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#e9edf6;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink)}
+  .slide{
+    display:none;position:absolute;inset:0;margin:auto;
+    width:min(100vw,177.78vh);height:min(56.25vw,100vh);
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.12) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.07) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+    padding:4% 5%;flex-direction:column;justify-content:center;overflow:hidden;-webkit-font-smoothing:antialiased;
+  }
+  .slide.active{display:flex}
+  /* light decks: clean surfaces, no dark photo backgrounds (the --img is ignored) */
+  .slide.img,.slide.img.hero{
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.14) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.08) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+  }
+  .pill{display:inline-block;border:1.5px solid var(--gold);color:var(--gold);
+    border-radius:999px;padding:.45em 1.1em;font-size:.85em;font-weight:700;
+    letter-spacing:.05em;margin-right:.6em;margin-bottom:.5em;white-space:nowrap}
+  .pill.solid{background:var(--gold-bright);color:#2a1f02;border-color:var(--gold-bright)}
+  .weektag{display:inline-block;background:rgba(227,179,65,.16);border:1px solid rgba(227,179,65,.4);
+    color:var(--gold);border-radius:8px;padding:.3em .95em;font-size:.75em;font-weight:700;
+    letter-spacing:.1em;margin-bottom:.7em;align-self:flex-start;text-transform:uppercase}
+  .weektag .sess{color:var(--ink-dim);letter-spacing:.04em;font-weight:600}
+  h1{font-size:3.1em;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:.4em;color:var(--navy)}
+  h2{font-size:1.9em;font-weight:800;line-height:1.15;letter-spacing:-.01em;margin-bottom:.35em;color:var(--navy)}
+  .lead{font-size:1.15em;color:var(--ink-dim);line-height:1.55;max-width:38em}
+  .big-quote{font-size:2.1em;font-weight:800;line-height:1.25;letter-spacing:-.01em;max-width:20em;margin:0;color:var(--navy)}
+  .big-quote .hl{color:var(--gold)}
+  .section-kicker{display:block;color:var(--gold);font-size:.78em;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.45em}
+  .cards{display:grid;gap:1.1em;margin-top:1.2em;align-content:center}
+  .cards.c3{grid-template-columns:repeat(3,1fr)}
+  .cards.c2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:1.05em 1.15em;display:flex;flex-direction:column;box-shadow:var(--shadow-sm);
+    border-top:3px solid var(--gold-bright)}
+  .card.pink{border-top-color:var(--pink)} .card.orange{border-top-color:var(--orange)}
+  .card.blue{border-top-color:var(--blue)} .card.green{border-top-color:var(--green)}
+  .card .ico{font-size:1.9em;margin-bottom:.25em;line-height:1}
+  .card h3{font-size:1.05em;margin-bottom:.45em;color:var(--navy)}
+  .card h3 .step{color:var(--gold);font-weight:800;margin-right:.35em}
+  .card.pink h3 .step{color:var(--pink)} .card.blue h3 .step{color:var(--blue)} .card.green h3 .step{color:var(--green)}
+  .card p,.card li{font-size:.88em;color:var(--ink-dim);line-height:1.45}
+  .card ul{margin-left:1.1em}
+  .card p b,.card li b{color:var(--navy)}
+  .strip{margin-top:1.2em;background:rgba(47,111,237,.08);border:1px solid rgba(47,111,237,.25);
+    border-radius:12px;padding:.75em 1.1em;font-size:.92em;line-height:1.5;color:var(--ink)}
+  .strip b{color:var(--blue)}
+  .strip.judge{background:rgba(227,179,65,.12);border-color:rgba(227,179,65,.45)} .strip.judge b{color:var(--gold)}
+  .strip.key{background:rgba(31,157,99,.1);border-color:rgba(31,157,99,.35)} .strip.key b{color:var(--green)}
+  .strip.warn{background:rgba(226,61,104,.09);border-color:rgba(226,61,104,.35)} .strip.warn b{color:var(--pink)}
+  .two-strips{display:grid;grid-template-columns:1fr 1fr;gap:.9em;margin-top:1.2em}
+  .two-strips .strip{margin-top:0}
+  .stack{display:flex;flex-direction:column;gap:.6em;margin-top:1.2em}
+  .stack .strip{margin-top:0}
+  table{width:100%;border-collapse:collapse;margin-top:.4em;font-size:.9em}
+  th{text-align:left;color:var(--gold);font-weight:700;padding:.5em .7em;border-bottom:2px solid rgba(227,179,65,.4)}
+  td{padding:.45em .7em;border-bottom:1px solid var(--hairline);color:var(--ink-dim);vertical-align:top;line-height:1.4}
+  td:first-child{color:var(--navy);font-weight:600}
+  td b{color:var(--navy)}
+  .agenda td:first-child{color:var(--gold);font-weight:700;width:6.5em;white-space:nowrap}
+  ul.big{margin:1em 0 0 1.2em;display:flex;flex-direction:column;gap:.55em;font-size:1.02em;line-height:1.5;color:var(--ink-dim)}
+  ul.big b{color:var(--navy)}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;
+    border:2px solid var(--gold);border-radius:50%;color:var(--gold);font-weight:700;margin-right:.6em;flex:none}
+  /* visual helpers (session 1) */
+  .bridge{display:grid;grid-template-columns:1fr auto 1fr;gap:.7em 1.4em;align-items:center;margin:0;max-width:46em}
+  .bridge .h{font-size:.78em;letter-spacing:.1em;font-weight:700;text-transform:uppercase;padding-bottom:.3em;border-bottom:2px solid rgba(227,179,65,.4)}
+  .bridge .h.l{color:var(--ink-dim)} .bridge .h.r{color:var(--gold)}
+  .bridge .b{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:.6em .9em;font-size:1.02em;font-weight:600;box-shadow:var(--shadow-sm);color:var(--navy)}
+  .bridge .b.r{border-color:rgba(227,179,65,.5)}
+  .bridge .arrow{color:var(--gold);font-size:1.3em;text-align:center}
+  .tree{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surface);border:1px solid var(--border);
+    border-radius:14px;padding:1.2em 1.5em;font-size:1.15em;line-height:1.9;margin:0;max-width:24em;box-shadow:var(--shadow-sm)}
+  .tree .f{color:var(--gold)} .tree .file{color:var(--ink-dim)} .tree .i{color:#9aa3c4}
+  .keys{display:flex;gap:1.2em;justify-content:center;margin:0;flex-wrap:wrap}
+  .keycap{background:var(--surface);border:1px solid var(--border);border-bottom-width:4px;border-bottom-color:var(--gold-bright);border-radius:12px;
+    padding:.8em 1em;text-align:center;min-width:7.2em;box-shadow:var(--shadow-sm)}
+  .keycap .k{font-size:1.35em;font-weight:800;color:var(--navy)}
+  .keycap .d{font-size:.82em;color:var(--ink-dim);margin-top:.35em}
+  .keycap.save{border-bottom-color:var(--green)} .keycap.save .k{color:var(--green)}
+  .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1em;margin:0;width:100%}
+  .three-col .col{border-radius:13px;padding:.95em 1.05em;border:1px solid;background:var(--surface);box-shadow:var(--shadow-sm)}
+  .col.cloud{border-color:rgba(47,111,237,.4)} .col.local{border-color:rgba(31,157,99,.4)} .col.nowhere{border-color:rgba(226,61,104,.4)}
+  .three-col h3{font-size:1.05em;margin-bottom:.5em}
+  .col.cloud h3{color:var(--blue)} .col.local h3{color:var(--green)} .col.nowhere h3{color:var(--pink)}
+  .three-col li{font-size:.86em;color:var(--ink-dim);line-height:1.5;margin-left:1.1em}
+  /* flow (portal guide) */
+  .flow{display:flex;align-items:center;gap:.5em;margin:0;flex-wrap:wrap}
+  .flow .step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7em .9em;font-size:.9em;font-weight:600;text-align:center;flex:1;min-width:8em;color:var(--navy);box-shadow:var(--shadow-sm)}
+  .flow .step span{display:block;color:var(--ink-dim);font-size:.78em;font-weight:400;margin-top:.2em}
+  .flow .arr{color:var(--gold);font-size:1.3em}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:2.5em}
+  .stat{background:var(--surface);padding:1.3em 1.4em;display:flex;flex-direction:column;gap:.2em}
+  .stat-value{font-size:1.9em;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.02em}
+  .stat-value span{color:var(--gold)}
+  .stat-label{font-size:.85em;color:var(--ink-dim);line-height:1.4}
+  .quick-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1em}
+  .quick-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.4em;box-shadow:var(--shadow-sm);text-decoration:none;color:inherit;display:block}
+  .quick-card h3{font-size:1.12em;color:var(--navy);margin-bottom:.35em}
+  .quick-card p{color:var(--ink-dim);font-size:.93em;line-height:1.5}
+  .quick-card .more{display:inline-block;margin-top:.8em;color:var(--gold);font-weight:700;font-size:.85em}
+  .ico-badge{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.4em;margin-bottom:.5em;background:rgba(227,179,65,.16)}
+  .ico-badge.blue{background:rgba(47,111,237,.12)} .ico-badge.green{background:rgba(31,157,99,.12)} .ico-badge.pink{background:rgba(226,61,104,.12)}
+  /* check grid (day 0) */
+  .check{display:grid;grid-template-columns:1fr 1fr;gap:.6em 1.6em;margin:0;font-size:1.05em;color:var(--ink-dim)}
+  .check div{padding:.2em 0}
+  .check b{color:var(--navy)}
+  /* footer chrome */
+  #bar{position:fixed;left:0;bottom:0;height:3px;background:var(--gold-bright);width:0;transition:width .2s;z-index:30}
+  #counter{position:fixed;right:14px;bottom:10px;font-size:12px;color:var(--ink-dim);z-index:30}
+  #hint{position:fixed;left:14px;bottom:8px;font-size:11px;color:#9aa3c4;z-index:30}
+  #notes{position:fixed;inset:auto 0 0 0;background:#0e1336;border-top:2px solid var(--gold-bright);
+    padding:1.1em 1.6em 1.4em;max-height:42%;overflow:auto;display:none;z-index:40}
+  #notes.show{display:block}
+  #notes h4{color:var(--gold-bright);font-size:.8em;letter-spacing:.14em;margin-bottom:.5em}
+  #notes-body{font-size:1.02em;line-height:1.6;color:#c2c9e6;max-width:60em}
+  @media print{.slide{display:flex;position:relative;page-break-after:always;width:100%;height:100vh}#bar,#counter,#hint,#notes{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  #deck-nav{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:8px;z-index:35}
+  #deck-nav button{background:var(--surface);border:1px solid var(--border);color:var(--ink);border-radius:9px;width:46px;height:36px;font-size:18px;line-height:1;cursor:pointer;box-shadow:var(--shadow-sm)}
+  #deck-nav button:hover{border-color:var(--gold)}
+  @media print{#deck-nav{display:none}}
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide img hero" style="--img:url('assets/s7/slide-1.svg')" data-notes="Welcome them back. This session got a redesign: the Forms work you may have heard was here has moved to Session 4. So today we get room to breathe on the thing that actually matters in their feeds every single day — telling what's real from what's manufactured. Frame the competency up front: VERIFICATION. By the end they should never again say 'it looks real' as if that settled anything.">
+  <div style="margin-top:1.2em">
+    <span class="weektag">ASCENT FOUNDATIONS · WEEKEND 4 <span class="sess">— Saturday</span></span>
+    <h1>Fact-Checking, Synthetic Media<br><span style="color:var(--gold)">&amp; Digital Wellbeing</span></h1>
+    <p class="lead">Your feed is full of things that <i>look</i> real. Today you learn to check the claim behind the pixels — and to notice what your feed is doing to your attention.</p>
+    <div style="margin-top:1.6em">
+      <span class="pill solid">SESSION 7</span>
+      <span class="pill">ONLINE · 120 MIN</span>
+      <span class="pill">COMPETENCY: VERIFICATION</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · BIG IDEA -->
+<section class="slide" data-notes="This is the spine. Say it, then come back to it at every block. A deepfake that looks perfect, an image with a watermark, a post from a million-follower account — none of those are evidence. Evidence is the chain: who made this, when, where, and who else confirms it. We verify the claim chain, not the pixels.">
+  <span class="weektag">THE ONE BIG IDEA</span>
+  <p class="big-quote">&ldquo;It looks real&rdquo; proves <span class="hl">nothing</span>.<br>Verify the <span class="hl">claim chain</span>, not the pixels.</p>
+  <div class="strip judge"><b>Judgment checkpoint for today:</b> &ldquo;It looks real&rdquo; and &ldquo;it has a watermark&rdquo; both prove nothing on their own — so what <i>actually</i> verifies a claim? (Answer: trace the source chain — who, when, where, corroborated by whom.)</div>
+</section>
+
+<!-- 3 · AGENDA -->
+<section class="slide" data-notes="Two hours, six blocks. No forms today — that moved to Session 4, which means we get real time on verification and synthetic media, plus a calm wellbeing block. The heart is the 25–70 stretch: lateral reading, then synthetic media. Protect it. The footprint audit at 70 is private — flag that now so nobody worries it's collected.">
+  <h2>Today — 120 minutes</h2>
+  <table class="agenda">
+    <tr><td>0–10</td><td>Recap S6 + surface the <b>announced phish test</b> ("it happens this week — treat every link as suspect") · post today's judgment checkpoint</td></tr>
+    <tr><td>10–35</td><td><b>Disinformation anatomy + lateral reading</b> — a worked example (leave the page to check the source)</td></tr>
+    <tr><td>35–55</td><td><b>Domain analysis + reverse image search</b> — demoed live via screen-share</td></tr>
+    <tr><td>55–80</td><td><b>Synthetic media</b> — deepfakes, AI images, Content Credentials (C2PA) · why no single signal is enough</td></tr>
+    <tr><td>80–100</td><td><b>Digital footprint &amp; wellbeing</b> + the <b>private</b> notification self-audit</td></tr>
+    <tr><td>100–115</td><td>Start <b>Assignment 7</b> together · capstone check-in</td></tr>
+    <tr><td>115–120</td><td>Exit ticket + close</td></tr>
+  </table>
+  <div class="strip judge"><b>Judgment checkpoint:</b> Which signal felt convincing but proves nothing — and what would you check instead?</div>
+</section>
+
+<!-- 4 · DISINFORMATION ANATOMY + LATERAL READING -->
+<section class="slide" data-notes="Open with the four shapes of false info — most fakes are not invented from scratch, they're real things ripped out of context. Then teach the one habit that changes everything: lateral reading. Don't read the page that makes the claim — open NEW TABS and check the source, author, and funding. Walk the worked example row by row. The punchline: the verdict comes from the OTHER tabs, never the original page. A page grades its own homework.">
+  <h2>Disinformation has four shapes — and one cure</h2>
+  <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:1.4em;align-items:center;flex:1">
+    <div class="cards c2" style="margin-top:0;gap:.7em">
+      <div class="card pink"><h3>Fabricated</h3><p>Invented from nothing — fake quote, fake event.</p></div>
+      <div class="card orange"><h3>Manipulated</h3><p>Real media, edited — cropped, slowed, retouched.</p></div>
+      <div class="card blue"><h3>Miscontextualized</h3><p>Real footage, wrong caption — old clip, new lie.</p></div>
+      <div class="card"><h3>Impersonated</h3><p>Fake source dressed as a real outlet or person.</p></div>
+    </div>
+    <div>
+      <h3 style="color:var(--gold);font-size:1.1em;margin-bottom:.5em">Worked example — lateral reading</h3>
+      <p class="lead" style="font-size:.95em;margin-bottom:.6em"><i>Claim:</i> &ldquo;New study proves [policy] doubles teen productivity — <b>TeenScienceDaily.org</b>.&rdquo;</p>
+      <ul class="big" style="margin:0;font-size:.92em;gap:.4em;list-style:none">
+        <li><span class="num" style="width:1.4em;height:1.4em;font-size:.8em">1</span>Search the site + <code style="color:var(--gold)">"funded by" / "owner"</code> — who pays?</li>
+        <li><span class="num" style="width:1.4em;height:1.4em;font-size:.8em">2</span>Search the <b>author</b> — real researcher or invented byline?</li>
+        <li><span class="num" style="width:1.4em;height:1.4em;font-size:.8em">3</span>Find the actual <b>study</b> — does it exist? say that?</li>
+        <li><span class="num" style="width:1.4em;height:1.4em;font-size:.8em">4</span>Does any <b>independent</b> outlet report it?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="strip warn"><b>Vertical reading lies to you:</b> staying on the page to judge the page lets it <i>grade its own homework</i>. The verdict comes from the <b>other tabs</b>.</div>
+</section>
+
+<!-- 5 · DOMAIN ANALYSIS + REVERSE IMAGE SEARCH -->
+<section class="slide" data-notes="Two concrete tools that live in those new tabs. Domain analysis: a clean design and a .org ending mean nothing — look-alike domains swap a letter or add a word; the About/whois page tells you who's really behind it. Then reverse image search live via screen-share — narrate the cursor path so remote students see exactly where you click. The goal of reverse search is the EARLIEST appearance and original context; that's what catches the miscontextualized real photo.">
+  <h2>Two tools that live in the other tabs</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card blue">
+      <div class="ico">🌐</div><h3>Domain analysis</h3>
+      <ul>
+        <li>Look-alike domains: <code style="color:var(--gold)">bbc-news.co</code> ≠ bbc.com — a swapped letter or extra word.</li>
+        <li><b>.org is not neutral</b> — anyone can buy one. The ending proves nothing.</li>
+        <li>Read the <b>About / whois</b> page: who owns it, when was it registered, who funds it?</li>
+        <li>Clean design is cheap. Trust the trail, not the typography.</li>
+      </ul>
+    </div>
+    <div class="card green">
+      <div class="ico">🔁</div><h3>Reverse image search</h3>
+      <ul>
+        <li>Right-click → search the image (or drop it into a reverse-search tool).</li>
+        <li>Sort by <b>oldest</b> — find the <b>earliest appearance</b>.</li>
+        <li>Compare the original <b>caption / date / place</b> to the claim in front of you.</li>
+        <li>Catches the #1 fake: a <b>real photo</b> with a <b>brand-new lie</b> attached.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="strip key"><b>Both answer the same question:</b> where did this <i>actually</i> come from — before someone re-captioned it for you?</div>
+</section>
+
+<!-- 6 · SYNTHETIC MEDIA + JUDGMENT CHECKPOINT -->
+<section class="slide" data-notes="Screen-share the VETTED deepfake and the C2PA image — never search for examples live, never screen a clip you haven't checked. Point out the tells: lip-sync drift, odd blinking, lighting that doesn't match, audio cadence that's too even. Then introduce Content Credentials / C2PA as provenance — but immediately set the trap: present-and-valid is supporting evidence, but ABSENT does not mean fake, and a watermark can be stripped or forged. No single signal is a verdict. The move is the claim chain: who, when, where, confirmed by whom.">
+  <h2>Synthetic media — no single signal is enough</h2>
+  <div class="cards c2" style="flex:1;gap:.9em">
+    <div class="card orange"><div class="ico">🎭</div><h3>Tells (necessary, never sufficient)</h3><ul><li><b>Video:</b> lip-sync drift, weird blinking, lighting/shadows that don't match.</li><li><b>Audio:</b> too-even cadence, no breaths, flat emotion.</li><li><b>AI image:</b> mangled hands/text, melted backgrounds — <i>but generators are getting good fast.</i></li></ul></div>
+    <div class="card blue"><div class="ico">🔖</div><h3>Content Credentials (C2PA)</h3><ul><li>A provenance tag: <i>what tool made or edited this, and when.</i></li><li>Present + valid = <b>supporting</b> evidence.</li><li><b>Absent ≠ fake.</b> A watermark can be <b>stripped or forged</b>.</li><li>A tag is a clue, not a verdict.</li></ul></div>
+  </div>
+  <div class="strip judge"><b>Judgment checkpoint:</b> &ldquo;It looks real&rdquo; and &ldquo;it has a watermark&rdquo; each fail on their own. A pass on one signal is never a verdict — <b>trace the claim chain: who, when, where, corroborated by whom.</b></div>
+</section>
+
+<!-- 7 · DIGITAL FOOTPRINT & WELLBEING -->
+<section class="slide" data-notes="Tone shift — calmer, not preachy. Three ideas: posts are permanent (a screenshot outlives any delete button); universities and employers really do look; and the feed is engineered for engagement, which is not the same as truth or your actual interest. Then run the PRIVATE audit. SAY THIS OUT LOUD before you start: nothing here is collected, shared, or discussed by individual. Don't ask anyone to reveal their count or their apps. This is safeguarding, not an exercise. The one question that lands: 'who decided you'd look at that?'">
+  <h2>Your footprint &amp; your attention</h2>
+  <div class="cards c3" style="flex:1">
+    <div class="card pink"><div class="ico">📌</div><h3>Permanence</h3><p>Delete removes <i>your</i> copy. <b>Screenshots outlive deletion.</b> Post as if it's forever — because for someone, it is.</p></div>
+    <div class="card blue"><div class="ico">🎓</div><h3>Who's looking</h3><p>Universities and employers <b>do</b> check. Your footprint is a portfolio you didn't know you were building.</p></div>
+    <div class="card orange"><div class="ico">🎰</div><h3>Attention economy</h3><p>The feed optimizes for <b>engagement</b> — not truth, not your interest. Engagement ≠ true ≠ good for you.</p></div>
+  </div>
+  <div class="strip warn"><b>Private self-audit (NOT submitted, NOT shared):</b> count today's notifications · name your 3 loudest apps · silence <b>one</b>. No one collects this — ask yourself: <i>&ldquo;who decided I'd look at that?&rdquo;</i></div>
+</section>
+
+<!-- 8 · THINK LIKE A BUILDER -->
+<section class="slide" data-notes="This is the dedicated thread slide — make it land. A builder doesn't argue about whether a bug is real; they reproduce it, trace it to its source, and isolate where it breaks. Verifying a claim is exactly that loop. Reproduce: find the original, not the screenshot of the screenshot. Trace: follow the source chain back to who, when, where. Isolate: pinpoint where the chain breaks — fabricated? miscaptioned? Same discipline as debugging code. This is the PROBLEM-SOLVING competency wearing a different hat.">
+  <span class="weektag" style="color:var(--green);border-color:var(--green);background:rgba(63,185,138,.16)">THINK LIKE A BUILDER 🛠️</span>
+  <h2>Verifying a claim is <span style="color:var(--green)">debugging</span></h2>
+  <div class="cards c3" style="flex:1">
+    <div class="card green"><div class="ico">🔁</div><h3><span class="step">1</span>Reproduce</h3><p>Find the <b>original</b> — not the screenshot of a screenshot. Can you get back to the source artifact?</p></div>
+    <div class="card green"><div class="ico">🧵</div><h3><span class="step">2</span>Trace the chain</h3><p>Follow it back: <b>who captured it, when, where</b>, and who else confirms. Walk the stack, frame by frame.</p></div>
+    <div class="card green"><div class="ico">🎯</div><h3><span class="step">3</span>Isolate the break</h3><p>Pinpoint <b>where it fails</b> — fabricated? re-captioned? unsourced? That's your repro of the bug.</p></div>
+  </div>
+  <div class="strip key"><b>Same loop, different domain:</b> a developer doesn't trust &ldquo;it looks broken&rdquo; — they reproduce and isolate. You don't trust &ldquo;it looks real.&rdquo; This is the <b>Problem-Solving</b> competency.</div>
+</section>
+
+<!-- 9 · ASSIGNMENT 7 + GRADING BAR -->
+<section class="slide" data-notes="Two parts, both started in class. Part one is the fact-check with a written verification trail — at least one synthetic-media check is required. Part two is the private footprint self-audit; remind them it stays private, you only confirm they did it, you never read their counts. NOTE OUT LOUD: there is NO form in this assignment — that's now Session 4. Walk the grading bar so there are no secrets. The competency scored here is VERIFICATION, 0–3. Mastery means tracing the chain across MULTIPLE signals and saying explicitly why no single one settled it.">
+  <h2>Assignment 7 — submitted via portal</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card">
+      <h3>What you turn in</h3>
+      <ul>
+        <li><b>Fact-check one viral claim</b> (your pre-work claim or a new one) with lateral reading.</li>
+        <li>Run <b>≥ 1 synthetic-media check</b> (provenance / reverse-image / corroboration).</li>
+        <li>Submit a <b>verification trail:</b> the claim · the tabs you opened (source/author/funding) · the check + result · your <b>verdict</b> (true / false / miscontextualized / unverifiable).</li>
+        <li>Plus a <b>private digital-footprint self-audit</b> — <i>done, not shared.</i> <span style="color:var(--pink)">No form — that moved to Session 4.</span></li>
+      </ul>
+    </div>
+    <div class="card green">
+      <h3>The grading bar <span style="font-size:.7em;color:var(--ink-dim)">— Verification (0–3)</span></h3>
+      <table style="margin-top:.2em">
+        <tr><td>0 · Missing</td><td>Repeats the claim unchecked; no trail.</td></tr>
+        <tr><td>1 · Emerging</td><td>Checks only the source's <i>own</i> site (vertical reading).</td></tr>
+        <tr><td>2 · Proficient</td><td>Lateral reading + one synthetic-media check; verdict supported.</td></tr>
+        <tr><td>3 · Mastery</td><td>Traces the chain across <b>multiple</b> signals; notes why no single one settles it.</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="strip key"><b>Competency scored: Verification.</b> The trail <i>is</i> the grade — a verdict with no trail is just another opinion.</div>
+</section>
+
+<!-- 10 · PHISH TEST + CAPSTONE -->
+<section class="slide" data-notes="Two housekeeping beats. First: the simulated phishing email. Somewhere in the S6–S8 window a fake-but-safe phishing email lands in their inbox. It's announced ('it WILL happen') but the date is hidden on purpose — that's the point, real phishing doesn't warn you. Treat every link as suspect; hover before you click; when in doubt, verify the sender out of band. Second: capstone check-in — each student names their topic (picked S4, opened S6) and one artifact they'll finish before S8 delivery. Flag anyone stalled for a nudge between sessions.">
+  <h2>Two heads-up before we close</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card pink">
+      <div class="ico">🎣</div><h3>The phish test is live</h3>
+      <ul>
+        <li>A <b>simulated</b> (safe) phishing email lands sometime in the <b>S6–S8 window</b>.</li>
+        <li>Announced on purpose — <b>date hidden</b>, because real phishing never warns you.</li>
+        <li><b>Treat every link as suspect:</b> hover before you click; verify the sender out of band.</li>
+        <li>Same instinct as today — <i>don't trust how it looks; check where it's from.</i></li>
+      </ul>
+    </div>
+    <div class="card blue">
+      <div class="ico">🏔️</div><h3>Capstone check-in</h3>
+      <ul>
+        <li>State your <b>capstone topic</b> (picked in S4, opened in S6) out loud.</li>
+        <li>Name <b>one artifact</b> you'll finish before <b>S8 delivery</b>.</li>
+        <li>Stuck or unsure? Say so now — we'll set a between-sessions nudge.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="strip warn"><b>The phish test connects to today:</b> &ldquo;looks legit&rdquo; is not &ldquo;is legit&rdquo; — for a viral post <i>or</i> an email asking for your password.</div>
+</section>
+
+<!-- 11 · WHERE THIS LEADS -->
+<section class="slide" data-notes="Tie it to the career arc. The verification instinct you built today is the daily reality of data and analytics work — you don't trust a dataset because it looks clean, you trace where it came from. And provenance is the heartbeat of AI operations — knowing what a model was trained on and whether an output can be sourced. Name all four Tracks so they see the map: Software, Data & Analytics, AI Operations, and Digital Product & Design. Today's skill points hardest at the middle two.">
+  <h2>Where this leads — the four Tracks</h2>
+  <div class="cards c2" style="flex:1;gap:.9em">
+    <div class="card blue"><div class="ico">📊</div><h3>Data &amp; Analytics</h3><p>You never trust a dataset because it <i>looks</i> clean — you trace its <b>source and method</b>. That's lateral reading, on spreadsheets.</p></div>
+    <div class="card green"><div class="ico">🤖</div><h3>AI Operations</h3><p><b>Provenance is the job:</b> what was a model trained on, and can an output be sourced back? C2PA thinking, professionalized.</p></div>
+    <div class="card"><div class="ico">💻</div><h3>Software Engineering</h3><p>Reproduce, trace, isolate — the debugging loop you practiced today <i>is</i> the day job.</p></div>
+    <div class="card orange"><div class="ico">🎨</div><h3>Digital Product &amp; Design</h3><p>Designing for <b>trust</b>: provenance labels, source citations, interfaces that help people verify.</p></div>
+  </div>
+  <div class="strip key"><b>Today's skill points hardest at Data &amp; Analytics and AI Operations</b> — verification and provenance are entry-level superpowers there.</div>
+</section>
+
+<!-- 12 · CLOSE -->
+<section class="slide" data-notes="End on the spine. Exit ticket in chat: name one signal that felt convincing but proves nothing, and what you'd check instead. Confirm the Assignment 7 due date and the submit point on the portal. Remind them the footprint audit is theirs alone. And the phish test is out there — stay sharp. Next session: capstone delivery.">
+  <span class="weektag">EXIT TICKET</span>
+  <p class="big-quote">Name one signal that felt <span class="hl">convincing</span> but proves nothing — and what you'd <span class="hl">check instead</span>.</p>
+  <div class="strip key"><b>You stopped trusting the pixels and started tracing the chain.</b> Finish Assignment 7 this week · the footprint audit is yours alone · the phish test is live — stay sharp. Next: capstone delivery.</div>
+</section>
+
+<div id="bar"></div>
+<div id="counter"></div>
+<div id="hint">← → navigate · N speaker notes · P print/PDF</div>
+<div id="notes"><h4>SPEAKER NOTES</h4><div id="notes-body"></div></div>
+<div id="deck-nav"><button onclick="show(i-1)" aria-label="Previous">‹</button><button onclick="show(i+1)" aria-label="Next">›</button></div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  const notes=document.getElementById('notes'),notesBody=document.getElementById('notes-body');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    document.getElementById('counter').textContent=(i+1)+' / '+slides.length;
+    document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+    notesBody.textContent=slides[i].dataset.notes||'(no notes)';
+    location.hash=i+1;
+  }
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(i+1)}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(i-1)}
+    else if(e.key==='Home')show(0);
+    else if(e.key==='End')show(slides.length-1);
+    else if(e.key.toLowerCase()==='n')notes.classList.toggle('show');
+    else if(e.key.toLowerCase()==='p')print();
+  });
+  show(parseInt(location.hash.slice(1))-1||0);
+</script>
+</body>
+</html>

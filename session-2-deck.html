@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 2 — Web, Search &amp; Professional Email · Ascent Foundations</title>
+<style>
+  :root{
+    --navy:#101733; --navy-soft:#1c2550;
+    --gold:#b07d10; --gold-bright:#e3b341; --gold-dim:#8a6a17;
+    --bg:#f6f8fd; --bg-accent:#eef2fb; --surface:#ffffff; --card:#ffffff;
+    --ink:#131a36; --ink-dim:#586089;
+    --pink:#e23d68; --orange:#e3742f; --blue:#2f6fed; --green:#1f9d63;
+    --border:rgba(16,23,51,.10); --hairline:rgba(16,23,51,.07);
+    --shadow-sm:0 1px 2px rgba(16,23,51,.05), 0 1px 3px rgba(16,23,51,.06);
+    --shadow-md:0 8px 24px rgba(16,23,51,.08), 0 2px 6px rgba(16,23,51,.05);
+    --shadow-lg:0 24px 60px rgba(16,23,51,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#e9edf6;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink)}
+  .slide{
+    display:none;position:absolute;inset:0;margin:auto;
+    width:min(100vw,177.78vh);height:min(56.25vw,100vh);
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.12) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.07) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+    padding:4% 5%;flex-direction:column;justify-content:center;overflow:hidden;-webkit-font-smoothing:antialiased;
+  }
+  .slide.active{display:flex}
+  /* light decks: clean surfaces, no dark photo backgrounds (the --img is ignored) */
+  .slide.img,.slide.img.hero{
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.14) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.08) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+  }
+  .pill{display:inline-block;border:1.5px solid var(--gold);color:var(--gold);
+    border-radius:999px;padding:.45em 1.1em;font-size:.85em;font-weight:700;
+    letter-spacing:.05em;margin-right:.6em;margin-bottom:.5em;white-space:nowrap}
+  .pill.solid{background:var(--gold-bright);color:#2a1f02;border-color:var(--gold-bright)}
+  .weektag{display:inline-block;background:rgba(227,179,65,.16);border:1px solid rgba(227,179,65,.4);
+    color:var(--gold);border-radius:8px;padding:.3em .95em;font-size:.75em;font-weight:700;
+    letter-spacing:.1em;margin-bottom:.7em;align-self:flex-start;text-transform:uppercase}
+  .weektag .sess{color:var(--ink-dim);letter-spacing:.04em;font-weight:600}
+  h1{font-size:3.1em;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:.4em;color:var(--navy)}
+  h2{font-size:1.9em;font-weight:800;line-height:1.15;letter-spacing:-.01em;margin-bottom:.35em;color:var(--navy)}
+  .lead{font-size:1.15em;color:var(--ink-dim);line-height:1.55;max-width:38em}
+  .big-quote{font-size:2.1em;font-weight:800;line-height:1.25;letter-spacing:-.01em;max-width:20em;margin:0;color:var(--navy)}
+  .big-quote .hl{color:var(--gold)}
+  .section-kicker{display:block;color:var(--gold);font-size:.78em;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.45em}
+  .cards{display:grid;gap:1.1em;margin-top:1.2em;align-content:center}
+  .cards.c3{grid-template-columns:repeat(3,1fr)}
+  .cards.c2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:1.05em 1.15em;display:flex;flex-direction:column;box-shadow:var(--shadow-sm);
+    border-top:3px solid var(--gold-bright)}
+  .card.pink{border-top-color:var(--pink)} .card.orange{border-top-color:var(--orange)}
+  .card.blue{border-top-color:var(--blue)} .card.green{border-top-color:var(--green)}
+  .card .ico{font-size:1.9em;margin-bottom:.25em;line-height:1}
+  .card h3{font-size:1.05em;margin-bottom:.45em;color:var(--navy)}
+  .card h3 .step{color:var(--gold);font-weight:800;margin-right:.35em}
+  .card.pink h3 .step{color:var(--pink)} .card.blue h3 .step{color:var(--blue)} .card.green h3 .step{color:var(--green)}
+  .card p,.card li{font-size:.88em;color:var(--ink-dim);line-height:1.45}
+  .card ul{margin-left:1.1em}
+  .card p b,.card li b{color:var(--navy)}
+  .strip{margin-top:1.2em;background:rgba(47,111,237,.08);border:1px solid rgba(47,111,237,.25);
+    border-radius:12px;padding:.75em 1.1em;font-size:.92em;line-height:1.5;color:var(--ink)}
+  .strip b{color:var(--blue)}
+  .strip.judge{background:rgba(227,179,65,.12);border-color:rgba(227,179,65,.45)} .strip.judge b{color:var(--gold)}
+  .strip.key{background:rgba(31,157,99,.1);border-color:rgba(31,157,99,.35)} .strip.key b{color:var(--green)}
+  .strip.warn{background:rgba(226,61,104,.09);border-color:rgba(226,61,104,.35)} .strip.warn b{color:var(--pink)}
+  .two-strips{display:grid;grid-template-columns:1fr 1fr;gap:.9em;margin-top:1.2em}
+  .two-strips .strip{margin-top:0}
+  .stack{display:flex;flex-direction:column;gap:.6em;margin-top:1.2em}
+  .stack .strip{margin-top:0}
+  table{width:100%;border-collapse:collapse;margin-top:.4em;font-size:.9em}
+  th{text-align:left;color:var(--gold);font-weight:700;padding:.5em .7em;border-bottom:2px solid rgba(227,179,65,.4)}
+  td{padding:.45em .7em;border-bottom:1px solid var(--hairline);color:var(--ink-dim);vertical-align:top;line-height:1.4}
+  td:first-child{color:var(--navy);font-weight:600}
+  td b{color:var(--navy)}
+  .agenda td:first-child{color:var(--gold);font-weight:700;width:6.5em;white-space:nowrap}
+  ul.big{margin:1em 0 0 1.2em;display:flex;flex-direction:column;gap:.55em;font-size:1.02em;line-height:1.5;color:var(--ink-dim)}
+  ul.big b{color:var(--navy)}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;
+    border:2px solid var(--gold);border-radius:50%;color:var(--gold);font-weight:700;margin-right:.6em;flex:none}
+  /* visual helpers (session 1) */
+  .bridge{display:grid;grid-template-columns:1fr auto 1fr;gap:.7em 1.4em;align-items:center;margin:0;max-width:46em}
+  .bridge .h{font-size:.78em;letter-spacing:.1em;font-weight:700;text-transform:uppercase;padding-bottom:.3em;border-bottom:2px solid rgba(227,179,65,.4)}
+  .bridge .h.l{color:var(--ink-dim)} .bridge .h.r{color:var(--gold)}
+  .bridge .b{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:.6em .9em;font-size:1.02em;font-weight:600;box-shadow:var(--shadow-sm);color:var(--navy)}
+  .bridge .b.r{border-color:rgba(227,179,65,.5)}
+  .bridge .arrow{color:var(--gold);font-size:1.3em;text-align:center}
+  .tree{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surface);border:1px solid var(--border);
+    border-radius:14px;padding:1.2em 1.5em;font-size:1.15em;line-height:1.9;margin:0;max-width:24em;box-shadow:var(--shadow-sm)}
+  .tree .f{color:var(--gold)} .tree .file{color:var(--ink-dim)} .tree .i{color:#9aa3c4}
+  .keys{display:flex;gap:1.2em;justify-content:center;margin:0;flex-wrap:wrap}
+  .keycap{background:var(--surface);border:1px solid var(--border);border-bottom-width:4px;border-bottom-color:var(--gold-bright);border-radius:12px;
+    padding:.8em 1em;text-align:center;min-width:7.2em;box-shadow:var(--shadow-sm)}
+  .keycap .k{font-size:1.35em;font-weight:800;color:var(--navy)}
+  .keycap .d{font-size:.82em;color:var(--ink-dim);margin-top:.35em}
+  .keycap.save{border-bottom-color:var(--green)} .keycap.save .k{color:var(--green)}
+  .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1em;margin:0;width:100%}
+  .three-col .col{border-radius:13px;padding:.95em 1.05em;border:1px solid;background:var(--surface);box-shadow:var(--shadow-sm)}
+  .col.cloud{border-color:rgba(47,111,237,.4)} .col.local{border-color:rgba(31,157,99,.4)} .col.nowhere{border-color:rgba(226,61,104,.4)}
+  .three-col h3{font-size:1.05em;margin-bottom:.5em}
+  .col.cloud h3{color:var(--blue)} .col.local h3{color:var(--green)} .col.nowhere h3{color:var(--pink)}
+  .three-col li{font-size:.86em;color:var(--ink-dim);line-height:1.5;margin-left:1.1em}
+  /* flow (portal guide) */
+  .flow{display:flex;align-items:center;gap:.5em;margin:0;flex-wrap:wrap}
+  .flow .step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7em .9em;font-size:.9em;font-weight:600;text-align:center;flex:1;min-width:8em;color:var(--navy);box-shadow:var(--shadow-sm)}
+  .flow .step span{display:block;color:var(--ink-dim);font-size:.78em;font-weight:400;margin-top:.2em}
+  .flow .arr{color:var(--gold);font-size:1.3em}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:2.5em}
+  .stat{background:var(--surface);padding:1.3em 1.4em;display:flex;flex-direction:column;gap:.2em}
+  .stat-value{font-size:1.9em;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.02em}
+  .stat-value span{color:var(--gold)}
+  .stat-label{font-size:.85em;color:var(--ink-dim);line-height:1.4}
+  .quick-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1em}
+  .quick-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.4em;box-shadow:var(--shadow-sm);text-decoration:none;color:inherit;display:block}
+  .quick-card h3{font-size:1.12em;color:var(--navy);margin-bottom:.35em}
+  .quick-card p{color:var(--ink-dim);font-size:.93em;line-height:1.5}
+  .quick-card .more{display:inline-block;margin-top:.8em;color:var(--gold);font-weight:700;font-size:.85em}
+  .ico-badge{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.4em;margin-bottom:.5em;background:rgba(227,179,65,.16)}
+  .ico-badge.blue{background:rgba(47,111,237,.12)} .ico-badge.green{background:rgba(31,157,99,.12)} .ico-badge.pink{background:rgba(226,61,104,.12)}
+  /* check grid (day 0) */
+  .check{display:grid;grid-template-columns:1fr 1fr;gap:.6em 1.6em;margin:0;font-size:1.05em;color:var(--ink-dim)}
+  .check div{padding:.2em 0}
+  .check b{color:var(--navy)}
+  /* footer chrome */
+  #bar{position:fixed;left:0;bottom:0;height:3px;background:var(--gold-bright);width:0;transition:width .2s;z-index:30}
+  #counter{position:fixed;right:14px;bottom:10px;font-size:12px;color:var(--ink-dim);z-index:30}
+  #hint{position:fixed;left:14px;bottom:8px;font-size:11px;color:#9aa3c4;z-index:30}
+  #notes{position:fixed;inset:auto 0 0 0;background:#0e1336;border-top:2px solid var(--gold-bright);
+    padding:1.1em 1.6em 1.4em;max-height:42%;overflow:auto;display:none;z-index:40}
+  #notes.show{display:block}
+  #notes h4{color:var(--gold-bright);font-size:.8em;letter-spacing:.14em;margin-bottom:.5em}
+  #notes-body{font-size:1.02em;line-height:1.6;color:#c2c9e6;max-width:60em}
+  @media print{.slide{display:flex;position:relative;page-break-after:always;width:100%;height:100vh}#bar,#counter,#hint,#notes{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  #deck-nav{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:8px;z-index:35}
+  #deck-nav button{background:var(--surface);border:1px solid var(--border);color:var(--ink);border-radius:9px;width:46px;height:36px;font-size:18px;line-height:1;cursor:pointer;box-shadow:var(--shadow-sm)}
+  #deck-nav button:hover{border-color:var(--gold)}
+  @media print{#deck-nav{display:none}}
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide img hero" style="--img:url('assets/s2/slide-1.svg')" data-notes="Welcome them back. Yesterday we made the filing cabinet visible. Today we go online — and the headline skill is verification: the internet hands you an answer instantly, and your job is to decide whether that answer is good enough or whether you go check the real source. Same brand, same flow: every block builds to a judgment call. Confirm everyone is on a free personal Google account before we start the email block.">
+  <div style="margin-top:1.2em">
+    <span class="weektag">ASCENT FOUNDATIONS · WEEKEND 1 <span class="sess">— Sunday</span></span>
+    <h1>Web, Search &amp; <br><span style="color:var(--gold)">Professional Email</span></h1>
+    <p class="lead">The internet answers instantly. Your real skill is deciding when that answer is enough — and when you go check the source.</p>
+    <div style="margin-top:1.6em">
+      <span class="pill solid">SESSION 2</span>
+      <span class="pill">ONLINE · 120 MIN</span>
+      <span class="pill">COMPETENCY: VERIFICATION</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · BIG IDEA -->
+<section class="slide" data-notes="This is the spine of the session. Say it slowly, then come back to it at every block. The AI panel and the search engine are fast and often right — but 'fast and often right' is a starting point, not a citation. The skill we're building is calibration: knowing when fast-and-good-enough is fine, and when you owe yourself a real source. Keep returning to this line.">
+  <span class="weektag">THE ONE BIG IDEA</span>
+  <p class="big-quote">The AI answer is a <span class="hl">starting point</span>,<br>not a <span class="hl">source</span>.</p>
+  <div class="strip key"><b>Why it matters:</b> the web hands you an answer in one second. Your value is judging whether that answer is good enough — or whether the stakes mean you go open the real source and check.</div>
+</section>
+
+<!-- 3 · AGENDA -->
+<section class="slide" data-notes="Two hours, six blocks summing to 120. The spine is the judgment checkpoint at 90–105 — the designer's note is explicit: if time runs short, trim the email lab to a self-check, never the panel-vs-source sort. The typing thread is still running (S2 of S1–4, target 25 WPM by S4): logged, not graded. Post the pre-work question in chat now — 'What does the padlock prove?' — and hold the answer for the next block.">
+  <h2>Today — 120 minutes</h2>
+  <table class="agenda">
+    <tr><td>0–10</td><td><b>Typing thread</b> (logged WPM, not graded) + S1 recap · post chat Q: <i>"What does the padlock prove?"</i></td></tr>
+    <tr><td>10–30</td><td>Search &amp; the web, instructor-led: <b>URL + HTTPS</b>, boolean operators, AI panel vs. links, fake buttons</td></tr>
+    <tr><td>30–50</td><td><b>Lab — search</b> (breakout pairs): run a query, compare panel vs. <b>two primary sources</b></td></tr>
+    <tr><td>50–70</td><td>Email, instructor-led: subject, To/CC/BCC, attachments, reply-all, <b>modern phishing</b></td></tr>
+    <tr><td>70–90</td><td><b>Lab — email</b> (individual): formal email + CC structure + <b>.zip</b> attachment</td></tr>
+    <tr><td>90–105</td><td><b>Judgment checkpoint</b> — sort 6 cards: panel enough vs. need a source ⟵ the spine</td></tr>
+    <tr><td>105–120</td><td><b>Assignment 2</b> brief (walk the rubric) + exit ticket</td></tr>
+  </table>
+  <div class="strip judge"><b>Judgment checkpoint:</b> When is the AI answer panel enough — and when do you still need a primary source?</div>
+</section>
+
+<!-- 4 · URL / HTTPS ANATOMY -->
+<section class="slide" data-notes="Resolve the chat question here. Read the URL left to right like an address: scheme tells you the protocol, the host is WHO you reached, the path is WHERE on their site, the query string is the SEARCH terms after the question mark. Then the big honest point about the padlock: HTTPS encrypts the trip and proves you actually reached THAT domain — nobody snooped, nobody swapped the page. It does NOT promise the site is honest, accurate, or safe. A scam site can have a perfect padlock. The lock is about the pipe, not the contents.">
+  <h2>Read a URL like an address 🔍</h2>
+  <div class="url-bar">
+    <span class="lock">🔒</span><span class="scheme">https://</span><span class="host">www.gov.uk</span><span class="path">/bank-accounts</span><span class="query">?age=16</span>
+  </div>
+  <div class="cards c2" style="flex:1;margin-top:0">
+    <div class="card green"><h3>🔒 What the padlock <i>does</i> promise</h3><ul>
+      <li><b>Encrypts transit</b> — nobody between you and the site can read or alter the page.</li>
+      <li><b>Proves the domain</b> — you really reached <code>gov.uk</code>, not an impostor in the middle.</li></ul></div>
+    <div class="card pink"><h3>🚫 What it does <i>NOT</i> promise</h3><ul>
+      <li>That the site is <b>honest</b>, <b>accurate</b>, or <b>safe</b>.</li>
+      <li>A scam site can have a <b>perfect padlock</b> — the lock is about the pipe, not the contents.</li></ul></div>
+  </div>
+  <div class="strip key"><b>scheme</b> (how) · <b>host</b> (who) · <b>path</b> (where on the site) · <b>query</b> (the search after <span class="op">?</span>) — and the lock secures the trip, not the truth.</div>
+</section>
+
+<!-- 5 · BOOLEAN SEARCH OPERATORS -->
+<section class="slide" data-notes="Demo these live on screen-share, slowly. The point is that a search box is a tool with controls — most people type a sentence and accept whatever comes back. Quotes lock an exact phrase. OR widens. site: restricts to authoritative domains. Minus drops noise. Then run the worked example as a build: start loose, watch it return forums and blogs, then add each operator and watch the results sharpen to government pages. Say the operators out loud as you type them.">
+  <h2>Search is a tool — drive it with operators</h2>
+  <div class="cards c3" style="flex:0;margin-top:.3em">
+    <div class="card"><div class="ico">➕</div><h3><span class="op">AND</span> / space</h3><p>Both terms must appear. Default between words.</p></div>
+    <div class="card blue"><div class="ico">🔀</div><h3><span class="op">OR</span></h3><p>Either term qualifies — widens the net. <code>(bank OR account)</code></p></div>
+    <div class="card green"><div class="ico">❝❞</div><h3><span class="op">"exact phrase"</span></h3><p>Locks word order. <code>"minimum age"</code>, not "age minimum".</p></div>
+    <div class="card orange"><div class="ico">🏛️</div><h3><span class="op">site:</span></h3><p>Restrict to a domain. <code>site:gov.*</code> = authoritative only.</p></div>
+    <div class="card pink"><div class="ico">➖</div><h3><span class="op">-minus</span></h3><p>Exclude noise. <code>-forum -reddit</code> drops opinion/aggregators.</p></div>
+    <div class="card"><div class="ico">🎯</div><h3>Worked example</h3><p>Task: official minimum age to open a bank account in your country.</p></div>
+  </div>
+  <div class="query-box"><span class="op">"minimum age"</span> (bank <span class="op">OR</span> account) <span class="op">site:</span>gov.* <span class="op">-forum -reddit</span></div>
+  <div class="strip key"><b>Watch it sharpen:</b> the panel gives one number fast; the actual gov page gives the number <i>plus</i> conditions (guardian co-sign, ID) the panel often drops — that dropped caveat is a real discrepancy.</div>
+</section>
+
+<!-- 6 · AI PANEL vs PRIMARY SOURCES (judgment checkpoint preview) -->
+<section class="slide" data-notes="This is the calibration that the whole session pivots on, previewed before the lab. An AI answer panel sitting above the blue links is a SYNTHESIS — it stitched together sources and may be stale, may have dropped a caveat, may be confidently wrong. Don't make the panel the villain: it's genuinely useful for cheap, stable facts. The rule is stakes-driven, and it ties straight back to Session 1's 'what's the worst week this file could have?' — here it's 'what's the worst that happens if this answer is wrong?' Run the answer key as a poll: read each scenario, let them call it, then reveal.">
+  <h2>When is the panel enough? <span style="font-size:.6em;color:var(--ink-dim)">The judgment</span></h2>
+  <div class="cards c2" style="flex:0;margin-top:.2em">
+    <div class="card green"><div class="ico">✅</div><h3>Panel is enough when…</h3><ul>
+      <li>Spelling of a word — <span class="verdict-yes">stable, low-stakes</span></li>
+      <li>How photosynthesis works — settled, no decision rides on it</li>
+      <li>Quick gist of a news event — orientation only</li></ul></div>
+    <div class="card pink"><div class="ico">📑</div><h3>Need a primary source when…</h3><ul>
+      <li>Current tuition fee — <span class="verdict-no">time-sensitive, exact figure</span></li>
+      <li>A medication dose for a real person — safety-critical, never a panel</li>
+      <li>A statistic going in your assignment — anything quoted/graded must trace to a source</li></ul></div>
+  </div>
+  <div class="strip judge"><b>The rule:</b> cheap-and-stable → the panel is fine. Stakes-or-quoted → open the source. Same question as S1: <i>"what's the worst that happens if this is wrong?"</i></div>
+</section>
+
+<!-- 7 · EMAIL MECHANICS -->
+<section class="slide" data-notes="Now flip to communication. Subject line first: specific and scannable beats clever — the recipient should know the topic and whether to act from the subject alone. Then the three address fields, framed by ROLE not by habit: To is the action owner, CC is informed-but-not-actioned, BCC shields a recipient's address from the others. Reply-all is a discipline question: helps when everyone genuinely needs the update, spam when it's a thank-you to forty people. Attachments: announce them in the body and compress multiple files into one .zip. Give the concrete Google path on screen — Gmail compose, attach, and Drive's right-click compress isn't a thing, so build the .zip locally then attach.">
+  <h2>Professional email — who goes where 📧</h2>
+  <div class="cards c3" style="flex:0;margin-top:.3em">
+    <div class="card"><div class="ico">📌</div><h3>Subject</h3><p>Specific + scannable: <i>"Assignment 2 findings — search discrepancy (B. Ahmed)"</i>. Topic + whether to act, at a glance.</p></div>
+    <div class="card green"><div class="ico">🎯</div><h3>To</h3><p>The <b>action owner</b> — the person who must do something with this.</p></div>
+    <div class="card blue"><div class="ico">👀</div><h3>CC</h3><p><b>Informed, not actioned</b> — they need visibility, not a task.</p></div>
+    <div class="card orange"><div class="ico">🕶️</div><h3>BCC</h3><p><b>Privacy-protected</b> — recipients can't see this address. Use for large or private lists.</p></div>
+    <div class="card pink"><div class="ico">↩️</div><h3>Reply-all</h3><p>Helps when <b>everyone</b> needs the update. Noise when it's a thank-you to the whole list.</p></div>
+    <div class="card"><div class="ico">📎</div><h3>Attach + .zip</h3><p>Compress multiple files into one <code>.zip</code> and <b>announce it in the body</b> so it's expected.</p></div>
+  </div>
+  <div class="strip key"><b>Google steps:</b> select files on your computer → right-click → <b>Compress</b> to make the <code>.zip</code> → in Gmail, <b>Compose</b> → paperclip <b>Attach</b> (or insert from Drive) → name the file in the body before sending.</div>
+</section>
+
+<!-- 8 · PHISHING -->
+<section class="slide" data-notes="The single most important update of the session: AI writes flawless phishing now, so the old advice — 'look for bad spelling and grammar' — is DEAD. Don't teach it. Teach the three tells that survive perfect grammar. One: read the sender's actual address, not the friendly display name — paypa1 with a digit one, micros0ft with a zero. Two: hover the link WITHOUT clicking and read the real destination in the status bar; if the visible text and the real URL disagree, stop. Demo this slowly on screen-share — phone-fluent students have almost never hovered a link. Three: unexpected urgency or an out-of-band ask — 'verify in 2 hours or lose access,' a sudden request for credentials, payment, or gift cards. Legitimate orgs don't pressure-rush logins by email.">
+  <span class="weektag" style="color:var(--pink);border-color:var(--pink);background:rgba(229,71,107,.16)">GRAMMAR IS NO LONGER A TELL ⚠️</span>
+  <h2>Spotting AI-written phishing</h2>
+  <div class="cards c3" style="flex:1">
+    <div class="card pink"><div class="ico">✉️</div><h3><span class="step">1</span>Sender domain</h3><p>Display name says <b>"School IT"</b> — the real address is <code>it@sch00l-helpdesk.co</code>. <b>Read the address, not the name.</b> Watch for <code>paypa1.com</code>, <code>micros0ft-support.net</code>.</p></div>
+    <div class="card pink"><div class="ico">🖱️</div><h3><span class="step">2</span>Hover the link</h3><p>Hover, <b>don't click</b>. The visible text says the portal; the real destination is a stranger. <b>Mismatch = stop.</b></p></div>
+    <div class="card pink"><div class="ico">⏰</div><h3><span class="step">3</span>Unexpected urgency</h3><p>"Verify in 2 hours or lose access." Sudden asks for credentials, payment, or gift cards. <b>Legit orgs don't pressure-rush logins.</b></p></div>
+  </div>
+  <div class="strip warn"><b>The trap:</b> AI now writes perfect English. Don't grade emails on grammar — grade them on <b>domain, hover target, and urgency</b>. Those three still work.</div>
+</section>
+
+<!-- 9 · ASSIGNMENT 2 + GRADING BAR -->
+<section class="slide" data-notes="Walk the rubric openly — no secrets, this is the exact checklist you grade with. The task: run a boolean search on an approved question, compare the AI panel against TWO primary sources, name ONE specific discrepancy, then email the findings formally with a CC structure and a working .zip. Read the four levels aloud and dwell on the line between Emerging and Proficient — that line is LATERAL READING: opening two genuine sources and naming a real, specific discrepancy, not just trusting the first claim. Mastery adds authority reasoning: which source to trust and why. And the pass gate is non-negotiable — strong verification with a broken or sloppy email does NOT pass. The .zip must open.">
+  <h2>Assignment 2 — search, verify, email</h2>
+  <div class="cards c2" style="flex:0;margin-top:.2em">
+    <div class="card"><h3>The task</h3><ul>
+      <li>Run a <b>boolean search</b> on an approved question</li>
+      <li>Compare the <b>AI panel</b> vs. <b>two primary sources</b></li>
+      <li>Name <b>one specific discrepancy</b> (a number, date, or dropped caveat)</li>
+      <li>Email the findings <b>formally</b> — CC structure + a working <code>.zip</code></li></ul>
+      <p style="margin-top:.4em">Competency scored: <b>Verification</b>.</p></div>
+    <div class="card green"><h3>Grading bar <span style="font-size:.7em;color:var(--ink-dim)">(best-evidence, 4 levels)</span></h3>
+      <table style="margin-top:.2em;font-size:.82em">
+        <tr><td><b>0</b> Missing</td><td>No search or no comparison; no email/attachment.</td></tr>
+        <tr><td><b>1</b> Emerging</td><td>Checks the panel only; first claim at face value; no real discrepancy.</td></tr>
+        <tr><td><b>2</b> Proficient</td><td><b>Lateral reading</b> — two genuine sources, names a real specific discrepancy.</td></tr>
+        <tr><td><b>3</b> Mastery</td><td>+ traces <b>which source is more authoritative and why</b>, and which to trust.</td></tr>
+      </table></div>
+  </div>
+  <div class="strip warn"><b>Pass gate:</b> professional email quality is required — correct CC logic, subject/greeting/sign-off, and a <b>working .zip that opens</b>. Strong verification with a broken email does <i>not</i> pass.</div>
+</section>
+
+<!-- 10 · WHERE THIS LEADS (career beat) -->
+<section class="slide" data-notes="Lift their eyes from the assignment to the career. Everything today — driving a search, telling a synthesis from a source, naming a discrepancy, writing a clean professional email — is not a school exercise. It is the literal daily core of the data and AI jobs the Ascent Tracks lead to. A Data analyst lives in 'where did this number come from and can I trust it.' An AI operations person spends the day judging whether a model's confident answer is actually right. Web and software people verify docs and report bugs precisely in writing. Designers research and cite. Good research plus verification is the habit underneath all four tracks. Name the tracks and let them see the line from today to the job.">
+  <h2>Where this leads — the Ascent Tracks</h2>
+  <div class="cards c2" style="flex:0;margin-top:.2em">
+    <div class="card blue"><div class="ico">📊</div><h3>Data &amp; Analytics</h3><p>The job <i>is</i> "where did this number come from, and can I trust it?" — sourcing and discrepancy-spotting, all day.</p></div>
+    <div class="card green"><div class="ico">🤖</div><h3>AI Operations</h3><p>Judging whether a model's confident answer is actually right — exactly the panel-vs-source call you made today.</p></div>
+    <div class="card orange"><div class="ico">💻</div><h3>Web &amp; Software</h3><p>Reading docs critically, verifying claims, and writing precise, professional reports and bug notes.</p></div>
+    <div class="card pink"><div class="ico">🎨</div><h3>Design</h3><p>Research, cite, and communicate clearly — decisions backed by real sources, not vibes.</p></div>
+  </div>
+  <div class="strip key"><b>The throughline:</b> good research + verification is the <i>daily core</i> of Data and AI roles. You started building that habit today.</div>
+</section>
+
+<!-- 11 · MODEL EMAIL -->
+<section class="slide" data-notes="Make the standard concrete before they go write theirs. Read this model aloud and point at each part: the subject is specific and scannable; To is the instructor — the action owner who must grade it; CC is the study partner — informed because they shared a source, but not actioned; no BCC because there's nothing private to shield. The .zip is named in the body so the recipient expects it. Tell them to self-check their lab email against this exact structure before they 'send' to the portal drop. This is the bar.">
+  <h2>The model email <span style="font-size:.6em;color:var(--ink-dim)">— self-check against this</span></h2>
+  <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:1.4em;align-items:start;flex:1">
+    <div class="card" style="font-size:.92em">
+      <p style="color:var(--gold);font-weight:700">Subject:</p><p style="color:var(--ink);margin-bottom:.5em">Assignment 2 findings — boolean search discrepancy (B. Ahmed)</p>
+      <p><b style="color:var(--green)">To:</b> instructor@school.edu &nbsp; <b style="color:var(--blue)">CC:</b> study-partner@school.edu</p>
+      <p style="margin-top:.5em;color:var(--ink-dim);line-height:1.5">Dear Mr. Khan,<br>Please find my Assignment 2 findings attached. I ran the boolean query, compared the AI panel against two primary sources, and noted one discrepancy where the panel omitted the guardian co-sign requirement.<br>I've CC'd Sara, my study partner, so she has visibility on the source we shared.<br>The full notes and screenshots are in the attached compressed file: <code style="color:var(--gold)">assignment2-findings.zip</code>.<br>Thank you,<br>Bilal Ahmed</p>
+    </div>
+    <ul class="big" style="margin:.2em 0 0 1.2em;font-size:.95em">
+      <li><span class="num">1</span><b>To = action owner</b> (instructor grades it).</li>
+      <li><span class="num">2</span><b>CC = informed</b> (partner shared a source, no task).</li>
+      <li><span class="num">3</span><b>No BCC</b> — nothing private to shield.</li>
+      <li><span class="num">4</span><b>.zip named in the body</b> — the recipient expects it.</li>
+    </ul>
+  </div>
+  <div class="strip key"><b>Subject + greeting + sign-off + correct CC logic + a working .zip</b> = the pass bar. Match this before you submit.</div>
+</section>
+
+<!-- 12 · CLOSE -->
+<section class="slide" data-notes="Close on the calibration win. They learned to drive a search, tell a synthesis from a source, spot phishing that survives perfect grammar, and write a professional email with a working attachment. Exit ticket in chat: 'Name one thing the padlock does NOT promise.' Good answers: it doesn't promise the site is honest, accurate, or safe. Confirm the Assignment 2 due date and the submit link on /learn. Tease forward: next weekend we start building — Session 4 opens the 'Think Like a Builder' thread.">
+  <span class="weektag">EXIT TICKET</span>
+  <p class="big-quote">Name one thing the padlock<br>does <span class="hl">NOT</span> promise.</p>
+  <div class="strip key"><b>Today you learned to verify, not just to look.</b> Finish Assignment 2 this week — search, compare two sources, name the discrepancy, email it with a working .zip. Next weekend: we start <i>building</i>.</div>
+</section>
+
+<div id="bar"></div>
+<div id="counter"></div>
+<div id="hint">← → navigate · N speaker notes · P print/PDF</div>
+<div id="notes"><h4>SPEAKER NOTES</h4><div id="notes-body"></div></div>
+<div id="deck-nav"><button onclick="show(i-1)" aria-label="Previous">‹</button><button onclick="show(i+1)" aria-label="Next">›</button></div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  const notes=document.getElementById('notes'),notesBody=document.getElementById('notes-body');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    document.getElementById('counter').textContent=(i+1)+' / '+slides.length;
+    document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+    notesBody.textContent=slides[i].dataset.notes||'(no notes)';
+    location.hash=i+1;
+  }
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(i+1)}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(i-1)}
+    else if(e.key==='Home')show(0);
+    else if(e.key==='End')show(slides.length-1);
+    else if(e.key.toLowerCase()==='n')notes.classList.toggle('show');
+    else if(e.key.toLowerCase()==='p')print();
+  });
+  show(parseInt(location.hash.slice(1))-1||0);
+</script>
+</body>
+</html>

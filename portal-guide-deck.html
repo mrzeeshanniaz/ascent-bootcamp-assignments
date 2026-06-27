@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ascent Portal — Guide</title>
+<style>
+  :root{
+    --navy:#101733; --navy-soft:#1c2550;
+    --gold:#b07d10; --gold-bright:#e3b341; --gold-dim:#8a6a17;
+    --bg:#f6f8fd; --bg-accent:#eef2fb; --surface:#ffffff; --card:#ffffff;
+    --ink:#131a36; --ink-dim:#586089;
+    --pink:#e23d68; --orange:#e3742f; --blue:#2f6fed; --green:#1f9d63;
+    --border:rgba(16,23,51,.10); --hairline:rgba(16,23,51,.07);
+    --shadow-sm:0 1px 2px rgba(16,23,51,.05), 0 1px 3px rgba(16,23,51,.06);
+    --shadow-md:0 8px 24px rgba(16,23,51,.08), 0 2px 6px rgba(16,23,51,.05);
+    --shadow-lg:0 24px 60px rgba(16,23,51,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#e9edf6;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink)}
+  .slide{
+    display:none;position:absolute;inset:0;margin:auto;
+    width:min(100vw,177.78vh);height:min(56.25vw,100vh);
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.12) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.07) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+    padding:4% 5%;flex-direction:column;justify-content:center;overflow:hidden;-webkit-font-smoothing:antialiased;
+  }
+  .slide.active{display:flex}
+  /* light decks: clean surfaces, no dark photo backgrounds (the --img is ignored) */
+  .slide.img,.slide.img.hero{
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.14) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.08) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+  }
+  .pill{display:inline-block;border:1.5px solid var(--gold);color:var(--gold);
+    border-radius:999px;padding:.45em 1.1em;font-size:.85em;font-weight:700;
+    letter-spacing:.05em;margin-right:.6em;margin-bottom:.5em;white-space:nowrap}
+  .pill.solid{background:var(--gold-bright);color:#2a1f02;border-color:var(--gold-bright)}
+  .weektag{display:inline-block;background:rgba(227,179,65,.16);border:1px solid rgba(227,179,65,.4);
+    color:var(--gold);border-radius:8px;padding:.3em .95em;font-size:.75em;font-weight:700;
+    letter-spacing:.1em;margin-bottom:.7em;align-self:flex-start;text-transform:uppercase}
+  .weektag .sess{color:var(--ink-dim);letter-spacing:.04em;font-weight:600}
+  h1{font-size:3.1em;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:.4em;color:var(--navy)}
+  h2{font-size:1.9em;font-weight:800;line-height:1.15;letter-spacing:-.01em;margin-bottom:.35em;color:var(--navy)}
+  .lead{font-size:1.15em;color:var(--ink-dim);line-height:1.55;max-width:38em}
+  .big-quote{font-size:2.1em;font-weight:800;line-height:1.25;letter-spacing:-.01em;max-width:20em;margin:0;color:var(--navy)}
+  .big-quote .hl{color:var(--gold)}
+  .section-kicker{display:block;color:var(--gold);font-size:.78em;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.45em}
+  .cards{display:grid;gap:1.1em;margin-top:1.2em;align-content:center}
+  .cards.c3{grid-template-columns:repeat(3,1fr)}
+  .cards.c2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:1.05em 1.15em;display:flex;flex-direction:column;box-shadow:var(--shadow-sm);
+    border-top:3px solid var(--gold-bright)}
+  .card.pink{border-top-color:var(--pink)} .card.orange{border-top-color:var(--orange)}
+  .card.blue{border-top-color:var(--blue)} .card.green{border-top-color:var(--green)}
+  .card .ico{font-size:1.9em;margin-bottom:.25em;line-height:1}
+  .card h3{font-size:1.05em;margin-bottom:.45em;color:var(--navy)}
+  .card h3 .step{color:var(--gold);font-weight:800;margin-right:.35em}
+  .card.pink h3 .step{color:var(--pink)} .card.blue h3 .step{color:var(--blue)} .card.green h3 .step{color:var(--green)}
+  .card p,.card li{font-size:.88em;color:var(--ink-dim);line-height:1.45}
+  .card ul{margin-left:1.1em}
+  .card p b,.card li b{color:var(--navy)}
+  .strip{margin-top:1.2em;background:rgba(47,111,237,.08);border:1px solid rgba(47,111,237,.25);
+    border-radius:12px;padding:.75em 1.1em;font-size:.92em;line-height:1.5;color:var(--ink)}
+  .strip b{color:var(--blue)}
+  .strip.judge{background:rgba(227,179,65,.12);border-color:rgba(227,179,65,.45)} .strip.judge b{color:var(--gold)}
+  .strip.key{background:rgba(31,157,99,.1);border-color:rgba(31,157,99,.35)} .strip.key b{color:var(--green)}
+  .strip.warn{background:rgba(226,61,104,.09);border-color:rgba(226,61,104,.35)} .strip.warn b{color:var(--pink)}
+  .two-strips{display:grid;grid-template-columns:1fr 1fr;gap:.9em;margin-top:1.2em}
+  .two-strips .strip{margin-top:0}
+  .stack{display:flex;flex-direction:column;gap:.6em;margin-top:1.2em}
+  .stack .strip{margin-top:0}
+  table{width:100%;border-collapse:collapse;margin-top:.4em;font-size:.9em}
+  th{text-align:left;color:var(--gold);font-weight:700;padding:.5em .7em;border-bottom:2px solid rgba(227,179,65,.4)}
+  td{padding:.45em .7em;border-bottom:1px solid var(--hairline);color:var(--ink-dim);vertical-align:top;line-height:1.4}
+  td:first-child{color:var(--navy);font-weight:600}
+  td b{color:var(--navy)}
+  .agenda td:first-child{color:var(--gold);font-weight:700;width:6.5em;white-space:nowrap}
+  ul.big{margin:1em 0 0 1.2em;display:flex;flex-direction:column;gap:.55em;font-size:1.02em;line-height:1.5;color:var(--ink-dim)}
+  ul.big b{color:var(--navy)}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;
+    border:2px solid var(--gold);border-radius:50%;color:var(--gold);font-weight:700;margin-right:.6em;flex:none}
+  /* visual helpers (session 1) */
+  .bridge{display:grid;grid-template-columns:1fr auto 1fr;gap:.7em 1.4em;align-items:center;margin:0;max-width:46em}
+  .bridge .h{font-size:.78em;letter-spacing:.1em;font-weight:700;text-transform:uppercase;padding-bottom:.3em;border-bottom:2px solid rgba(227,179,65,.4)}
+  .bridge .h.l{color:var(--ink-dim)} .bridge .h.r{color:var(--gold)}
+  .bridge .b{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:.6em .9em;font-size:1.02em;font-weight:600;box-shadow:var(--shadow-sm);color:var(--navy)}
+  .bridge .b.r{border-color:rgba(227,179,65,.5)}
+  .bridge .arrow{color:var(--gold);font-size:1.3em;text-align:center}
+  .tree{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surface);border:1px solid var(--border);
+    border-radius:14px;padding:1.2em 1.5em;font-size:1.15em;line-height:1.9;margin:0;max-width:24em;box-shadow:var(--shadow-sm)}
+  .tree .f{color:var(--gold)} .tree .file{color:var(--ink-dim)} .tree .i{color:#9aa3c4}
+  .keys{display:flex;gap:1.2em;justify-content:center;margin:0;flex-wrap:wrap}
+  .keycap{background:var(--surface);border:1px solid var(--border);border-bottom-width:4px;border-bottom-color:var(--gold-bright);border-radius:12px;
+    padding:.8em 1em;text-align:center;min-width:7.2em;box-shadow:var(--shadow-sm)}
+  .keycap .k{font-size:1.35em;font-weight:800;color:var(--navy)}
+  .keycap .d{font-size:.82em;color:var(--ink-dim);margin-top:.35em}
+  .keycap.save{border-bottom-color:var(--green)} .keycap.save .k{color:var(--green)}
+  .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1em;margin:0;width:100%}
+  .three-col .col{border-radius:13px;padding:.95em 1.05em;border:1px solid;background:var(--surface);box-shadow:var(--shadow-sm)}
+  .col.cloud{border-color:rgba(47,111,237,.4)} .col.local{border-color:rgba(31,157,99,.4)} .col.nowhere{border-color:rgba(226,61,104,.4)}
+  .three-col h3{font-size:1.05em;margin-bottom:.5em}
+  .col.cloud h3{color:var(--blue)} .col.local h3{color:var(--green)} .col.nowhere h3{color:var(--pink)}
+  .three-col li{font-size:.86em;color:var(--ink-dim);line-height:1.5;margin-left:1.1em}
+  /* flow (portal guide) */
+  .flow{display:flex;align-items:center;gap:.5em;margin:0;flex-wrap:wrap}
+  .flow .step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7em .9em;font-size:.9em;font-weight:600;text-align:center;flex:1;min-width:8em;color:var(--navy);box-shadow:var(--shadow-sm)}
+  .flow .step span{display:block;color:var(--ink-dim);font-size:.78em;font-weight:400;margin-top:.2em}
+  .flow .arr{color:var(--gold);font-size:1.3em}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:2.5em}
+  .stat{background:var(--surface);padding:1.3em 1.4em;display:flex;flex-direction:column;gap:.2em}
+  .stat-value{font-size:1.9em;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.02em}
+  .stat-value span{color:var(--gold)}
+  .stat-label{font-size:.85em;color:var(--ink-dim);line-height:1.4}
+  .quick-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1em}
+  .quick-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.4em;box-shadow:var(--shadow-sm);text-decoration:none;color:inherit;display:block}
+  .quick-card h3{font-size:1.12em;color:var(--navy);margin-bottom:.35em}
+  .quick-card p{color:var(--ink-dim);font-size:.93em;line-height:1.5}
+  .quick-card .more{display:inline-block;margin-top:.8em;color:var(--gold);font-weight:700;font-size:.85em}
+  .ico-badge{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.4em;margin-bottom:.5em;background:rgba(227,179,65,.16)}
+  .ico-badge.blue{background:rgba(47,111,237,.12)} .ico-badge.green{background:rgba(31,157,99,.12)} .ico-badge.pink{background:rgba(226,61,104,.12)}
+  /* check grid (day 0) */
+  .check{display:grid;grid-template-columns:1fr 1fr;gap:.6em 1.6em;margin:0;font-size:1.05em;color:var(--ink-dim)}
+  .check div{padding:.2em 0}
+  .check b{color:var(--navy)}
+  /* footer chrome */
+  #bar{position:fixed;left:0;bottom:0;height:3px;background:var(--gold-bright);width:0;transition:width .2s;z-index:30}
+  #counter{position:fixed;right:14px;bottom:10px;font-size:12px;color:var(--ink-dim);z-index:30}
+  #hint{position:fixed;left:14px;bottom:8px;font-size:11px;color:#9aa3c4;z-index:30}
+  #notes{position:fixed;inset:auto 0 0 0;background:#0e1336;border-top:2px solid var(--gold-bright);
+    padding:1.1em 1.6em 1.4em;max-height:42%;overflow:auto;display:none;z-index:40}
+  #notes.show{display:block}
+  #notes h4{color:var(--gold-bright);font-size:.8em;letter-spacing:.14em;margin-bottom:.5em}
+  #notes-body{font-size:1.02em;line-height:1.6;color:#c2c9e6;max-width:60em}
+  @media print{.slide{display:flex;position:relative;page-break-after:always;width:100%;height:100vh}#bar,#counter,#hint,#notes{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  #deck-nav{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:8px;z-index:35}
+  #deck-nav button{background:var(--surface);border:1px solid var(--border);color:var(--ink);border-radius:9px;width:46px;height:36px;font-size:18px;line-height:1;cursor:pointer;box-shadow:var(--shadow-sm)}
+  #deck-nav button:hover{border-color:var(--gold)}
+  @media print{#deck-nav{display:none}}
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide img hero" style="--img:url('assets/portal/slide-1.svg')" data-notes="A guided tour of the Ascent Portal for stakeholders. Goal: by the end, the reader knows what the portal is, what's inside it, and who uses each part.">
+  <span class="weektag">ASCENT · PRODUCT GUIDE</span>
+  <h1>The Ascent Portal</h1>
+  <p class="lead">The web app that runs Foundations end to end — sign-up, learning, scoring, and career direction. What it is, what's in it, and how it's used.</p>
+  <div style="margin-top:1.3em"><span class="pill solid">FOR STAKEHOLDERS</span><span class="pill">PLAIN-LANGUAGE OVERVIEW</span></div>
+</section>
+
+<!-- 2 · WHAT IT IS -->
+<section class="slide" data-notes="The whole product in one idea. A student signs up, gets onboarded and assessed, works through 8 sessions on their personal portal page, is scored against a skills rubric, and is then pointed toward a tech career. Staff manage it all from secure dashboards.">
+  <span class="weektag">IN ONE IDEA</span>
+  <p class="big-quote">One web app takes a student from <span class="hl">sign-up</span> → through <span class="hl">8 sessions</span> of real work → to a <span class="hl">tech career direction</span> — and gives staff the tools to run it.</p>
+  <div class="strip key"><b>Two sides:</b> a personal page for each student, and secure dashboards for facilitators and the program manager.</div>
+</section>
+
+<!-- 3 · THE JOURNEY -->
+<section class="slide" data-notes="The five stages of the student journey, left to right. Everything in the portal supports one of these stages.">
+  <h2>The student journey</h2>
+  <div class="flow">
+    <div class="step">Sign up<span>readiness + consent</span></div>
+    <div class="arr">→</div>
+    <div class="step">Onboarding<span>setup + warm-up</span></div>
+    <div class="arr">→</div>
+    <div class="step">Learner Portal<span>8 sessions of work</span></div>
+    <div class="arr">→</div>
+    <div class="step">Scoring<span>skills rubric</span></div>
+    <div class="arr">→</div>
+    <div class="step">Compass<span>career direction</span></div>
+  </div>
+  <div class="strip"><b>Foundations → Compass → Tracks → Mentors</b> — the portal owns the first two and feeds the rest.</div>
+</section>
+
+<!-- 4 · AT A GLANCE -->
+<section class="slide" data-notes="A map of the areas and who uses each. The learner portal is the heart; the dashboards are how staff run it.">
+  <h2>What's in the portal</h2>
+  <table>
+    <thead><tr><th>Area</th><th>Who uses it</th><th>What it's for</th></tr></thead>
+    <tbody>
+      <tr><td>Marketing pages</td><td>Public</td><td>Explain the program; lead to sign-up</td></tr>
+      <tr><td>Sign-up</td><td>Prospective student</td><td>Readiness check + enrolment + consents</td></tr>
+      <tr><td>Onboarding + warm-up</td><td>New student</td><td>Day-0 setup + a 10-min diagnostic</td></tr>
+      <tr><td>Learner Portal</td><td>Enrolled student</td><td>Sessions, submissions, feedback, progress</td></tr>
+      <tr><td>Facilitator dashboard</td><td>Teaching staff</td><td>Roster, scoring, cohort resources</td></tr>
+      <tr><td>Admin dashboard</td><td>Program manager</td><td>Cohorts, enrolments, headline stats</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 5 · SIGN-UP -->
+<section class="slide" data-notes="The front door. The readiness check matters most: it flags access problems (no computer / poor internet) BEFORE the course starts, so staff can fix them.">
+  <h2>Sign-up</h2>
+  <div class="cards c3" style="flex:1">
+    <div class="card"><div class="ico">✅</div><h3>Readiness check</h3><p>Confirms a computer + reliable internet. No? Flagged <b>"needs help"</b> so staff resolve access before Session 1.</p></div>
+    <div class="card blue"><div class="ico">📝</div><h3>Enrolment</h3><p>Name, contact — plus a <b>guardian</b> for under-18s. Minimal data only.</p></div>
+    <div class="card green"><div class="ico">🔏</div><h3>Consents</h3><p>Explicit opt-ins for <b>data, messaging, and guardian</b> consent — all recorded.</p></div>
+  </div>
+</section>
+
+<!-- 6 · ONBOARDING + WARM-UP -->
+<section class="slide" data-notes="Day 0, before Session 1. Three setup missions get them online with a free Google account. The 10-minute warm-up is explicitly NOT a test — it just tags readiness for pairing and pacing, never as a score.">
+  <h2>Onboarding &amp; the warm-up (Day 0)</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card"><div class="ico">📨</div><h3>3 setup missions</h3><p>Power on → get online + <b>create a free Google account</b> → join a practice video call. Sent before Session 1.</p></div>
+    <div class="card blue"><div class="ico">⏱️</div><h3>10-minute warm-up</h3><p>Four quick tasks (mouse, typing, find-a-file, search). <b>Not a test, not graded.</b></p></div>
+  </div>
+  <div class="strip key"><b>Outcome:</b> each student is tagged <b>Bridge</b> or <b>Foundation</b> + a baseline typing speed — used only for pairing &amp; pacing, never shown as a ranking.</div>
+</section>
+
+<!-- 7 · LEARNER PORTAL (the heart) -->
+<section class="slide" data-notes="The heart of the product. One personal link (the link IS the key — no password). This is where students spend the course. Stress: best-evidence scoring means it only goes UP, and they submit by pasting a Google Drive link, not uploading.">
+  <span class="weektag">THE HEART OF IT</span>
+  <h2>The Learner Portal — one personal link</h2>
+  <div class="cards c3" style="flex:1">
+    <div class="card"><div class="ico">📚</div><h3>8 session cards</h3><p>Live session, walkthrough &amp; sandbox links, plus the assignment.</p></div>
+    <div class="card blue"><div class="ico">📤</div><h3>Submit work</h3><p>Paste a <b>Google Drive link</b>; resubmit anytime to improve.</p></div>
+    <div class="card green"><div class="ico">📈</div><h3>Mastery profile</h3><p>Best level per skill — <b>only ever goes up.</b></p></div>
+    <div class="card"><div class="ico">💬</div><h3>Feedback</h3><p>Facilitator notes appear on each submission.</p></div>
+    <div class="card orange"><div class="ico">✍️</div><h3>AI-use policy</h3><p>Read &amp; sign once; applies to the capstone.</p></div>
+    <div class="card pink"><div class="ico">🧭</div><h3>Compass</h3><p>Unlocks their free career direction.</p></div>
+  </div>
+</section>
+
+<!-- 8 · FACILITATOR DASHBOARD -->
+<section class="slide" data-notes="The teaching staff's control room — password-protected. The roster shows everything at a glance; clicking a name opens scoring. Cohort resources is where staff paste the session links students then see.">
+  <h2>Facilitator dashboard <span style="font-size:.55em;color:var(--ink-dim)">· password-protected</span></h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card"><div class="ico">👥</div><h3>Roster</h3><p>Every learner: cohort, tag, typing speed, progress (e.g. 5/8), consents, and a link to their portal. A <b>"needs help" alert</b> flags access issues.</p></div>
+    <div class="card green"><div class="ico">🎯</div><h3>Scoring &amp; feedback</h3><p>Per submission, pick a skill + level (0–3) + a note. <b>Best-evidence, never averaged.</b> Set a learner's pace (extension / support).</p></div>
+    <div class="card blue"><div class="ico">🔗</div><h3>Cohort resources</h3><p>Paste each session's <b>live / walkthrough / sandbox</b> links — they appear on every learner's portal.</p></div>
+    <div class="card orange"><div class="ico">📊</div><h3>Compass insight</h3><p>Completions, debrief requests, and which <b>Tracks are in demand.</b></p></div>
+  </div>
+</section>
+
+<!-- 9 · ADMIN DASHBOARD -->
+<section class="slide" data-notes="The program manager's overview — password-protected. Headline numbers at the top, then full control of cohorts and enrolments. Safety check: a cohort with learners can't be deleted until they're reassigned.">
+  <h2>Admin dashboard <span style="font-size:.55em;color:var(--ink-dim)">· password-protected</span></h2>
+  <div class="cards c3" style="flex:1">
+    <div class="card"><div class="ico">📊</div><h3>Headline stats</h3><p>Enrolments, enrolled vs. needs-help, cohorts, submissions, Compass completions.</p></div>
+    <div class="card blue"><div class="ico">🗂️</div><h3>Cohorts</h3><p>Create, rename, set start date, open/close enrolment, delete. <b>Can't delete a cohort with learners</b> (safety check).</p></div>
+    <div class="card green"><div class="ico">👤</div><h3>Enrolments</h3><p>Change status, move between cohorts, or remove a learner.</p></div>
+  </div>
+</section>
+
+<!-- 10 · COMPASS -->
+<section class="slide" data-notes="The payoff after Foundations. Compass reads the student's actual skills profile (not a personality quiz) plus a short interest check, and recommends a path using their own work as evidence. Feeds the next stage — Tracks.">
+  <h2>Compass — where it leads</h2>
+  <p class="lead">After Foundations, Compass reads what the student <i>actually did</i> — their skills profile — plus a short interest check, and recommends a tech path in plain language, using their own work as evidence.</p>
+  <div class="cards c3" style="flex:0;margin-top:1em">
+    <div class="card blue"><h3>A primary path</h3><p>Plus one to explore — Data, Web/Software, AI Ops, or Design.</p></div>
+    <div class="card green"><h3>A real conversation</h3><p>They can request a one-to-one debrief.</p></div>
+    <div class="card"><h3>On to Tracks</h3><p>The chosen path's skill course comes next.</p></div>
+  </div>
+</section>
+
+<!-- 11 · ACCESS, PRIVACY & STATUS -->
+<section class="slide" data-notes="For the manager's peace of mind: students need no password (private personal link); staff areas are password-protected and not indexed. Data is minimal with recorded consents. Be honest about what's planned next.">
+  <h2>Access, privacy &amp; status</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card green"><div class="ico">🔐</div><h3>Access &amp; privacy</h3><ul><li>Students: a <b>private personal link</b> — no account to manage</li><li>Staff areas: <b>password-protected</b>, not search-indexed</li><li><b>Minimal data</b> + recorded consents; minors need guardian consent</li></ul></div>
+    <div class="card orange"><div class="ico">🛠️</div><h3>Live vs. coming next</h3><ul><li><b>Live:</b> sign-up, onboarding + diagnostic, learner portal, scoring, admin, Compass</li><li><b>Planned:</b> auto-sending onboarding messages; serving teaching decks in-app</li></ul></div>
+  </div>
+</section>
+
+<!-- 12 · CLOSE -->
+<section class="slide" data-notes="Offer a live demo — the fastest way to make it concrete. A test account walks the whole journey in a few minutes.">
+  <span class="weektag">IN SHORT</span>
+  <p class="big-quote">One app runs the whole climb — <span class="hl">sign-up to career direction</span> — for students and the staff who guide them.</p>
+  <div class="strip key"><b>Want to see it?</b> The full journey can be demoed live on a test account in a few minutes.</div>
+</section>
+
+<div id="bar"></div>
+<div id="counter"></div>
+<div id="hint">← → navigate · N speaker notes · P print/PDF</div>
+<div id="notes"><h4>SPEAKER NOTES</h4><div id="notes-body"></div></div>
+<div id="deck-nav"><button onclick="show(i-1)" aria-label="Previous">‹</button><button onclick="show(i+1)" aria-label="Next">›</button></div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  const notes=document.getElementById('notes'),notesBody=document.getElementById('notes-body');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    document.getElementById('counter').textContent=(i+1)+' / '+slides.length;
+    document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+    notesBody.textContent=slides[i].dataset.notes||'(no notes)';
+    location.hash=i+1;
+  }
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(i+1)}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(i-1)}
+    else if(e.key==='Home')show(0);
+    else if(e.key==='End')show(slides.length-1);
+    else if(e.key.toLowerCase()==='n')notes.classList.toggle('show');
+    else if(e.key.toLowerCase()==='p')print();
+  });
+  show(parseInt(location.hash.slice(1))-1||0);
+</script>
+</body>
+</html>

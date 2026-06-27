@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 6 — AI Literacy: Delegation, Verification &amp; Integrity · Ascent Foundations</title>
+<style>
+  :root{
+    --navy:#101733; --navy-soft:#1c2550;
+    --gold:#b07d10; --gold-bright:#e3b341; --gold-dim:#8a6a17;
+    --bg:#f6f8fd; --bg-accent:#eef2fb; --surface:#ffffff; --card:#ffffff;
+    --ink:#131a36; --ink-dim:#586089;
+    --pink:#e23d68; --orange:#e3742f; --blue:#2f6fed; --green:#1f9d63;
+    --border:rgba(16,23,51,.10); --hairline:rgba(16,23,51,.07);
+    --shadow-sm:0 1px 2px rgba(16,23,51,.05), 0 1px 3px rgba(16,23,51,.06);
+    --shadow-md:0 8px 24px rgba(16,23,51,.08), 0 2px 6px rgba(16,23,51,.05);
+    --shadow-lg:0 24px 60px rgba(16,23,51,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#e9edf6;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink)}
+  .slide{
+    display:none;position:absolute;inset:0;margin:auto;
+    width:min(100vw,177.78vh);height:min(56.25vw,100vh);
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.12) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.07) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+    padding:4% 5%;flex-direction:column;justify-content:center;overflow:hidden;-webkit-font-smoothing:antialiased;
+  }
+  .slide.active{display:flex}
+  /* light decks: clean surfaces, no dark photo backgrounds (the --img is ignored) */
+  .slide.img,.slide.img.hero{
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.14) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.08) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+  }
+  .pill{display:inline-block;border:1.5px solid var(--gold);color:var(--gold);
+    border-radius:999px;padding:.45em 1.1em;font-size:.85em;font-weight:700;
+    letter-spacing:.05em;margin-right:.6em;margin-bottom:.5em;white-space:nowrap}
+  .pill.solid{background:var(--gold-bright);color:#2a1f02;border-color:var(--gold-bright)}
+  .weektag{display:inline-block;background:rgba(227,179,65,.16);border:1px solid rgba(227,179,65,.4);
+    color:var(--gold);border-radius:8px;padding:.3em .95em;font-size:.75em;font-weight:700;
+    letter-spacing:.1em;margin-bottom:.7em;align-self:flex-start;text-transform:uppercase}
+  .weektag .sess{color:var(--ink-dim);letter-spacing:.04em;font-weight:600}
+  h1{font-size:3.1em;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:.4em;color:var(--navy)}
+  h2{font-size:1.9em;font-weight:800;line-height:1.15;letter-spacing:-.01em;margin-bottom:.35em;color:var(--navy)}
+  .lead{font-size:1.15em;color:var(--ink-dim);line-height:1.55;max-width:38em}
+  .big-quote{font-size:2.1em;font-weight:800;line-height:1.25;letter-spacing:-.01em;max-width:20em;margin:0;color:var(--navy)}
+  .big-quote .hl{color:var(--gold)}
+  .section-kicker{display:block;color:var(--gold);font-size:.78em;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.45em}
+  .cards{display:grid;gap:1.1em;margin-top:1.2em;align-content:center}
+  .cards.c3{grid-template-columns:repeat(3,1fr)}
+  .cards.c2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:1.05em 1.15em;display:flex;flex-direction:column;box-shadow:var(--shadow-sm);
+    border-top:3px solid var(--gold-bright)}
+  .card.pink{border-top-color:var(--pink)} .card.orange{border-top-color:var(--orange)}
+  .card.blue{border-top-color:var(--blue)} .card.green{border-top-color:var(--green)}
+  .card .ico{font-size:1.9em;margin-bottom:.25em;line-height:1}
+  .card h3{font-size:1.05em;margin-bottom:.45em;color:var(--navy)}
+  .card h3 .step{color:var(--gold);font-weight:800;margin-right:.35em}
+  .card.pink h3 .step{color:var(--pink)} .card.blue h3 .step{color:var(--blue)} .card.green h3 .step{color:var(--green)}
+  .card p,.card li{font-size:.88em;color:var(--ink-dim);line-height:1.45}
+  .card ul{margin-left:1.1em}
+  .card p b,.card li b{color:var(--navy)}
+  .strip{margin-top:1.2em;background:rgba(47,111,237,.08);border:1px solid rgba(47,111,237,.25);
+    border-radius:12px;padding:.75em 1.1em;font-size:.92em;line-height:1.5;color:var(--ink)}
+  .strip b{color:var(--blue)}
+  .strip.judge{background:rgba(227,179,65,.12);border-color:rgba(227,179,65,.45)} .strip.judge b{color:var(--gold)}
+  .strip.key{background:rgba(31,157,99,.1);border-color:rgba(31,157,99,.35)} .strip.key b{color:var(--green)}
+  .strip.warn{background:rgba(226,61,104,.09);border-color:rgba(226,61,104,.35)} .strip.warn b{color:var(--pink)}
+  .two-strips{display:grid;grid-template-columns:1fr 1fr;gap:.9em;margin-top:1.2em}
+  .two-strips .strip{margin-top:0}
+  .stack{display:flex;flex-direction:column;gap:.6em;margin-top:1.2em}
+  .stack .strip{margin-top:0}
+  table{width:100%;border-collapse:collapse;margin-top:.4em;font-size:.9em}
+  th{text-align:left;color:var(--gold);font-weight:700;padding:.5em .7em;border-bottom:2px solid rgba(227,179,65,.4)}
+  td{padding:.45em .7em;border-bottom:1px solid var(--hairline);color:var(--ink-dim);vertical-align:top;line-height:1.4}
+  td:first-child{color:var(--navy);font-weight:600}
+  td b{color:var(--navy)}
+  .agenda td:first-child{color:var(--gold);font-weight:700;width:6.5em;white-space:nowrap}
+  ul.big{margin:1em 0 0 1.2em;display:flex;flex-direction:column;gap:.55em;font-size:1.02em;line-height:1.5;color:var(--ink-dim)}
+  ul.big b{color:var(--navy)}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;
+    border:2px solid var(--gold);border-radius:50%;color:var(--gold);font-weight:700;margin-right:.6em;flex:none}
+  /* visual helpers (session 1) */
+  .bridge{display:grid;grid-template-columns:1fr auto 1fr;gap:.7em 1.4em;align-items:center;margin:0;max-width:46em}
+  .bridge .h{font-size:.78em;letter-spacing:.1em;font-weight:700;text-transform:uppercase;padding-bottom:.3em;border-bottom:2px solid rgba(227,179,65,.4)}
+  .bridge .h.l{color:var(--ink-dim)} .bridge .h.r{color:var(--gold)}
+  .bridge .b{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:.6em .9em;font-size:1.02em;font-weight:600;box-shadow:var(--shadow-sm);color:var(--navy)}
+  .bridge .b.r{border-color:rgba(227,179,65,.5)}
+  .bridge .arrow{color:var(--gold);font-size:1.3em;text-align:center}
+  .tree{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surface);border:1px solid var(--border);
+    border-radius:14px;padding:1.2em 1.5em;font-size:1.15em;line-height:1.9;margin:0;max-width:24em;box-shadow:var(--shadow-sm)}
+  .tree .f{color:var(--gold)} .tree .file{color:var(--ink-dim)} .tree .i{color:#9aa3c4}
+  .keys{display:flex;gap:1.2em;justify-content:center;margin:0;flex-wrap:wrap}
+  .keycap{background:var(--surface);border:1px solid var(--border);border-bottom-width:4px;border-bottom-color:var(--gold-bright);border-radius:12px;
+    padding:.8em 1em;text-align:center;min-width:7.2em;box-shadow:var(--shadow-sm)}
+  .keycap .k{font-size:1.35em;font-weight:800;color:var(--navy)}
+  .keycap .d{font-size:.82em;color:var(--ink-dim);margin-top:.35em}
+  .keycap.save{border-bottom-color:var(--green)} .keycap.save .k{color:var(--green)}
+  .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1em;margin:0;width:100%}
+  .three-col .col{border-radius:13px;padding:.95em 1.05em;border:1px solid;background:var(--surface);box-shadow:var(--shadow-sm)}
+  .col.cloud{border-color:rgba(47,111,237,.4)} .col.local{border-color:rgba(31,157,99,.4)} .col.nowhere{border-color:rgba(226,61,104,.4)}
+  .three-col h3{font-size:1.05em;margin-bottom:.5em}
+  .col.cloud h3{color:var(--blue)} .col.local h3{color:var(--green)} .col.nowhere h3{color:var(--pink)}
+  .three-col li{font-size:.86em;color:var(--ink-dim);line-height:1.5;margin-left:1.1em}
+  /* flow (portal guide) */
+  .flow{display:flex;align-items:center;gap:.5em;margin:0;flex-wrap:wrap}
+  .flow .step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7em .9em;font-size:.9em;font-weight:600;text-align:center;flex:1;min-width:8em;color:var(--navy);box-shadow:var(--shadow-sm)}
+  .flow .step span{display:block;color:var(--ink-dim);font-size:.78em;font-weight:400;margin-top:.2em}
+  .flow .arr{color:var(--gold);font-size:1.3em}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:2.5em}
+  .stat{background:var(--surface);padding:1.3em 1.4em;display:flex;flex-direction:column;gap:.2em}
+  .stat-value{font-size:1.9em;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.02em}
+  .stat-value span{color:var(--gold)}
+  .stat-label{font-size:.85em;color:var(--ink-dim);line-height:1.4}
+  .quick-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1em}
+  .quick-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.4em;box-shadow:var(--shadow-sm);text-decoration:none;color:inherit;display:block}
+  .quick-card h3{font-size:1.12em;color:var(--navy);margin-bottom:.35em}
+  .quick-card p{color:var(--ink-dim);font-size:.93em;line-height:1.5}
+  .quick-card .more{display:inline-block;margin-top:.8em;color:var(--gold);font-weight:700;font-size:.85em}
+  .ico-badge{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.4em;margin-bottom:.5em;background:rgba(227,179,65,.16)}
+  .ico-badge.blue{background:rgba(47,111,237,.12)} .ico-badge.green{background:rgba(31,157,99,.12)} .ico-badge.pink{background:rgba(226,61,104,.12)}
+  /* check grid (day 0) */
+  .check{display:grid;grid-template-columns:1fr 1fr;gap:.6em 1.6em;margin:0;font-size:1.05em;color:var(--ink-dim)}
+  .check div{padding:.2em 0}
+  .check b{color:var(--navy)}
+  /* footer chrome */
+  #bar{position:fixed;left:0;bottom:0;height:3px;background:var(--gold-bright);width:0;transition:width .2s;z-index:30}
+  #counter{position:fixed;right:14px;bottom:10px;font-size:12px;color:var(--ink-dim);z-index:30}
+  #hint{position:fixed;left:14px;bottom:8px;font-size:11px;color:#9aa3c4;z-index:30}
+  #notes{position:fixed;inset:auto 0 0 0;background:#0e1336;border-top:2px solid var(--gold-bright);
+    padding:1.1em 1.6em 1.4em;max-height:42%;overflow:auto;display:none;z-index:40}
+  #notes.show{display:block}
+  #notes h4{color:var(--gold-bright);font-size:.8em;letter-spacing:.14em;margin-bottom:.5em}
+  #notes-body{font-size:1.02em;line-height:1.6;color:#c2c9e6;max-width:60em}
+  @media print{.slide{display:flex;position:relative;page-break-after:always;width:100%;height:100vh}#bar,#counter,#hint,#notes{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  #deck-nav{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:8px;z-index:35}
+  #deck-nav button{background:var(--surface);border:1px solid var(--border);color:var(--ink);border-radius:9px;width:46px;height:36px;font-size:18px;line-height:1;cursor:pointer;box-shadow:var(--shadow-sm)}
+  #deck-nav button:hover{border-color:var(--gold)}
+  @media print{#deck-nav{display:none}}
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide img hero" style="--img:url('assets/s6/slide-1.svg')" data-notes="Welcome them back for the last session of Weekend 3. This is a big one. Two things make today different from every session so far: first, they SIGN the AI-use policy — a real commitment, timestamped in the portal. Second, the capstone build window opens — the topic they chose back at Session 4 becomes a real project due at Session 8. Frame the whole session in one breath: AI is the most powerful tool we'll hand you, and the most dangerous one to trust blindly. Today is about using it like a builder, not a believer.">
+  <div style="margin-top:1.2em">
+    <span class="weektag">ASCENT FOUNDATIONS · WEEKEND 3 <span class="sess">— Sunday</span></span>
+    <h1>AI Literacy<br><span style="color:var(--gold)">Delegation, Verification &amp; Integrity</span></h1>
+    <p class="lead">AI can do an enormous amount of your work — fast. The skill that separates a builder from a believer is knowing what to hand off, and how to check what comes back.</p>
+    <div style="margin-top:1.6em">
+      <span class="pill solid">SESSION 6</span>
+      <span class="pill">ONLINE · 120 MIN</span>
+      <span class="pill">COMPETENCY: AI LITERACY</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · BIG IDEA -->
+<section class="slide" data-notes="This is the spine of the whole session — say it slowly and come back to it at every block. An intern is fast, eager, and genuinely useful — and will sometimes hand you something confidently wrong with a straight face. You wouldn't fire the intern, and you wouldn't blindly publish their work either. You'd check it. That's the entire relationship with AI in one sentence. Tell them: by the end of today, 'verify' will be a reflex, not a chore.">
+  <span class="weektag">THE ONE BIG IDEA</span>
+  <p class="big-quote">AI is a <span class="hl">confident intern</span> — fast, useful, and sometimes wrong.<br>Your job is to <span class="hl">verify</span>.</p>
+  <div class="strip key"><b>Why it matters:</b> fluency is <i>not</i> evidence. A smooth, specific, certain answer can still be false — so the builder's move is always the same: delegate, then check against an independent source.</div>
+</section>
+
+<!-- 3 · AGENDA -->
+<section class="slide" data-notes="Two hours, time-blocked. The spine is trust → check → caught: we open with a planted wrong answer and leave it UNRESOLVED on screen all session, then catch it together in the verification block. Protect three things if you run short: the hook (0–10), the verification catch (65–85), and the signing (85–100). Everything else can compress. Point out the judgment checkpoint up front so they're listening for it.">
+  <h2>Today — 120 minutes</h2>
+  <table class="agenda">
+    <tr><td>0–10</td><td>Recap S5 + <b>the hook</b>: a confident AI answer with a planted error — trust it or check it? (left OPEN)</td></tr>
+    <tr><td>10–30</td><td>What an LLM <b>actually</b> is — token prediction, hallucination, context limits, training cutoff</td></tr>
+    <tr><td>30–45</td><td>The <b>4 Prompt Pillars</b> — weak → strong rewrite, live</td></tr>
+    <tr><td>45–65</td><td><b>Agentic AI</b> — "AI suggested" vs "AI acted" · scope before you approve</td></tr>
+    <tr><td>65–85</td><td><b>The verification habit</b> — catch the planted hallucination together ⟵ the heart</td></tr>
+    <tr><td>85–100</td><td><b>Integrity &amp; disclosure</b> — walk the policy, <b>SIGN it</b>, the privacy rule</td></tr>
+    <tr><td>100–115</td><td>Assignment 6 + <b>capstone build window opens</b></td></tr>
+    <tr><td>115–120</td><td>Exit ticket + close</td></tr>
+  </table>
+  <div class="strip judge"><b>Judgment checkpoint:</b> When do you delegate to AI, when do you verify, and when do you do it entirely yourself?</div>
+</section>
+
+<!-- 4 · WHAT AN LLM ACTUALLY IS -->
+<section class="slide" data-notes="Demystify the magic. The single most useful mental model: an LLM does not look things up — it predicts the next most likely word, over and over, until it has a fluent answer. That one fact explains every failure mode on this slide. Do the live demo: ask the assistant about something past its training cutoff (a recent event) and watch it guess with total confidence. Don't shame the tool — celebrate that they can now SEE why it fails. Knowing the mechanism is what makes them un-foolable.">
+  <h2>What an LLM actually is</h2>
+  <p class="lead">It completes likely text. It does <b>not</b> recall facts or look things up — unless a tool is attached. That one truth explains every way it fails.</p>
+  <div class="cards c2" style="flex:1">
+    <div class="card blue"><div class="ico">🎲</div><h3>Token prediction, not memory</h3><p>It picks the <b>next likely word</b>, again and again. Sounds like knowing — it's sophisticated autocomplete.</p></div>
+    <div class="card pink"><div class="ico">🪄</div><h3>Hallucination</h3><p>When the likely-sounding answer is simply <b>wrong</b>. Fluent and specific is <i>not</i> the same as correct.</p></div>
+    <div class="card orange"><div class="ico">📏</div><h3>Context limits</h3><p>It only "remembers" a window of the chat. In a long conversation it <b>forgets</b> what you said earlier.</p></div>
+    <div class="card green"><div class="ico">📅</div><h3>Training cutoff</h3><p>It knows nothing after its training date — and <b>no live access</b> unless a search tool is wired in.</p></div>
+  </div>
+  <div class="strip"><b>Live demo:</b> ask it something past its cutoff and watch it answer confidently anyway. Confidence is the tell, not the proof.</div>
+</section>
+
+<!-- 5 · THE 4 PROMPT PILLARS -->
+<section class="slide" data-notes="This is the highest-leverage skill of the day — a better prompt does the thinking for the model. Put the weak prompt on screen and rebuild it live, pillar by pillar, letting the class call out each part. The punchline: same model, dramatically better output, because the prompt carried its weight. For the Bridge learners, hand out the 4-Pillars card as a fill-in template so writing a long prompt isn't a typing test. Save the before/after — they'll reuse this pattern forever.">
+  <h2>The 4 Prompt Pillars</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.4em;align-items:center;flex:1">
+    <div>
+      <ul class="big" style="margin-left:0;list-style:none">
+        <li><span class="num">R</span><b>Role</b> — who the AI should be. <i>"You are a science tutor for grade-11 students."</i></li>
+        <li><span class="num">T</span><b>Task</b> — the exact job. <i>"Explain the greenhouse effect in 3 short paragraphs."</i></li>
+        <li><span class="num">C</span><b>Context</b> — what it must know. <i>"We've covered photosynthesis, not atmospheric chemistry; no equations."</i></li>
+        <li><span class="num">O</span><b>Output format</b> — the shape. <i>"Plain language, one analogy, end with two review questions."</i></li>
+      </ul>
+    </div>
+    <div class="cards c2" style="margin-top:0;grid-template-columns:1fr">
+      <div class="card pink"><h3>❌ Weak prompt</h3><p>"write about climate change"</p><p style="margin-top:.4em;font-size:.8em">Vague in, vague out — the model has to guess everything.</p></div>
+      <div class="card green"><h3>✅ Strong prompt</h3><p>Role + Task + Context + Output, stacked.</p><p style="margin-top:.4em;font-size:.8em">Same model, far better answer — <b>the prompt did the thinking.</b></p></div>
+    </div>
+  </div>
+  <div class="strip key"><b>The rewrite move:</b> if the output is bad, the prompt was thin. Add the missing pillar — don't just hit regenerate.</div>
+</section>
+
+<!-- 6 · AGENTIC AI -->
+<section class="slide" data-notes="Step up the stakes. So far AI has handed us drafts. Agentic AI takes actions — it can browse, book, buy, file, send. Walk the study-room scenario: 'book a room for the group Friday.' Before you approve anything, SCOPE the delegation — what may it touch, what is off-limits? Then show the review-before-approve gate. Hammer the one line: 'AI suggested' is a draft you still own; 'AI acted' means something changed in the world. The rule of thumb: if money moves, a message sends, or something becomes public — a human approves first.">
+  <h2>Agentic AI — when the intern can press buttons</h2>
+  <p class="lead">Some assistants don't just <i>suggest</i> — they <b>act</b>: browse, book, buy, file, send. The moment AI can change the world, you scope it and you gate it.</p>
+  <table>
+    <tr><th>Action</th><th>AI suggested</th><th>AI acted</th><th>Approve first?</th></tr>
+    <tr><td>Draft an email</td><td>Shows you draft text</td><td>Sends the email</td><td><b>Yes</b> — before sending</td></tr>
+    <tr><td>Find a study room</td><td>Lists open rooms</td><td>Books the room</td><td><b>Yes</b> — before booking</td></tr>
+    <tr><td>Research a topic</td><td>Summarizes sources</td><td>Posts it publicly</td><td><b>Yes</b> — before posting</td></tr>
+    <tr><td>Buy supplies</td><td>Recommends an item</td><td>Places the order</td><td><b>Yes</b> — money moves</td></tr>
+  </table>
+  <div class="strip warn"><b>Scope before you approve:</b> "AI suggested" is a draft you still own; "AI acted" means something changed in the world — money, a message, a public post.</div>
+</section>
+
+<!-- 7 · THE VERIFICATION HABIT (the heart) -->
+<section class="slide" data-notes="THE EMOTIONAL CORE of the session. Now go back to the hook you left OPEN all session. The rule: every AI output gets checked against ONE independent source. Model it on the cutoff answer from block 2, then send students to find a source that confirms or disagrees on the planted claim. The room catches it together — the source disagrees on both the date and the person. Cross out OPEN, write CAUGHT, and name how. The lesson is NOT 'AI is bad' — it's that the disproving source is the proof, not the confidence. Then walk the judgment checkpoint: delegate / verify / do-it-yourself.">
+  <span class="weektag" style="color:var(--green);border-color:var(--green);background:rgba(63,185,138,.16)">THE HEART OF THE SESSION ♥</span>
+  <h2>The verification habit — fluency is not evidence</h2>
+  <p class="lead">The rule for every AI output: <b>check it against one independent source.</b> We go back to the hook — and catch the planted hallucination together.</p>
+  <div class="cards c3" style="flex:1">
+    <div class="card pink"><div class="ico">🪄</div><h3><span class="step">1</span>The planted claim</h3><p>Confident, specific, <b>wrong</b>. e.g. "the first email was sent in 1965 by Vint Cerf." Smooth — and false.</p></div>
+    <div class="card blue"><div class="ico">🔎</div><h3><span class="step">2</span>One independent source</h3><p>Open a reference that doesn't come from the same answer. It <b>disagrees</b> on the date <i>and</i> the person.</p></div>
+    <div class="card green"><div class="ico">✅</div><h3><span class="step">3</span>Caught</h3><p>OPEN → <b>CAUGHT</b>. The source is the proof. Name how you knew — that's the whole skill.</p></div>
+  </div>
+  <div class="strip judge"><b>Judgment checkpoint:</b> <b>Delegate</b> low-stakes, easily-checked work · <b>Verify</b> anything you'll submit, share, or act on · <b>Do it yourself</b> when the doing <i>is</i> the learning (or the data is private).</div>
+</section>
+
+<!-- 8 · INTEGRITY & DISCLOSURE + SIGN -->
+<section class="slide" data-notes="This is the safeguarding core. Walk the AI-use policy by task type — three tiers: allowed-without-disclosure, allowed-with-disclosure, never-allowed. Then students SIGN it NOW via the /learn portal sign action — not chat, not email; the portal timestamps it. Do not move on until every student shows signed. Then the privacy rule, said concretely: never paste personal, family, or third-party private data into a public AI tool — real names, home addresses, ID numbers, phone numbers, photos of people, private messages, anyone's secrets. Tie it straight back to Week 1's 'nowhere' cards.">
+  <h2>Integrity &amp; disclosure — then sign</h2>
+  <div class="three-col">
+    <div class="col local"><h3>✅ Allowed — no disclosure</h3><ul><li>Brainstorming ideas</li><li>Debugging / explaining a concept</li></ul><p style="font-size:.82em;margin-top:.5em;color:var(--green)">A learning aid — you reproduce the understanding</p></div>
+    <div class="col cloud"><h3>📝 Allowed — with disclosure</h3><ul><li>Drafting prose you'll submit</li><li>Summarizing sources (still verify + cite)</li></ul><p style="font-size:.82em;margin-top:.5em;color:var(--blue)">The words aren't fully yours — say so</p></div>
+    <div class="col nowhere"><h3>🚫 Never allowed</h3><ul><li>Exams / graded assessments</li><li>Feedback on a classmate (third-party data)</li></ul><p style="font-size:.82em;margin-top:.5em;color:var(--pink)">Defeats the measure · breaks privacy</p></div>
+  </div>
+  <div class="strip warn"><b>The privacy rule:</b> never paste personal, family, or third-party private data into a public AI tool — names, addresses, ID numbers, phone numbers, photos, private messages. <b>Sign the policy now on /learn.</b></div>
+</section>
+
+<!-- 9 · THINK LIKE A BUILDER -->
+<section class="slide" data-notes="The dedicated Think Like a Builder thread slide — give it real weight. Connect today to everything else: delegating to AI is just DECOMPOSITION, the same skill from the problem-solving thread. A builder breaks a big task into scoped sub-tasks, hands the right pieces to the right tool, then VERIFIES each piece coming back — exactly like debugging code one function at a time. You don't approve the whole black box; you check the parts. That's why a builder out-uses a believer: same tool, but they decompose and they verify.">
+  <span class="weektag" style="color:var(--gold)">THINK LIKE A BUILDER</span>
+  <h2>Delegating to AI is decomposition</h2>
+  <div class="bridge">
+    <div class="h l">Builder's move</div><div></div><div class="h r">With AI</div>
+    <div class="b">🧩 Break the big task into parts</div><div class="arrow">→</div><div class="b r">Scope each sub-task before handing it off</div>
+    <div class="b">🎯 Hand each part to the right tool</div><div class="arrow">→</div><div class="b r">A 4-Pillar prompt per piece</div>
+    <div class="b">🐞 Test each part on the way back</div><div class="arrow">→</div><div class="b r">Verify each output like debugging</div>
+  </div>
+  <div class="strip key"><b>Problem-solving competency:</b> a builder doesn't approve the black box — they decompose it into checkable pieces and verify each one. Same tool, better result.</div>
+</section>
+
+<!-- 10 · ASSIGNMENT 6 + GRADING BAR -->
+<section class="slide" data-notes="Brief the do-it-twice task: pick one small researchable question and answer it two ways — fully manual, then AI-assisted under the disclosure policy. Submit both outputs plus a half-page comparison: where AI saved time, where it was wrong, what you had to verify, and the source you checked against. Be loud about this: we grade the VERIFICATION TRAIL, not whether the prose 'sounds like AI.' No AI-detector tools — they're unreliable and they punish honest disclosure. Show them the exact 0–3 bar so there are no secrets. Fast finishers: red-team the model and document the prompt that broke it.">
+  <h2>Assignment 6 — one research task, done twice</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card"><h3>The do-it-twice task</h3><ul><li>Pick one small researchable question</li><li><b>(1) Manual</b> — your own searching and reading</li><li><b>(2) AI-assisted</b> — a 4-Pillar prompt, then verify</li><li>Submit <b>both outputs</b> + a <b>half-page comparison</b>: where AI saved time, where it was wrong, what you verified + the source</li><li><b>Disclose</b> your AI use per the signed policy</li></ul></div>
+    <div class="card green"><h3>Grading bar — AI Literacy <span style="font-size:.7em;color:var(--ink-dim)">(0–3)</span></h3>
+      <table style="margin-top:.1em">
+        <tr><td>0 · Missing</td><td>Pastes AI output unread; no verification; no disclosure</td></tr>
+        <tr><td>1 · Emerging</td><td>4-Pillar prompt present, but no independent verification</td></tr>
+        <tr><td>2 · Proficient</td><td>4-Pillar prompt + verifies a claim vs. an independent source + discloses</td></tr>
+        <tr><td>3 · Mastery</td><td>Proficient + scopes an agentic delegation + catches a hallucination &amp; documents the source</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="strip"><b>We grade the verification trail, not the prose</b> — no AI-detector tools, ever. Honest disclosure is rewarded, not punished.</div>
+</section>
+
+<!-- 11 · CAPSTONE BUILD WINDOW OPENS -->
+<section class="slide" data-notes="Big moment — the capstone build window OPENS. Remind each student by name of the topic they chose back at Session 4; that personal recall matters, so come prepared with the list. The deliverable is due at Session 8. Walk what to assemble between now and then: the structure, the verified research, the writing, and an honest AI-use disclosure log built right in. This is where every competency converges. One housekeeping flag, said calmly: a simulated phishing test runs once before Session 8 — stay alert, it's a drill, not a trick to fear.">
+  <span class="weektag" style="color:var(--gold)">CAPSTONE — BUILD WINDOW OPEN</span>
+  <h2>Your Session-4 topic becomes a project</h2>
+  <p class="lead">The build window is <b>open now</b> — your capstone is due at <b>Session 8</b>. Use everything: decompose it, research it, verify it, disclose your AI use.</p>
+  <div class="cards c3" style="flex:1">
+    <div class="card blue"><div class="ico">🧱</div><h3><span class="step">1</span>Structure first</h3><p>Outline your capstone on <b>your topic from Session 4</b>. Three levels, named for future-you.</p></div>
+    <div class="card green"><div class="ico">🔎</div><h3><span class="step">2</span>Verified research</h3><p>4-Pillar prompts to draft and gather — then <b>check each claim</b> against an independent source.</p></div>
+    <div class="card orange"><div class="ico">📋</div><h3><span class="step">3</span>Disclosure log</h3><p>Note where AI helped and what you verified. The <b>trail</b> is part of the work.</p></div>
+  </div>
+  <div class="strip warn"><b>Heads up:</b> a <b>simulated phishing test</b> runs once before Session 8 — it's a drill. Stay alert; don't panic.</div>
+</section>
+
+<!-- 12 · WHERE THIS LEADS -->
+<section class="slide" data-notes="The career beat — connect today's habit to real futures. AI fluency and the verification reflex are the exact skills behind the AI Operations track: people whose whole job is delegating to AI and checking what comes back, at scale. Name all four tracks so everyone sees their lane. The throughline: every track now runs on someone who can use AI without being fooled by it — you're building the most transferable skill in the program.">
+  <span class="weektag">WHERE THIS LEADS</span>
+  <h2>This habit is a career</h2>
+  <p class="lead">Delegating well and verifying ruthlessly isn't just a school skill — it's the core of an entire track, and an edge in every other one.</p>
+  <div class="cards c2" style="flex:1">
+    <div class="card gold"><h3>🤖 AI Operations</h3><p>Delegate to AI and verify the output <b>at scale</b> — exactly today's skill, as a job. This is where AI fluency leads most directly.</p></div>
+    <div class="card blue"><h3>💻 Software &amp; Web</h3><p>Build with AI as a pair-programmer — and <b>debug what it writes</b> instead of trusting it.</p></div>
+    <div class="card green"><h3>📊 Data &amp; Analytics</h3><p>AI speeds the analysis; <b>your verification</b> keeps the numbers honest.</p></div>
+    <div class="card orange"><h3>🎨 Digital Media &amp; Content</h3><p>AI drafts fast; <b>disclosure and judgment</b> keep the work yours and trustworthy.</p></div>
+  </div>
+  <div class="strip key"><b>Four Tracks, one through-line:</b> every future now runs on someone who can use AI without being fooled by it.</div>
+</section>
+
+<!-- 13 · CLOSE -->
+<section class="slide" data-notes="End on the through-line of the session: the moment a confident answer turned out wrong, and they caught it. That feeling is the whole point. Run the exit ticket in chat — make them name all three categories. Confirm Assignment 6 is due this week and the submit link is on /learn, and that the capstone build window is open. Tomorrow nothing — this closes Weekend 3. Next time: Session 7. Send them off as builders.">
+  <span class="weektag">EXIT TICKET</span>
+  <p class="big-quote">Name one task you'd <span class="hl">delegate</span> to AI, one you'd <span class="hl">verify</span>, and one you'd do <span class="hl">entirely yourself</span> — and why.</p>
+  <div class="strip key"><b>You caught a confident answer being wrong today — that reflex is the skill.</b> Sign the policy, start Assignment 6, and open your capstone. The intern is fast; you're the one who checks.</div>
+</section>
+
+<div id="bar"></div>
+<div id="counter"></div>
+<div id="hint">← → navigate · N speaker notes · P print/PDF</div>
+<div id="notes"><h4>SPEAKER NOTES</h4><div id="notes-body"></div></div>
+<div id="deck-nav"><button onclick="show(i-1)" aria-label="Previous">‹</button><button onclick="show(i+1)" aria-label="Next">›</button></div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  const notes=document.getElementById('notes'),notesBody=document.getElementById('notes-body');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    document.getElementById('counter').textContent=(i+1)+' / '+slides.length;
+    document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+    notesBody.textContent=slides[i].dataset.notes||'(no notes)';
+    location.hash=i+1;
+  }
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(i+1)}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(i-1)}
+    else if(e.key==='Home')show(0);
+    else if(e.key==='End')show(slides.length-1);
+    else if(e.key.toLowerCase()==='n')notes.classList.toggle('show');
+    else if(e.key.toLowerCase()==='p')print();
+  });
+  show(parseInt(location.hash.slice(1))-1||0);
+</script>
+</body>
+</html>

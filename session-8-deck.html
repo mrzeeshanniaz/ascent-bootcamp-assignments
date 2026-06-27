@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 8 — Security, Identity &amp; Integrated Capstone · Ascent Foundations</title>
+<style>
+  :root{
+    --navy:#101733; --navy-soft:#1c2550;
+    --gold:#b07d10; --gold-bright:#e3b341; --gold-dim:#8a6a17;
+    --bg:#f6f8fd; --bg-accent:#eef2fb; --surface:#ffffff; --card:#ffffff;
+    --ink:#131a36; --ink-dim:#586089;
+    --pink:#e23d68; --orange:#e3742f; --blue:#2f6fed; --green:#1f9d63;
+    --border:rgba(16,23,51,.10); --hairline:rgba(16,23,51,.07);
+    --shadow-sm:0 1px 2px rgba(16,23,51,.05), 0 1px 3px rgba(16,23,51,.06);
+    --shadow-md:0 8px 24px rgba(16,23,51,.08), 0 2px 6px rgba(16,23,51,.05);
+    --shadow-lg:0 24px 60px rgba(16,23,51,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#e9edf6;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink)}
+  .slide{
+    display:none;position:absolute;inset:0;margin:auto;
+    width:min(100vw,177.78vh);height:min(56.25vw,100vh);
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.12) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.07) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+    padding:4% 5%;flex-direction:column;justify-content:center;overflow:hidden;-webkit-font-smoothing:antialiased;
+  }
+  .slide.active{display:flex}
+  /* light decks: clean surfaces, no dark photo backgrounds (the --img is ignored) */
+  .slide.img,.slide.img.hero{
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.14) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.08) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+  }
+  .pill{display:inline-block;border:1.5px solid var(--gold);color:var(--gold);
+    border-radius:999px;padding:.45em 1.1em;font-size:.85em;font-weight:700;
+    letter-spacing:.05em;margin-right:.6em;margin-bottom:.5em;white-space:nowrap}
+  .pill.solid{background:var(--gold-bright);color:#2a1f02;border-color:var(--gold-bright)}
+  .weektag{display:inline-block;background:rgba(227,179,65,.16);border:1px solid rgba(227,179,65,.4);
+    color:var(--gold);border-radius:8px;padding:.3em .95em;font-size:.75em;font-weight:700;
+    letter-spacing:.1em;margin-bottom:.7em;align-self:flex-start;text-transform:uppercase}
+  .weektag .sess{color:var(--ink-dim);letter-spacing:.04em;font-weight:600}
+  h1{font-size:3.1em;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:.4em;color:var(--navy)}
+  h2{font-size:1.9em;font-weight:800;line-height:1.15;letter-spacing:-.01em;margin-bottom:.35em;color:var(--navy)}
+  .lead{font-size:1.15em;color:var(--ink-dim);line-height:1.55;max-width:38em}
+  .big-quote{font-size:2.1em;font-weight:800;line-height:1.25;letter-spacing:-.01em;max-width:20em;margin:0;color:var(--navy)}
+  .big-quote .hl{color:var(--gold)}
+  .section-kicker{display:block;color:var(--gold);font-size:.78em;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.45em}
+  .cards{display:grid;gap:1.1em;margin-top:1.2em;align-content:center}
+  .cards.c3{grid-template-columns:repeat(3,1fr)}
+  .cards.c2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:1.05em 1.15em;display:flex;flex-direction:column;box-shadow:var(--shadow-sm);
+    border-top:3px solid var(--gold-bright)}
+  .card.pink{border-top-color:var(--pink)} .card.orange{border-top-color:var(--orange)}
+  .card.blue{border-top-color:var(--blue)} .card.green{border-top-color:var(--green)}
+  .card .ico{font-size:1.9em;margin-bottom:.25em;line-height:1}
+  .card h3{font-size:1.05em;margin-bottom:.45em;color:var(--navy)}
+  .card h3 .step{color:var(--gold);font-weight:800;margin-right:.35em}
+  .card.pink h3 .step{color:var(--pink)} .card.blue h3 .step{color:var(--blue)} .card.green h3 .step{color:var(--green)}
+  .card p,.card li{font-size:.88em;color:var(--ink-dim);line-height:1.45}
+  .card ul{margin-left:1.1em}
+  .card p b,.card li b{color:var(--navy)}
+  .strip{margin-top:1.2em;background:rgba(47,111,237,.08);border:1px solid rgba(47,111,237,.25);
+    border-radius:12px;padding:.75em 1.1em;font-size:.92em;line-height:1.5;color:var(--ink)}
+  .strip b{color:var(--blue)}
+  .strip.judge{background:rgba(227,179,65,.12);border-color:rgba(227,179,65,.45)} .strip.judge b{color:var(--gold)}
+  .strip.key{background:rgba(31,157,99,.1);border-color:rgba(31,157,99,.35)} .strip.key b{color:var(--green)}
+  .strip.warn{background:rgba(226,61,104,.09);border-color:rgba(226,61,104,.35)} .strip.warn b{color:var(--pink)}
+  .two-strips{display:grid;grid-template-columns:1fr 1fr;gap:.9em;margin-top:1.2em}
+  .two-strips .strip{margin-top:0}
+  .stack{display:flex;flex-direction:column;gap:.6em;margin-top:1.2em}
+  .stack .strip{margin-top:0}
+  table{width:100%;border-collapse:collapse;margin-top:.4em;font-size:.9em}
+  th{text-align:left;color:var(--gold);font-weight:700;padding:.5em .7em;border-bottom:2px solid rgba(227,179,65,.4)}
+  td{padding:.45em .7em;border-bottom:1px solid var(--hairline);color:var(--ink-dim);vertical-align:top;line-height:1.4}
+  td:first-child{color:var(--navy);font-weight:600}
+  td b{color:var(--navy)}
+  .agenda td:first-child{color:var(--gold);font-weight:700;width:6.5em;white-space:nowrap}
+  ul.big{margin:1em 0 0 1.2em;display:flex;flex-direction:column;gap:.55em;font-size:1.02em;line-height:1.5;color:var(--ink-dim)}
+  ul.big b{color:var(--navy)}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;
+    border:2px solid var(--gold);border-radius:50%;color:var(--gold);font-weight:700;margin-right:.6em;flex:none}
+  /* visual helpers (session 1) */
+  .bridge{display:grid;grid-template-columns:1fr auto 1fr;gap:.7em 1.4em;align-items:center;margin:0;max-width:46em}
+  .bridge .h{font-size:.78em;letter-spacing:.1em;font-weight:700;text-transform:uppercase;padding-bottom:.3em;border-bottom:2px solid rgba(227,179,65,.4)}
+  .bridge .h.l{color:var(--ink-dim)} .bridge .h.r{color:var(--gold)}
+  .bridge .b{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:.6em .9em;font-size:1.02em;font-weight:600;box-shadow:var(--shadow-sm);color:var(--navy)}
+  .bridge .b.r{border-color:rgba(227,179,65,.5)}
+  .bridge .arrow{color:var(--gold);font-size:1.3em;text-align:center}
+  .tree{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surface);border:1px solid var(--border);
+    border-radius:14px;padding:1.2em 1.5em;font-size:1.15em;line-height:1.9;margin:0;max-width:24em;box-shadow:var(--shadow-sm)}
+  .tree .f{color:var(--gold)} .tree .file{color:var(--ink-dim)} .tree .i{color:#9aa3c4}
+  .keys{display:flex;gap:1.2em;justify-content:center;margin:0;flex-wrap:wrap}
+  .keycap{background:var(--surface);border:1px solid var(--border);border-bottom-width:4px;border-bottom-color:var(--gold-bright);border-radius:12px;
+    padding:.8em 1em;text-align:center;min-width:7.2em;box-shadow:var(--shadow-sm)}
+  .keycap .k{font-size:1.35em;font-weight:800;color:var(--navy)}
+  .keycap .d{font-size:.82em;color:var(--ink-dim);margin-top:.35em}
+  .keycap.save{border-bottom-color:var(--green)} .keycap.save .k{color:var(--green)}
+  .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1em;margin:0;width:100%}
+  .three-col .col{border-radius:13px;padding:.95em 1.05em;border:1px solid;background:var(--surface);box-shadow:var(--shadow-sm)}
+  .col.cloud{border-color:rgba(47,111,237,.4)} .col.local{border-color:rgba(31,157,99,.4)} .col.nowhere{border-color:rgba(226,61,104,.4)}
+  .three-col h3{font-size:1.05em;margin-bottom:.5em}
+  .col.cloud h3{color:var(--blue)} .col.local h3{color:var(--green)} .col.nowhere h3{color:var(--pink)}
+  .three-col li{font-size:.86em;color:var(--ink-dim);line-height:1.5;margin-left:1.1em}
+  /* flow (portal guide) */
+  .flow{display:flex;align-items:center;gap:.5em;margin:0;flex-wrap:wrap}
+  .flow .step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7em .9em;font-size:.9em;font-weight:600;text-align:center;flex:1;min-width:8em;color:var(--navy);box-shadow:var(--shadow-sm)}
+  .flow .step span{display:block;color:var(--ink-dim);font-size:.78em;font-weight:400;margin-top:.2em}
+  .flow .arr{color:var(--gold);font-size:1.3em}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:2.5em}
+  .stat{background:var(--surface);padding:1.3em 1.4em;display:flex;flex-direction:column;gap:.2em}
+  .stat-value{font-size:1.9em;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.02em}
+  .stat-value span{color:var(--gold)}
+  .stat-label{font-size:.85em;color:var(--ink-dim);line-height:1.4}
+  .quick-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1em}
+  .quick-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.4em;box-shadow:var(--shadow-sm);text-decoration:none;color:inherit;display:block}
+  .quick-card h3{font-size:1.12em;color:var(--navy);margin-bottom:.35em}
+  .quick-card p{color:var(--ink-dim);font-size:.93em;line-height:1.5}
+  .quick-card .more{display:inline-block;margin-top:.8em;color:var(--gold);font-weight:700;font-size:.85em}
+  .ico-badge{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.4em;margin-bottom:.5em;background:rgba(227,179,65,.16)}
+  .ico-badge.blue{background:rgba(47,111,237,.12)} .ico-badge.green{background:rgba(31,157,99,.12)} .ico-badge.pink{background:rgba(226,61,104,.12)}
+  /* check grid (day 0) */
+  .check{display:grid;grid-template-columns:1fr 1fr;gap:.6em 1.6em;margin:0;font-size:1.05em;color:var(--ink-dim)}
+  .check div{padding:.2em 0}
+  .check b{color:var(--navy)}
+  /* footer chrome */
+  #bar{position:fixed;left:0;bottom:0;height:3px;background:var(--gold-bright);width:0;transition:width .2s;z-index:30}
+  #counter{position:fixed;right:14px;bottom:10px;font-size:12px;color:var(--ink-dim);z-index:30}
+  #hint{position:fixed;left:14px;bottom:8px;font-size:11px;color:#9aa3c4;z-index:30}
+  #notes{position:fixed;inset:auto 0 0 0;background:#0e1336;border-top:2px solid var(--gold-bright);
+    padding:1.1em 1.6em 1.4em;max-height:42%;overflow:auto;display:none;z-index:40}
+  #notes.show{display:block}
+  #notes h4{color:var(--gold-bright);font-size:.8em;letter-spacing:.14em;margin-bottom:.5em}
+  #notes-body{font-size:1.02em;line-height:1.6;color:#c2c9e6;max-width:60em}
+  @media print{.slide{display:flex;position:relative;page-break-after:always;width:100%;height:100vh}#bar,#counter,#hint,#notes{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  #deck-nav{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:8px;z-index:35}
+  #deck-nav button{background:var(--surface);border:1px solid var(--border);color:var(--ink);border-radius:9px;width:46px;height:36px;font-size:18px;line-height:1;cursor:pointer;box-shadow:var(--shadow-sm)}
+  #deck-nav button:hover{border-color:var(--gold)}
+  @media print{#deck-nav{display:none}}
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide img hero" style="--img:url('assets/s8/slide-1.svg')" data-notes="This is graduation day — say that out loud at the top and let it land. Four weekends, eight sessions, and today they don't just learn one more thing — they prove all of it at once, live, and walk out pointed at a Track. Two halves: a tight security block, then the capstone delivered in breakout rooms. Keep the tone warm and proud from the first second.">
+  <div style="margin-top:1.2em">
+    <span class="weektag">ASCENT FOUNDATIONS · WEEKEND 4 <span class="sess">— Sunday</span></span>
+    <h1>Security, Identity &amp;<br><span style="color:var(--gold)">the Integrated Capstone</span></h1>
+    <p class="lead">The final session. Lock down your identity the 2026 way — then deliver your whole pipeline live and prove every competency at once.</p>
+    <div style="margin-top:1.6em">
+      <span class="pill solid">SESSION 8</span>
+      <span class="pill">ONLINE · 120 MIN</span>
+      <span class="pill">COMPETENCY: SECURITY + CAPSTONE</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · BIG IDEA -->
+<section class="slide" data-notes="The spine of the day. Every other session you were learning. Today you're demonstrating — and the demonstration itself is the credential. Say it plainly: by the time you log off, you will have done the whole job end to end, and Compass can read that evidence and route you to a Track. This is the moment everything pointed at.">
+  <span class="weektag">THE ONE BIG IDEA</span>
+  <p class="big-quote">Today you don't learn it — <span class="hl">you prove it</span>.<br>And you walk out <span class="hl">Track-ready</span>.</p>
+  <div class="strip key"><b>Why it matters:</b> the capstone isn't one more assignment — it's the whole pipeline in one body of work, scored across every competency. Deliver it, and Foundations is done.</div>
+</section>
+
+<!-- 3 · AGENDA -->
+<section class="slide" data-notes="Two hours, four blocks. Protect two things if time slips: every student gets their full 3 minutes (cut peer notes before cutting a delivery), and the security block keeps the LIVE passkey setup. The 65-minute capstone window is the heart — 3 rooms of ~4, recording on. Confirm at the top that all six links are in the shared sheet; route anyone missing an artifact to the support-path scope now, not at delivery.">
+  <h2>Today — 120 minutes</h2>
+  <table class="agenda">
+    <tr><td>0–10</td><td><b>Recap.</b> One sentence each: name your capstone subject · confirm all six links are in the shared sheet</td></tr>
+    <tr><td>10–35</td><td><b>Security, 2026 edition</b> — passkeys-first, MFA, password managers, app-access audit, social engineering</td></tr>
+    <tr><td>35–45</td><td><b>Phish-test debrief</b> — the simulated phish from the S6–S8 window · blame-free</td></tr>
+    <tr><td>45–110</td><td><b>CAPSTONE delivery</b> — breakout rooms, 3-min live pitch, full pipeline linked ⟵ the heart</td></tr>
+    <tr><td>110–120</td><td><b>Portfolio + next steps</b> — consolidate · hand off to Compass · choose a Track</td></tr>
+  </table>
+  <div class="strip judge"><b>Judgment checkpoint:</b> a "family emergency" call demands you act NOW — how do you verify before you act?</div>
+</section>
+
+<!-- 4 · PASSKEYS FIRST -->
+<section class="slide" data-notes="Do this LIVE on the school identity provider — rehearse the click-path once before class because the demo dies if you hunt menus. Narrate each step. The mental model: a password is a shared secret, so anyone who tricks you out of it wins. A passkey is a key pair — the private half never leaves your device, the public half sits with the service. There's nothing to type, reuse, or hand to a fake site. That's why it's phishing-resistant: the key is bound to the real domain, so a lookalike login page collects nothing.">
+  <h2>Passkeys first — there's nothing to phish</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.6em;align-items:center;flex:1">
+    <div>
+      <ul class="big" style="margin-left:0;list-style:none">
+        <li><span class="num">1</span><b>What it is:</b> a cryptographic <b>key pair</b> — the private half stays on your device, the public half lives with the service. No password to type.</li>
+        <li><span class="num">2</span><b>Set one up live:</b> identity provider → Security → <b>Add a passkey</b> → confirm with biometric/PIN → sign out and back in to test.</li>
+        <li><span class="num">3</span><b>Why phishing-resistant:</b> the key only works on the <b>genuine domain</b> — a fake login page gets nothing reusable.</li>
+      </ul>
+    </div>
+    <div class="cards c2" style="margin-top:0">
+      <div class="card pink"><div class="ico">🔑</div><h3>Password</h3><p>A <b>shared secret</b> — type it anywhere, and a fake site can catch it.</p></div>
+      <div class="card green"><div class="ico">📱</div><h3>Passkey</h3><p><b>Device-bound</b> — nothing to type, nothing to leak, bound to the real site.</p></div>
+    </div>
+  </div>
+  <div class="strip key"><b>The shift:</b> stop protecting a secret you can be tricked out of — carry a key that can't be handed over.</div>
+</section>
+
+<!-- 5 · ACCOUNT-HARDENING PRIORITY ORDER -->
+<section class="slide" data-notes="Order matters — do them in this sequence, don't skip to a password manager and stop. Passkey wherever it's supported. For the legacy accounts that don't support passkeys yet, turn on MFA — and prefer an authenticator app or hardware key over SMS, because SMS can be intercepted or SIM-swapped. For everything left, use unique strong passphrases: length and unpredictability beat symbol-soup. A password manager generates and holds that long tail so you never reuse. Mastery move mentioned later: audit third-party app access and revoke stale grants.">
+  <h2>Hardening, in priority order</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card green"><div class="ico">🔑</div><h3><span class="step">1</span>Passkey</h3><p>Wherever it's supported — strongest and <b>phishing-resistant</b>. Start here.</p></div>
+    <div class="card blue"><div class="ico">📲</div><h3><span class="step">2</span>MFA on legacy</h3><p>For accounts with no passkey yet. Prefer <b>app or hardware</b> over SMS.</p></div>
+    <div class="card orange"><div class="ico">🧩</div><h3><span class="step">3</span>Unique strong passphrase</h3><p>One per account. <b>Length + unpredictability</b> beats symbol-soup.</p></div>
+    <div class="card"><div class="ico">🗄️</div><h3><span class="step">4</span>Password manager</h3><p>Generates and holds the long tail so you <b>never reuse</b>.</p></div>
+  </div>
+  <div class="strip warn"><b>Don't skip to #4 and stop.</b> The order is the point — and a Mastery move: audit "connected apps," revoke stale access.</div>
+</section>
+
+<!-- 6 · SOCIAL ENGINEERING / VOICE-CLONE -->
+<section class="slide" data-notes="Run this as a 3-minute think-pair-share. Frame the 2026 reality: a voice clone needs only seconds of audio, so 'it sounded exactly like them' is no longer proof. The scam runs on urgency + secrecy + send-now. The defense is a script, not a feeling. Hang up — real emergencies survive a callback. Call back on a number already in your contacts, never one the caller gives you. Ask a pre-agreed safe question or family code word a clone won't know. Surface the one line: urgency is the red flag, not the proof.">
+  <h2>"It's me — I need money now" 📞</h2>
+  <p class="lead">Voice clones need only seconds of audio. <b>"It sounded just like them" is no longer proof.</b> Run the script, not the feeling.</p>
+  <div class="cards c3" style="flex:0">
+    <div class="card pink"><div class="ico">📵</div><h3><span class="step">1</span>Hang up</h3><p>Real emergencies <b>survive a callback</b>. The script relies on you not breaking contact.</p></div>
+    <div class="card blue"><div class="ico">☎️</div><h3><span class="step">2</span>Call back on a known number</h3><p>The one <b>already in your contacts</b> — never a number the caller gives you.</p></div>
+    <div class="card green"><div class="ico">🔐</div><h3><span class="step">3</span>Ask the safe question</h3><p>A pre-agreed <b>code word</b> a cloned voice or scammer won't know.</p></div>
+  </div>
+  <div class="strip judge"><b>Judgment checkpoint:</b> urgency + secrecy + "send now" is the <b>red flag</b>, not the proof. Slow it down; verify before you act or pay.</div>
+</section>
+
+<!-- 7 · PHISH-TEST DEBRIEF -->
+<section class="slide" data-notes="This must be blame-free — no names, no 'who clicked.' Reveal the simulated phish you sent between Sessions 6 and 8, share aggregate numbers only, and frame clicking as the most common, most human outcome — that's exactly why we train. Walk the four tells, then ask the room: what ONE check would have caught it? Usually the answer is 'hover the link' or 'look at the real sender domain.' Normalize, teach the check, move on warmly.">
+  <h2>Phish-test debrief — no names, no blame</h2>
+  <p class="lead">Remember the email from a few weeks back? <b>That was us.</b> Clicking is the most common, most human outcome — and the reason we train.</p>
+  <div class="cards c2" style="flex:1">
+    <div class="card pink"><div class="ico">🕵️</div><h3>The tells</h3><ul><li><b>Sender domain</b> — close but not quite right</li><li><b>Urgency</b> — "act now or lose access"</li><li><b>Link mismatch</b> — text says one thing, hover says another</li><li><b>Unexpected attachment</b> you didn't ask for</li></ul></div>
+    <div class="card green"><div class="ico">✅</div><h3>The one check</h3><p>What single move would have caught it?</p><ul><li><b>Hover the link</b> before you click</li><li><b>Read the real sender domain</b>, not the display name</li><li>When unsure: <b>go to the site directly</b>, don't follow the email</li></ul></div>
+  </div>
+  <div class="strip key"><b>No shame, ever.</b> We don't ask who clicked — we ask what check catches it next time.</div>
+</section>
+
+<!-- 8 · CAPSTONE PIPELINE → COMPETENCIES -->
+<section class="slide" data-notes="This is the map of the whole course in one slide. The capstone carries ONE real subject — the topic they picked in Session 4, built across S6 to S8 — through the full pipeline. Each artifact is scored on a different competency row from a single body of work. Walk the table top to bottom so they see there are no hidden criteria: the form and email touch File ops and Verification, the ledger Spreadsheets, the PDF Documents, the pitch Presentations, disclosed AI use AI literacy, today's work Security — and building the whole thing end to end is PROBLEM-SOLVING.">
+  <h2>The capstone pipeline — one subject, every competency</h2>
+  <table>
+    <tr><th>Pipeline artifact</th><th>Competency row scored</th></tr>
+    <tr><td>Validated registration <b>form</b> (built S4)</td><td>File operations / Verification</td></tr>
+    <tr><td>Formula <b>ledger</b> (working formulas)</td><td>Spreadsheets</td></tr>
+    <tr><td>Semantic <b>PDF report</b> (headings/structure)</td><td>Documents</td></tr>
+    <tr><td>Live 4-frame, 3-min <b>pitch</b></td><td>Presentations</td></tr>
+    <tr><td>Disclosed, appropriate <b>AI use</b> across the build</td><td>AI literacy</td></tr>
+    <tr><td>Today's <b>security</b> work + zipped, named folder &amp; sent email</td><td>Security · File operations / Verification</td></tr>
+    <tr><td><b>The end-to-end build itself</b></td><td><b>PROBLEM-SOLVING</b></td></tr>
+  </table>
+  <div class="strip"><b>One body of work, six artifacts, multiple rows.</b> Support-path scope: ledger of <b>8 rows</b> + <b>3-frame deck</b> — same competencies, less volume.</div>
+</section>
+
+<!-- 9 · THINK LIKE A BUILDER (thread close) -->
+<section class="slide" data-notes="This closes the thread that ran through all eight sessions. Say it directly: the capstone IS computational thinking made visible. You decomposed a messy real subject into parts, you built each part with the right tool, you integrated them into one pipeline, and you tested the whole thing by delivering it live. That loop — decompose, build, integrate, test — is exactly what a Track expects of you. This is what makes you Track-ready, not the certificate.">
+  <span class="weektag" style="color:var(--green);border-color:var(--green);background:rgba(63,185,138,.16)">THINK LIKE A BUILDER — THREAD CLOSE ♥</span>
+  <h2>The capstone <i>is</i> computational thinking</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card green"><div class="ico">🧩</div><h3><span class="step">1</span>Decompose</h3><p>Break a messy real subject into parts: who registers, what's tracked, what gets reported.</p></div>
+    <div class="card blue"><div class="ico">🛠️</div><h3><span class="step">2</span>Build each part</h3><p>Right tool per part — form, ledger, report, deck. Each one a finished piece.</p></div>
+    <div class="card orange"><div class="ico">🔗</div><h3><span class="step">3</span>Integrate</h3><p>Wire the parts into one pipeline that flows from sign-up to a sent email.</p></div>
+    <div class="card pink"><div class="ico">🧪</div><h3><span class="step">4</span>Test the whole</h3><p>Deliver it live. Does it hold together end to end? That's the real test.</p></div>
+  </div>
+  <div class="strip key"><b>Decompose → build → integrate → test.</b> That loop is what a Track expects — and it's exactly what you just did. You're Track-ready.</div>
+</section>
+
+<!-- 10 · LIVE CAPSTONE DELIVERY -->
+<section class="slide" data-notes="Set the mechanics so the block runs itself. Three breakout rooms of about four. Each student delivers the live 3-minute, 4-frame pitch and drops their full pipeline links in-room. Peers give one warm note and one useful note. Recording is ON in every room — announce it at the top for consent — because you can only be in one room at a time and the cloud recording is how you score the deliveries you miss. Keep a timer visible and hold the 3-minute limit gently. With 4 talks plus notes, a room runs about 16 minutes — comfortably inside the window.">
+  <h2>Live delivery — how the rooms run</h2>
+  <div class="cards c3" style="flex:1">
+    <div class="card blue"><div class="ico">🚪</div><h3>3 rooms of ~4</h3><p>You deliver to your room, then give peers <b>one warm + one useful</b> note each.</p></div>
+    <div class="card gold"><div class="ico">⏱️</div><h3>3-min, 4-frame pitch</h3><p>Visible timer, held gently. ~16 min of talks per room — inside the 65-min window.</p></div>
+    <div class="card pink"><div class="ico">🔴</div><h3>Recording ON</h3><p>Announced for consent. The facilitator rotates; the recording <b>scores the rooms missed</b>.</p></div>
+  </div>
+  <div class="strip warn"><b>Before your room opens:</b> all six links in the shared sheet — form, ledger, PDF, deck, zipped folder, sent email. No hunting mid-pitch.</div>
+</section>
+
+<!-- 11 · SECURITY GRADING BAR -->
+<section class="slide" data-notes="Show the bar with no secrets — same one you grade with. Zero is reused passwords or falling for the phish with no recognition. Emerging is 2FA on somewhere but weak hygiene elsewhere. Proficient is the target: passkey set up, MFA on legacy, and you pass the phish test by spotting the tells. Mastery adds the third-party access audit and being able to explain voice-clone defense to a peer in your own words. Then the big-picture rule: your course grade is your BEST evidence per competency across ALL sessions plus the capstone — late growth is rewarded, not averaged away.">
+  <h2>Security grading bar <span style="font-size:.6em;color:var(--ink-dim)">(no secrets)</span></h2>
+  <table>
+    <tr><th>Level</th><th>What it looks like — Security competency</th></tr>
+    <tr><td><b>0 · Missing</b></td><td>Reuses passwords across accounts, or falls for the phish test with no recognition.</td></tr>
+    <tr><td><b>1 · Emerging</b></td><td>2FA turned on somewhere, but weak hygiene elsewhere — reused/short passwords, no audit.</td></tr>
+    <tr><td><b>2 · Proficient</b></td><td>Passkey set up, MFA on legacy accounts, <b>passes the phish test</b> (spots the tells).</td></tr>
+    <tr><td><b>3 · Mastery</b></td><td>All of Proficient, <b>plus</b> audits third-party app access <b>and</b> explains voice-clone defense to a peer.</td></tr>
+  </table>
+  <div class="strip key"><b>Course grade = best evidence per competency across ALL sessions + capstone.</b> Your highest demonstrated level counts — late growth is rewarded, never averaged away.</div>
+</section>
+
+<!-- 12 · PORTFOLIO + NEXT STEPS -->
+<section class="slide" data-notes="Each student folds their six artifacts into a single portfolio entry — one link, labeled by competency. Then the handoff: drop the Compass link in chat. Compass reads their Foundations evidence and helps them choose a Track — Data & Analytics, Web & Software, AI Operations, or Design. This is the bridge from Foundations to specialization. Also point them at Coursera and edX pathways for adjacent fields — Engineering, Analytics, UI/UX, AI-adjacent roles — so they know the road keeps going.">
+  <h2>Consolidate, then choose your Track</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.6em;align-items:center;flex:1">
+    <div>
+      <ul class="big" style="margin-left:0;list-style:none">
+        <li><span class="num">1</span><b>Consolidate:</b> fold all six artifacts into <b>one portfolio entry</b> — a single link, labeled by competency.</li>
+        <li><span class="num">2</span><b>Hand off to Compass:</b> it reads your Foundations evidence and helps you pick a Track.</li>
+        <li><span class="num">3</span><b>Keep going:</b> Coursera / edX pathways for Engineering, Analytics, UI/UX, AI-adjacent roles.</li>
+      </ul>
+    </div>
+    <div class="cards c2" style="margin-top:0">
+      <div class="card blue"><div class="ico">📊</div><h3>Data &amp; Analytics</h3></div>
+      <div class="card green"><div class="ico">💻</div><h3>Web &amp; Software</h3></div>
+      <div class="card orange"><div class="ico">🤖</div><h3>AI Operations</h3></div>
+      <div class="card pink"><div class="ico">🎨</div><h3>Design</h3></div>
+    </div>
+  </div>
+  <div class="strip"><b>Compass → Tracks.</b> Foundations proved you can build; Compass points you where to build next.</div>
+</section>
+
+<!-- 13 · CLOSE + EXIT TICKET -->
+<section class="slide" data-notes="End on the win and mean it. Four weekends, eight sessions — and today they demonstrated every competency from a single piece of real work, with a portfolio artifact in hand. Remind them resubmissions are allowed before final scoring, so a stronger ledger formula or a re-recorded frame is welcome. Then the exit ticket. Congratulate them by name if you can. This is graduation — protect the celebration.">
+  <span class="weektag">EXIT TICKET</span>
+  <p class="big-quote">Name the <span class="hl">one competency</span> you're proudest of proving today — and the <span class="hl">Track</span> you're leaning toward.</p>
+  <div class="strip key"><b>You proved all of it — and you have the artifact to show it.</b> Resubmissions stay open before final scoring. Welcome to Track-ready. 🎓</div>
+</section>
+
+<div id="bar"></div>
+<div id="counter"></div>
+<div id="hint">← → navigate · N speaker notes · P print/PDF</div>
+<div id="notes"><h4>SPEAKER NOTES</h4><div id="notes-body"></div></div>
+<div id="deck-nav"><button onclick="show(i-1)" aria-label="Previous">‹</button><button onclick="show(i+1)" aria-label="Next">›</button></div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  const notes=document.getElementById('notes'),notesBody=document.getElementById('notes-body');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    document.getElementById('counter').textContent=(i+1)+' / '+slides.length;
+    document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+    notesBody.textContent=slides[i].dataset.notes||'(no notes)';
+    location.hash=i+1;
+  }
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(i+1)}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(i-1)}
+    else if(e.key==='Home')show(0);
+    else if(e.key==='End')show(slides.length-1);
+    else if(e.key.toLowerCase()==='n')notes.classList.toggle('show');
+    else if(e.key.toLowerCase()==='p')print();
+  });
+  show(parseInt(location.hash.slice(1))-1||0);
+</script>
+</body>
+</html>

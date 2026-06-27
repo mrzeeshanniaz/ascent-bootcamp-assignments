@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 1 — From Phone to Desktop · Ascent Foundations</title>
+<style>
+  :root{
+    --navy:#101733; --navy-soft:#1c2550;
+    --gold:#b07d10; --gold-bright:#e3b341; --gold-dim:#8a6a17;
+    --bg:#f6f8fd; --bg-accent:#eef2fb; --surface:#ffffff; --card:#ffffff;
+    --ink:#131a36; --ink-dim:#586089;
+    --pink:#e23d68; --orange:#e3742f; --blue:#2f6fed; --green:#1f9d63;
+    --border:rgba(16,23,51,.10); --hairline:rgba(16,23,51,.07);
+    --shadow-sm:0 1px 2px rgba(16,23,51,.05), 0 1px 3px rgba(16,23,51,.06);
+    --shadow-md:0 8px 24px rgba(16,23,51,.08), 0 2px 6px rgba(16,23,51,.05);
+    --shadow-lg:0 24px 60px rgba(16,23,51,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#e9edf6;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink)}
+  .slide{
+    display:none;position:absolute;inset:0;margin:auto;
+    width:min(100vw,177.78vh);height:min(56.25vw,100vh);
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.12) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.07) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+    padding:4% 5%;flex-direction:column;justify-content:center;overflow:hidden;-webkit-font-smoothing:antialiased;
+  }
+  .slide.active{display:flex}
+  /* light decks: clean surfaces, no dark photo backgrounds (the --img is ignored) */
+  .slide.img,.slide.img.hero{
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.14) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.08) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+  }
+  .pill{display:inline-block;border:1.5px solid var(--gold);color:var(--gold);
+    border-radius:999px;padding:.45em 1.1em;font-size:.85em;font-weight:700;
+    letter-spacing:.05em;margin-right:.6em;margin-bottom:.5em;white-space:nowrap}
+  .pill.solid{background:var(--gold-bright);color:#2a1f02;border-color:var(--gold-bright)}
+  .weektag{display:inline-block;background:rgba(227,179,65,.16);border:1px solid rgba(227,179,65,.4);
+    color:var(--gold);border-radius:8px;padding:.3em .95em;font-size:.75em;font-weight:700;
+    letter-spacing:.1em;margin-bottom:.7em;align-self:flex-start;text-transform:uppercase}
+  .weektag .sess{color:var(--ink-dim);letter-spacing:.04em;font-weight:600}
+  h1{font-size:3.1em;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:.4em;color:var(--navy)}
+  h2{font-size:1.9em;font-weight:800;line-height:1.15;letter-spacing:-.01em;margin-bottom:.35em;color:var(--navy)}
+  .lead{font-size:1.15em;color:var(--ink-dim);line-height:1.55;max-width:38em}
+  .big-quote{font-size:2.1em;font-weight:800;line-height:1.25;letter-spacing:-.01em;max-width:20em;margin:0;color:var(--navy)}
+  .big-quote .hl{color:var(--gold)}
+  .section-kicker{display:block;color:var(--gold);font-size:.78em;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.45em}
+  .cards{display:grid;gap:1.1em;margin-top:1.2em;align-content:center}
+  .cards.c3{grid-template-columns:repeat(3,1fr)}
+  .cards.c2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:1.05em 1.15em;display:flex;flex-direction:column;box-shadow:var(--shadow-sm);
+    border-top:3px solid var(--gold-bright)}
+  .card.pink{border-top-color:var(--pink)} .card.orange{border-top-color:var(--orange)}
+  .card.blue{border-top-color:var(--blue)} .card.green{border-top-color:var(--green)}
+  .card .ico{font-size:1.9em;margin-bottom:.25em;line-height:1}
+  .card h3{font-size:1.05em;margin-bottom:.45em;color:var(--navy)}
+  .card h3 .step{color:var(--gold);font-weight:800;margin-right:.35em}
+  .card.pink h3 .step{color:var(--pink)} .card.blue h3 .step{color:var(--blue)} .card.green h3 .step{color:var(--green)}
+  .card p,.card li{font-size:.88em;color:var(--ink-dim);line-height:1.45}
+  .card ul{margin-left:1.1em}
+  .card p b,.card li b{color:var(--navy)}
+  .strip{margin-top:1.2em;background:rgba(47,111,237,.08);border:1px solid rgba(47,111,237,.25);
+    border-radius:12px;padding:.75em 1.1em;font-size:.92em;line-height:1.5;color:var(--ink)}
+  .strip b{color:var(--blue)}
+  .strip.judge{background:rgba(227,179,65,.12);border-color:rgba(227,179,65,.45)} .strip.judge b{color:var(--gold)}
+  .strip.key{background:rgba(31,157,99,.1);border-color:rgba(31,157,99,.35)} .strip.key b{color:var(--green)}
+  .strip.warn{background:rgba(226,61,104,.09);border-color:rgba(226,61,104,.35)} .strip.warn b{color:var(--pink)}
+  .two-strips{display:grid;grid-template-columns:1fr 1fr;gap:.9em;margin-top:1.2em}
+  .two-strips .strip{margin-top:0}
+  .stack{display:flex;flex-direction:column;gap:.6em;margin-top:1.2em}
+  .stack .strip{margin-top:0}
+  table{width:100%;border-collapse:collapse;margin-top:.4em;font-size:.9em}
+  th{text-align:left;color:var(--gold);font-weight:700;padding:.5em .7em;border-bottom:2px solid rgba(227,179,65,.4)}
+  td{padding:.45em .7em;border-bottom:1px solid var(--hairline);color:var(--ink-dim);vertical-align:top;line-height:1.4}
+  td:first-child{color:var(--navy);font-weight:600}
+  td b{color:var(--navy)}
+  .agenda td:first-child{color:var(--gold);font-weight:700;width:6.5em;white-space:nowrap}
+  ul.big{margin:1em 0 0 1.2em;display:flex;flex-direction:column;gap:.55em;font-size:1.02em;line-height:1.5;color:var(--ink-dim)}
+  ul.big b{color:var(--navy)}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;
+    border:2px solid var(--gold);border-radius:50%;color:var(--gold);font-weight:700;margin-right:.6em;flex:none}
+  /* visual helpers (session 1) */
+  .bridge{display:grid;grid-template-columns:1fr auto 1fr;gap:.7em 1.4em;align-items:center;margin:0;max-width:46em}
+  .bridge .h{font-size:.78em;letter-spacing:.1em;font-weight:700;text-transform:uppercase;padding-bottom:.3em;border-bottom:2px solid rgba(227,179,65,.4)}
+  .bridge .h.l{color:var(--ink-dim)} .bridge .h.r{color:var(--gold)}
+  .bridge .b{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:.6em .9em;font-size:1.02em;font-weight:600;box-shadow:var(--shadow-sm);color:var(--navy)}
+  .bridge .b.r{border-color:rgba(227,179,65,.5)}
+  .bridge .arrow{color:var(--gold);font-size:1.3em;text-align:center}
+  .tree{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surface);border:1px solid var(--border);
+    border-radius:14px;padding:1.2em 1.5em;font-size:1.15em;line-height:1.9;margin:0;max-width:24em;box-shadow:var(--shadow-sm)}
+  .tree .f{color:var(--gold)} .tree .file{color:var(--ink-dim)} .tree .i{color:#9aa3c4}
+  .keys{display:flex;gap:1.2em;justify-content:center;margin:0;flex-wrap:wrap}
+  .keycap{background:var(--surface);border:1px solid var(--border);border-bottom-width:4px;border-bottom-color:var(--gold-bright);border-radius:12px;
+    padding:.8em 1em;text-align:center;min-width:7.2em;box-shadow:var(--shadow-sm)}
+  .keycap .k{font-size:1.35em;font-weight:800;color:var(--navy)}
+  .keycap .d{font-size:.82em;color:var(--ink-dim);margin-top:.35em}
+  .keycap.save{border-bottom-color:var(--green)} .keycap.save .k{color:var(--green)}
+  .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1em;margin:0;width:100%}
+  .three-col .col{border-radius:13px;padding:.95em 1.05em;border:1px solid;background:var(--surface);box-shadow:var(--shadow-sm)}
+  .col.cloud{border-color:rgba(47,111,237,.4)} .col.local{border-color:rgba(31,157,99,.4)} .col.nowhere{border-color:rgba(226,61,104,.4)}
+  .three-col h3{font-size:1.05em;margin-bottom:.5em}
+  .col.cloud h3{color:var(--blue)} .col.local h3{color:var(--green)} .col.nowhere h3{color:var(--pink)}
+  .three-col li{font-size:.86em;color:var(--ink-dim);line-height:1.5;margin-left:1.1em}
+  /* flow (portal guide) */
+  .flow{display:flex;align-items:center;gap:.5em;margin:0;flex-wrap:wrap}
+  .flow .step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7em .9em;font-size:.9em;font-weight:600;text-align:center;flex:1;min-width:8em;color:var(--navy);box-shadow:var(--shadow-sm)}
+  .flow .step span{display:block;color:var(--ink-dim);font-size:.78em;font-weight:400;margin-top:.2em}
+  .flow .arr{color:var(--gold);font-size:1.3em}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:2.5em}
+  .stat{background:var(--surface);padding:1.3em 1.4em;display:flex;flex-direction:column;gap:.2em}
+  .stat-value{font-size:1.9em;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.02em}
+  .stat-value span{color:var(--gold)}
+  .stat-label{font-size:.85em;color:var(--ink-dim);line-height:1.4}
+  .quick-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1em}
+  .quick-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.4em;box-shadow:var(--shadow-sm);text-decoration:none;color:inherit;display:block}
+  .quick-card h3{font-size:1.12em;color:var(--navy);margin-bottom:.35em}
+  .quick-card p{color:var(--ink-dim);font-size:.93em;line-height:1.5}
+  .quick-card .more{display:inline-block;margin-top:.8em;color:var(--gold);font-weight:700;font-size:.85em}
+  .ico-badge{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.4em;margin-bottom:.5em;background:rgba(227,179,65,.16)}
+  .ico-badge.blue{background:rgba(47,111,237,.12)} .ico-badge.green{background:rgba(31,157,99,.12)} .ico-badge.pink{background:rgba(226,61,104,.12)}
+  /* check grid (day 0) */
+  .check{display:grid;grid-template-columns:1fr 1fr;gap:.6em 1.6em;margin:0;font-size:1.05em;color:var(--ink-dim)}
+  .check div{padding:.2em 0}
+  .check b{color:var(--navy)}
+  /* footer chrome */
+  #bar{position:fixed;left:0;bottom:0;height:3px;background:var(--gold-bright);width:0;transition:width .2s;z-index:30}
+  #counter{position:fixed;right:14px;bottom:10px;font-size:12px;color:var(--ink-dim);z-index:30}
+  #hint{position:fixed;left:14px;bottom:8px;font-size:11px;color:#9aa3c4;z-index:30}
+  #notes{position:fixed;inset:auto 0 0 0;background:#0e1336;border-top:2px solid var(--gold-bright);
+    padding:1.1em 1.6em 1.4em;max-height:42%;overflow:auto;display:none;z-index:40}
+  #notes.show{display:block}
+  #notes h4{color:var(--gold-bright);font-size:.8em;letter-spacing:.14em;margin-bottom:.5em}
+  #notes-body{font-size:1.02em;line-height:1.6;color:#c2c9e6;max-width:60em}
+  @media print{.slide{display:flex;position:relative;page-break-after:always;width:100%;height:100vh}#bar,#counter,#hint,#notes{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  #deck-nav{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:8px;z-index:35}
+  #deck-nav button{background:var(--surface);border:1px solid var(--border);color:var(--ink);border-radius:9px;width:46px;height:36px;font-size:18px;line-height:1;cursor:pointer;box-shadow:var(--shadow-sm)}
+  #deck-nav button:hover{border-color:var(--gold)}
+  @media print{#deck-nav{display:none}}
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide img hero" style="--img:url('assets/s1/slide-1.webp')" data-notes="Welcome them warmly. The secret of week one: they already know more than they think — they've used a sophisticated computer for years, it just lived in their pocket. Today we map everything the phone taught them onto a desktop.">
+  <div style="margin-top:1.2em">
+    <span class="weektag">ASCENT FOUNDATIONS · WEEKEND 1 <span class="sess">— Saturday</span></span>
+    <h1>From Phone to Desktop<br><span style="color:var(--gold)">Files, OS &amp; Recovery</span></h1>
+    <p class="lead">You already know more than you think. Today we take everything your phone taught you — and make it visible on a desktop.</p>
+    <div style="margin-top:1.6em">
+      <span class="pill solid">SESSION 1</span>
+      <span class="pill">ONLINE · 120 MIN</span>
+      <span class="pill">COMPETENCY: FILE OPERATIONS</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · BIG IDEA -->
+<section class="slide img hero" style="--img:url('assets/s1/slide-2.webp')" data-notes="This is the spine of the whole session. Say it, then repeat it at every block. The desktop isn't harder than the phone — it's more honest. It shows you the machinery the phone politely hid.">
+  <span class="weektag">THE ONE BIG IDEA</span>
+  <p class="big-quote">Your phone <span class="hl">hides</span> the filing cabinet.<br>The desktop <span class="hl">shows</span> it to you.</p>
+  <div class="strip key"><b>Why it matters:</b> everything today is the <i>same</i> idea you already use on your phone — just made visible. Not harder. More honest.</div>
+</section>
+
+<!-- 3 · AGENDA -->
+<section class="slide img" style="--img:url('assets/s1/slide-3.webp')" data-notes="Two hours, seven blocks. The heart is the Recovery Lab (45–75) — protect it. Typing thread opens Sessions 1–4 only, tracked not graded.">
+  <h2>Today — 120 minutes</h2>
+  <table class="agenda">
+    <tr><td>0–10</td><td>Welcome + <b>typing baseline</b> (tracked, not graded)</td></tr>
+    <tr><td>10–25</td><td>The Bridge: phone ↔ desktop · the <b>"lost download"</b> hook</td></tr>
+    <tr><td>25–45</td><td>Guided lab: file manager, folder tree, naming, <b>hotkeys</b></td></tr>
+    <tr><td>45–75</td><td><b>Recovery Lab</b> — trash · version history · conflict copy ⟵ the heart</td></tr>
+    <tr><td>75–95</td><td>Judgment: <b>Cloud / Local / Nowhere</b></td></tr>
+    <tr><td>95–115</td><td>Start <b>Assignment 1</b> together</td></tr>
+    <tr><td>115–120</td><td>Exit ticket + close</td></tr>
+  </table>
+  <div class="strip judge"><b>Judgment checkpoint:</b> What belongs in cloud storage vs. local vs. nowhere?</div>
+</section>
+
+<!-- 4 · THE BRIDGE -->
+<section class="slide img" style="--img:url('assets/s1/slide-4.webp')" data-notes="Put students in pairs to match these for ~4 minutes, then debrief each row. The debrief line that makes it land: none of this is new — it's the same ideas, just made visible.">
+  <h2>You already know this — on your phone</h2>
+  <div class="bridge">
+    <div class="h l">Phone (you know this)</div><div></div><div class="h r">Desktop (same idea, shown)</div>
+    <div class="b">📱 App</div><div class="arrow">→</div><div class="b r">🖥️ Program</div>
+    <div class="b">📰 Feed</div><div class="arrow">→</div><div class="b r">📄 File</div>
+    <div class="b">🖼️ Camera roll</div><div class="arrow">→</div><div class="b r">📁 Folder</div>
+    <div class="b">🛒 App Store</div><div class="arrow">→</div><div class="b r">📦 Installer</div>
+    <div class="b">☁️ Cloud photos</div><div class="arrow">→</div><div class="b r">🔄 Sync</div>
+  </div>
+</section>
+
+<!-- 5 · THE HOOK -->
+<section class="slide img" style="--img:url('assets/s1/slide-5.webp')" data-notes="Do the hook BEFORE this slide: screen-share, download a file, 'lose' it, collect theories in chat, leave it unresolved. Then reveal: it was in Downloads all along. Nothing on a computer goes nowhere — it goes somewhere, and now you know where to look.">
+  <h2>"Where did my download go?" 🔍</h2>
+  <p class="lead">Nothing on a computer goes <i>nowhere</i>. It goes <b>somewhere</b> — and now you know where to look.</p>
+  <div class="cards c3" style="flex:0">
+    <div class="card blue"><div class="ico">⬇️</div><h3>Downloads</h3><p>Where the browser drops everything — like your phone's Screenshots album.</p></div>
+    <div class="card"><div class="ico">🖥️</div><h3>Desktop</h3><p>The "front of the desk" — visible, easy to clutter.</p></div>
+    <div class="card green"><div class="ico">📁</div><h3>Documents</h3><p>The default home for your work.</p></div>
+  </div>
+  <div class="strip key"><b>Lost a file? Check these three first</b> — that's 90% of "I lost my file."</div>
+</section>
+
+<!-- 6 · FOLDER TREE + NAMING -->
+<section class="slide img" style="--img:url('assets/s1/slide-6.webp')" data-notes="Build this tree live while narrating the why at each level: bucket → subject → specific thing. Same nesting they already do: Photos → Albums → that one trip. Then the naming rule — the single habit that separates people who lose work from people who don't.">
+  <h2>Build a filing cabinet that makes sense</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.6em;align-items:center;flex:1">
+    <div class="tree">
+<span class="f">📁 Term1/</span>
+  <span class="i">└</span> <span class="f">📁 Science/</span>
+      <span class="i">└</span> <span class="f">📁 Labs/</span>
+          <span class="i">└</span> <span class="file">📄 2026-06-volcano-lab-v2</span>
+    </div>
+    <div>
+      <ul class="big" style="margin-left:0;list-style:none">
+        <li><span class="num">1</span><b>Bucket</b> → subject → specific thing. Three levels, like Photos → Albums → that trip.</li>
+        <li><span class="num">2</span>Name for <b>future-you</b>: <code style="color:var(--gold)">YYYY-MM-topic-vN</code></li>
+        <li><span class="num">3</span>Dates sort themselves · versions stop overwrites.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="strip warn"><b>Not</b> <i>"New Document"</i>, <i>"final final REAL final"</i> — boring names are <b>professional</b> names.</div>
+</section>
+
+<!-- 7 · HOTKEYS -->
+<section class="slide img" style="--img:url('assets/s1/slide-7.webp')" data-notes="Call-and-response on a scratch file, fast and fun. Mac = Cmd, everyone else = Ctrl — same key, different name. Z saves your life — burn it in.">
+  <h2>Four shortcuts you'll use 10,000 times</h2>
+  <p class="lead">Mac uses <b>Cmd</b>, everyone else uses <b>Ctrl</b> — same key, different name.</p>
+  <div class="keys">
+    <div class="keycap"><div class="k">⌘/Ctrl + A</div><div class="d">Select all</div></div>
+    <div class="keycap"><div class="k">⌘/Ctrl + C</div><div class="d">Copy</div></div>
+    <div class="keycap"><div class="k">⌘/Ctrl + V</div><div class="d">Paste</div></div>
+    <div class="keycap save"><div class="k">⌘/Ctrl + Z</div><div class="d">Undo — saves your life</div></div>
+  </div>
+</section>
+
+<!-- 8 · RECOVERY LAB (the heart) -->
+<section class="slide img hero" style="--img:url('assets/s1/slide-8.webp')" data-notes="THE EMOTIONAL CORE. Frame it: the scariest moment for a new user is 'I deleted it / I saved over it.' Today we kill that fear permanently — destroy three files on purpose, bring every one back. Demo each on screen-share, then students do it in their copied Google Drive Sandbox.">
+  <span class="weektag" style="color:var(--green);border-color:var(--green);background:rgba(63,185,138,.16)">THE HEART OF THE SESSION ♥</span>
+  <h2>Recovery Lab — "gone" almost never means gone</h2>
+  <div class="cards c3" style="flex:1">
+    <div class="card green"><div class="ico">🗑️</div><h3><span class="step">1</span>Trash</h3><p>Like "Recently Deleted." Delete → <b>Trash → Restore</b>. Drive keeps it 30 days.</p></div>
+    <div class="card blue"><div class="ico">⏱️</div><h3><span class="step">2</span>Version history</h3><p>The time machine. Overwrote your work? <b>Scroll back</b> and restore an earlier version.</p></div>
+    <div class="card orange"><div class="ico">👯</div><h3><span class="step">3</span>Conflict copy</h3><p>Two near-identical files. <b>Compare, keep the superset</b>, archive the loser — never delete blind.</p></div>
+  </div>
+  <div class="strip key"><b>After today:</b> you never panic about losing work again.</div>
+</section>
+
+<!-- 9 · VERSION HISTORY STEPS (Google) -->
+<section class="slide img" style="--img:url('assets/s1/slide-9.svg')" data-notes="The one step people stumble on with personal Google accounts: a copied Doc starts a FRESH history, so name the good version BEFORE you overwrite. Reassurance: looking changes nothing — restoring just adds a new version on top. You can't make it worse by exploring.">
+  <h2>Version history — the magic, step by step <span style="font-size:.6em;color:var(--ink-dim)">(Google Docs)</span></h2>
+  <ul class="big" style="list-style:none;margin-left:0;flex:1;justify-content:center">
+    <li><span class="num">1</span><b>Name the good version first:</b> File → Version history → <b>Name current version</b> → <code style="color:var(--gold)">good copy</code></li>
+    <li><span class="num">2</span><b>Destroy it on purpose:</b> Ctrl/Cmd + A, type garbage. It <b>auto-saves</b> — "I never pressed save."</li>
+    <li><span class="num">3</span><b>Travel back:</b> File → Version history → See version history <span style="color:var(--ink-dim)">(Ctrl/Cmd + Alt + Shift + H)</span></li>
+    <li><span class="num">4</span>Click <code style="color:var(--gold)">good copy</code> → <b>Restore this version</b> → it's back. ✨</li>
+  </ul>
+  <div class="strip key"><b>Nothing is lost by looking.</b> Restoring just adds a new version on top — you can't make it worse by exploring.</div>
+</section>
+
+<!-- 10 · JUDGMENT: CLOUD/LOCAL/NOWHERE -->
+<section class="slide img" style="--img:url('assets/s1/slide-10.svg')" data-notes="Pairs sort the 8 cards in breakout, then poll each in class. Don't moralize the 'nowhere' ones — ask: what's the worst week this file could have? If the answer is 'identity stolen' or 'real trouble' — that's your signal it shouldn't be on your drive at all.">
+  <h2>Three homes for any file</h2>
+  <div class="three-col">
+    <div class="col cloud"><h3>☁️ Cloud</h3><ul><li>Group project draft</li><li>Homework essay</li><li>Club budget sheet</li></ul><p style="font-size:.82em;margin-top:.5em;color:var(--blue)">Synced · shared · recoverable</p></div>
+    <div class="col local"><h3>💻 Local</h3><ul><li>Meme collection</li><li>Low-stakes scratch files</li></ul><p style="font-size:.82em;margin-top:.5em;color:var(--green)">One machine · no recovery need</p></div>
+    <div class="col nowhere"><h3>🚫 Nowhere</h3><ul><li>ID / passport scan</li><li>A friend's private photos</li><li>Wi-Fi password list</li></ul><p style="font-size:.82em;margin-top:.5em;color:var(--pink)">Risk outlives convenience</p></div>
+  </div>
+  <div class="strip judge"><b>The question that decides it:</b> "What's the worst week this file could have?"</div>
+</section>
+
+<!-- 11 · ASSIGNMENT 1 -->
+<section class="slide img" style="--img:url('assets/s1/slide-11.svg')" data-notes="Start it in class — the version-history step is the one people get stuck on, and you're right here. Show them the grading bar: same checklist you grade with. Structure beats decoration, always.">
+  <h2>Assignment 1 — in your own Google Drive</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card"><h3>Build &amp; recover</h3><ul><li>Nested directory: <b>≥ 3 levels, ≥ 6 files</b>, named <code>YYYY-MM-topic-vN</code></li><li>Overwrite a file → <b>recover via version history</b></li><li>Delete a file → <b>restore from trash</b></li><li>Submit: screenshot of the tree + a 3-sentence recovery note</li></ul></div>
+    <div class="card green"><h3>The grading bar <span style="font-size:.7em;color:var(--ink-dim)">(no secrets)</span></h3><ul><li><b>Proficient:</b> logical nesting + consistent naming; both recoveries correct</li><li><b>Mastery:</b> naming shows a <i>system</i>; note explains <i>when</i> to use version history vs. trash</li></ul><p style="margin-top:.5em">Competency scored: <b>File operations</b>.</p></div>
+  </div>
+  <div class="strip"><b>Structure over styling</b> — random folders named "stuff" and "New Folder (2)" = we have work to do.</div>
+</section>
+
+<!-- 12 · CLOSE -->
+<section class="slide img hero" style="--img:url('assets/s1/slide-12.svg')" data-notes="End on the win: every file came back. Exit ticket in chat. Confirm the due date and the submit link on /learn. Tomorrow: Web, Search & Email.">
+  <span class="weektag">EXIT TICKET</span>
+  <p class="big-quote">Name one thing your phone <span class="hl">hides</span> that the desktop <span class="hl">shows</span> you.</p>
+  <div class="strip key"><b>You broke three files today — and brought every one back.</b> Finish Assignment 1 this week. Tomorrow: Web, Search &amp; Email.</div>
+</section>
+
+<div id="bar"></div>
+<div id="counter"></div>
+<div id="hint">← → navigate · N speaker notes · P print/PDF</div>
+<div id="notes"><h4>SPEAKER NOTES</h4><div id="notes-body"></div></div>
+<div id="deck-nav"><button onclick="show(i-1)" aria-label="Previous">‹</button><button onclick="show(i+1)" aria-label="Next">›</button></div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  const notes=document.getElementById('notes'),notesBody=document.getElementById('notes-body');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    document.getElementById('counter').textContent=(i+1)+' / '+slides.length;
+    document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+    notesBody.textContent=slides[i].dataset.notes||'(no notes)';
+    location.hash=i+1;
+  }
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(i+1)}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(i-1)}
+    else if(e.key==='Home')show(0);
+    else if(e.key==='End')show(slides.length-1);
+    else if(e.key.toLowerCase()==='n')notes.classList.toggle('show');
+    else if(e.key.toLowerCase()==='p')print();
+  });
+  show(parseInt(location.hash.slice(1))-1||0);
+</script>
+</body>
+</html>

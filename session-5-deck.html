@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 5 — Presentations &amp; Live Delivery · Ascent Foundations</title>
+<style>
+  :root{
+    --navy:#101733; --navy-soft:#1c2550;
+    --gold:#b07d10; --gold-bright:#e3b341; --gold-dim:#8a6a17;
+    --bg:#f6f8fd; --bg-accent:#eef2fb; --surface:#ffffff; --card:#ffffff;
+    --ink:#131a36; --ink-dim:#586089;
+    --pink:#e23d68; --orange:#e3742f; --blue:#2f6fed; --green:#1f9d63;
+    --border:rgba(16,23,51,.10); --hairline:rgba(16,23,51,.07);
+    --shadow-sm:0 1px 2px rgba(16,23,51,.05), 0 1px 3px rgba(16,23,51,.06);
+    --shadow-md:0 8px 24px rgba(16,23,51,.08), 0 2px 6px rgba(16,23,51,.05);
+    --shadow-lg:0 24px 60px rgba(16,23,51,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#e9edf6;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink)}
+  .slide{
+    display:none;position:absolute;inset:0;margin:auto;
+    width:min(100vw,177.78vh);height:min(56.25vw,100vh);
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.12) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.07) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+    padding:4% 5%;flex-direction:column;justify-content:center;overflow:hidden;-webkit-font-smoothing:antialiased;
+  }
+  .slide.active{display:flex}
+  /* light decks: clean surfaces, no dark photo backgrounds (the --img is ignored) */
+  .slide.img,.slide.img.hero{
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.14) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.08) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+  }
+  .pill{display:inline-block;border:1.5px solid var(--gold);color:var(--gold);
+    border-radius:999px;padding:.45em 1.1em;font-size:.85em;font-weight:700;
+    letter-spacing:.05em;margin-right:.6em;margin-bottom:.5em;white-space:nowrap}
+  .pill.solid{background:var(--gold-bright);color:#2a1f02;border-color:var(--gold-bright)}
+  .weektag{display:inline-block;background:rgba(227,179,65,.16);border:1px solid rgba(227,179,65,.4);
+    color:var(--gold);border-radius:8px;padding:.3em .95em;font-size:.75em;font-weight:700;
+    letter-spacing:.1em;margin-bottom:.7em;align-self:flex-start;text-transform:uppercase}
+  .weektag .sess{color:var(--ink-dim);letter-spacing:.04em;font-weight:600}
+  h1{font-size:3.1em;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:.4em;color:var(--navy)}
+  h2{font-size:1.9em;font-weight:800;line-height:1.15;letter-spacing:-.01em;margin-bottom:.35em;color:var(--navy)}
+  .lead{font-size:1.15em;color:var(--ink-dim);line-height:1.55;max-width:38em}
+  .big-quote{font-size:2.1em;font-weight:800;line-height:1.25;letter-spacing:-.01em;max-width:20em;margin:0;color:var(--navy)}
+  .big-quote .hl{color:var(--gold)}
+  .section-kicker{display:block;color:var(--gold);font-size:.78em;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.45em}
+  .cards{display:grid;gap:1.1em;margin-top:1.2em;align-content:center}
+  .cards.c3{grid-template-columns:repeat(3,1fr)}
+  .cards.c2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:1.05em 1.15em;display:flex;flex-direction:column;box-shadow:var(--shadow-sm);
+    border-top:3px solid var(--gold-bright)}
+  .card.pink{border-top-color:var(--pink)} .card.orange{border-top-color:var(--orange)}
+  .card.blue{border-top-color:var(--blue)} .card.green{border-top-color:var(--green)}
+  .card .ico{font-size:1.9em;margin-bottom:.25em;line-height:1}
+  .card h3{font-size:1.05em;margin-bottom:.45em;color:var(--navy)}
+  .card h3 .step{color:var(--gold);font-weight:800;margin-right:.35em}
+  .card.pink h3 .step{color:var(--pink)} .card.blue h3 .step{color:var(--blue)} .card.green h3 .step{color:var(--green)}
+  .card p,.card li{font-size:.88em;color:var(--ink-dim);line-height:1.45}
+  .card ul{margin-left:1.1em}
+  .card p b,.card li b{color:var(--navy)}
+  .strip{margin-top:1.2em;background:rgba(47,111,237,.08);border:1px solid rgba(47,111,237,.25);
+    border-radius:12px;padding:.75em 1.1em;font-size:.92em;line-height:1.5;color:var(--ink)}
+  .strip b{color:var(--blue)}
+  .strip.judge{background:rgba(227,179,65,.12);border-color:rgba(227,179,65,.45)} .strip.judge b{color:var(--gold)}
+  .strip.key{background:rgba(31,157,99,.1);border-color:rgba(31,157,99,.35)} .strip.key b{color:var(--green)}
+  .strip.warn{background:rgba(226,61,104,.09);border-color:rgba(226,61,104,.35)} .strip.warn b{color:var(--pink)}
+  .two-strips{display:grid;grid-template-columns:1fr 1fr;gap:.9em;margin-top:1.2em}
+  .two-strips .strip{margin-top:0}
+  .stack{display:flex;flex-direction:column;gap:.6em;margin-top:1.2em}
+  .stack .strip{margin-top:0}
+  table{width:100%;border-collapse:collapse;margin-top:.4em;font-size:.9em}
+  th{text-align:left;color:var(--gold);font-weight:700;padding:.5em .7em;border-bottom:2px solid rgba(227,179,65,.4)}
+  td{padding:.45em .7em;border-bottom:1px solid var(--hairline);color:var(--ink-dim);vertical-align:top;line-height:1.4}
+  td:first-child{color:var(--navy);font-weight:600}
+  td b{color:var(--navy)}
+  .agenda td:first-child{color:var(--gold);font-weight:700;width:6.5em;white-space:nowrap}
+  ul.big{margin:1em 0 0 1.2em;display:flex;flex-direction:column;gap:.55em;font-size:1.02em;line-height:1.5;color:var(--ink-dim)}
+  ul.big b{color:var(--navy)}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;
+    border:2px solid var(--gold);border-radius:50%;color:var(--gold);font-weight:700;margin-right:.6em;flex:none}
+  /* visual helpers (session 1) */
+  .bridge{display:grid;grid-template-columns:1fr auto 1fr;gap:.7em 1.4em;align-items:center;margin:0;max-width:46em}
+  .bridge .h{font-size:.78em;letter-spacing:.1em;font-weight:700;text-transform:uppercase;padding-bottom:.3em;border-bottom:2px solid rgba(227,179,65,.4)}
+  .bridge .h.l{color:var(--ink-dim)} .bridge .h.r{color:var(--gold)}
+  .bridge .b{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:.6em .9em;font-size:1.02em;font-weight:600;box-shadow:var(--shadow-sm);color:var(--navy)}
+  .bridge .b.r{border-color:rgba(227,179,65,.5)}
+  .bridge .arrow{color:var(--gold);font-size:1.3em;text-align:center}
+  .tree{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surface);border:1px solid var(--border);
+    border-radius:14px;padding:1.2em 1.5em;font-size:1.15em;line-height:1.9;margin:0;max-width:24em;box-shadow:var(--shadow-sm)}
+  .tree .f{color:var(--gold)} .tree .file{color:var(--ink-dim)} .tree .i{color:#9aa3c4}
+  .keys{display:flex;gap:1.2em;justify-content:center;margin:0;flex-wrap:wrap}
+  .keycap{background:var(--surface);border:1px solid var(--border);border-bottom-width:4px;border-bottom-color:var(--gold-bright);border-radius:12px;
+    padding:.8em 1em;text-align:center;min-width:7.2em;box-shadow:var(--shadow-sm)}
+  .keycap .k{font-size:1.35em;font-weight:800;color:var(--navy)}
+  .keycap .d{font-size:.82em;color:var(--ink-dim);margin-top:.35em}
+  .keycap.save{border-bottom-color:var(--green)} .keycap.save .k{color:var(--green)}
+  .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1em;margin:0;width:100%}
+  .three-col .col{border-radius:13px;padding:.95em 1.05em;border:1px solid;background:var(--surface);box-shadow:var(--shadow-sm)}
+  .col.cloud{border-color:rgba(47,111,237,.4)} .col.local{border-color:rgba(31,157,99,.4)} .col.nowhere{border-color:rgba(226,61,104,.4)}
+  .three-col h3{font-size:1.05em;margin-bottom:.5em}
+  .col.cloud h3{color:var(--blue)} .col.local h3{color:var(--green)} .col.nowhere h3{color:var(--pink)}
+  .three-col li{font-size:.86em;color:var(--ink-dim);line-height:1.5;margin-left:1.1em}
+  /* flow (portal guide) */
+  .flow{display:flex;align-items:center;gap:.5em;margin:0;flex-wrap:wrap}
+  .flow .step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7em .9em;font-size:.9em;font-weight:600;text-align:center;flex:1;min-width:8em;color:var(--navy);box-shadow:var(--shadow-sm)}
+  .flow .step span{display:block;color:var(--ink-dim);font-size:.78em;font-weight:400;margin-top:.2em}
+  .flow .arr{color:var(--gold);font-size:1.3em}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:2.5em}
+  .stat{background:var(--surface);padding:1.3em 1.4em;display:flex;flex-direction:column;gap:.2em}
+  .stat-value{font-size:1.9em;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.02em}
+  .stat-value span{color:var(--gold)}
+  .stat-label{font-size:.85em;color:var(--ink-dim);line-height:1.4}
+  .quick-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1em}
+  .quick-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.4em;box-shadow:var(--shadow-sm);text-decoration:none;color:inherit;display:block}
+  .quick-card h3{font-size:1.12em;color:var(--navy);margin-bottom:.35em}
+  .quick-card p{color:var(--ink-dim);font-size:.93em;line-height:1.5}
+  .quick-card .more{display:inline-block;margin-top:.8em;color:var(--gold);font-weight:700;font-size:.85em}
+  .ico-badge{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.4em;margin-bottom:.5em;background:rgba(227,179,65,.16)}
+  .ico-badge.blue{background:rgba(47,111,237,.12)} .ico-badge.green{background:rgba(31,157,99,.12)} .ico-badge.pink{background:rgba(226,61,104,.12)}
+  /* check grid (day 0) */
+  .check{display:grid;grid-template-columns:1fr 1fr;gap:.6em 1.6em;margin:0;font-size:1.05em;color:var(--ink-dim)}
+  .check div{padding:.2em 0}
+  .check b{color:var(--navy)}
+  /* footer chrome */
+  #bar{position:fixed;left:0;bottom:0;height:3px;background:var(--gold-bright);width:0;transition:width .2s;z-index:30}
+  #counter{position:fixed;right:14px;bottom:10px;font-size:12px;color:var(--ink-dim);z-index:30}
+  #hint{position:fixed;left:14px;bottom:8px;font-size:11px;color:#9aa3c4;z-index:30}
+  #notes{position:fixed;inset:auto 0 0 0;background:#0e1336;border-top:2px solid var(--gold-bright);
+    padding:1.1em 1.6em 1.4em;max-height:42%;overflow:auto;display:none;z-index:40}
+  #notes.show{display:block}
+  #notes h4{color:var(--gold-bright);font-size:.8em;letter-spacing:.14em;margin-bottom:.5em}
+  #notes-body{font-size:1.02em;line-height:1.6;color:#c2c9e6;max-width:60em}
+  @media print{.slide{display:flex;position:relative;page-break-after:always;width:100%;height:100vh}#bar,#counter,#hint,#notes{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  #deck-nav{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:8px;z-index:35}
+  #deck-nav button{background:var(--surface);border:1px solid var(--border);color:var(--ink);border-radius:9px;width:46px;height:36px;font-size:18px;line-height:1;cursor:pointer;box-shadow:var(--shadow-sm)}
+  #deck-nav button:hover{border-color:var(--gold)}
+  @media print{#deck-nav{display:none}}
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide img hero" style="--img:url('assets/s5/slide-1.svg')" data-notes="Welcome them to the first live-delivery session. Set the tone: today is low stakes — it is the first time on camera, and capstone delivery is Session 8. Quick housekeeping note for the cohort: the typing baseline thread that ran Sessions 1 through 4 has now ended, so no typing check today. Pre-work was a talk topic plus one supporting fact — ask in chat who has both ready before you start.">
+  <div style="margin-top:1.2em">
+    <span class="weektag">ASCENT FOUNDATIONS · WEEKEND 3 <span class="sess">— Saturday</span></span>
+    <h1>Presentations &amp;<br><span style="color:var(--gold)">Live Delivery</span></h1>
+    <p class="lead">Today you build a four-slide deck and deliver it live — on camera, in a breakout room. First time presenting. Low stakes. Real practice.</p>
+    <div style="margin-top:1.6em">
+      <span class="pill solid">SESSION 5</span>
+      <span class="pill">ONLINE · 120 MIN</span>
+      <span class="pill">COMPETENCY: PRESENTATIONS</span>
+    </div>
+    <div class="strip" style="margin-top:1.3em;max-width:40em"><b>Heads up:</b> the typing-speed thread has ended — it ran Sessions 1–4. No typing check today.</div>
+  </div>
+</section>
+
+<!-- 2 · BIG IDEA -->
+<section class="slide" data-notes="This is the spine of the session. Say it once, slowly, then come back to it at every block. A slide is a billboard, not a document. If the words on the screen are a script, the audience reads ahead, stops listening to you, and you are now redundant. One idea per slide forces you to be the one carrying the message — which is the whole point of standing up to talk.">
+  <span class="weektag">THE ONE BIG IDEA</span>
+  <p class="big-quote">One idea <span class="hl">per slide.</span><br>If they're <span class="hl">reading</span>, they're not <span class="hl">listening.</span></p>
+  <div class="strip key"><b>Why it matters:</b> the slide is a billboard, not a script. Your job is to carry the message — the slide just points at it.</div>
+</section>
+
+<!-- 3 · AGENDA -->
+<section class="slide" data-notes="Two hours, six blocks. The heart is the 75–110 LIVE delivery block in breakout rooms — protect it even if the build runs long. If you must cut, trim accessibility to contrast-only, never the rooms. Note the judgment checkpoint up front: what to CUT to stay under 25 words a slide.">
+  <h2>Today — 120 minutes</h2>
+  <table class="agenda">
+    <tr><td>0–10</td><td>Recap + <b>judgment hook</b>: dense slide vs. clean slide, poll in chat</td></tr>
+    <tr><td>10–30</td><td>Visual narrative — the <b>CPEC arc</b> · the 25-words/slide rule</td></tr>
+    <tr><td>30–45</td><td>Contrast &amp; accessibility · grouping &amp; align · <b>screen-share basics</b></td></tr>
+    <tr><td>45–75</td><td>Build your <b>4-slide CPEC deck</b> in class · rehearse share-one-window</td></tr>
+    <tr><td>75–110</td><td><b>LIVE delivery</b> — 3 breakout rooms, 3-min talks, peer feedback ⟵ the heart</td></tr>
+    <tr><td>110–120</td><td>Debrief + <b>Assignment 5</b> brief + close</td></tr>
+  </table>
+  <div class="strip judge"><b>Judgment checkpoint:</b> What do you CUT to stay under 25 words a slide — signal vs. noise?</div>
+</section>
+
+<!-- 4 · VISUAL NARRATIVE: CPEC ARC -->
+<section class="slide" data-notes="Walk the four moves left to right — a talk is a journey, not a pile of slides. Context: why should anyone care, where are we. Problem: the tension, what's wrong. Evidence: ONE fact, number, or example — not five. Call-to-action: what happens now, what do you want from them. One CPEC job per slide, four slides, done. Live-demo: take a rambling paragraph and split it across these four.">
+  <h2>A talk is a journey: the <span style="color:var(--gold)">CPEC</span> arc</h2>
+  <div class="cards c3" style="grid-template-columns:repeat(4,1fr);flex:1">
+    <div class="card blue"><div class="ico">🧭</div><h3><span class="step">C</span>Context</h3><p>Why care? Where are we? Set the scene in one line.</p></div>
+    <div class="card pink"><div class="ico">⚠️</div><h3><span class="step">P</span>Problem</h3><p>The tension. What's wrong, and who feels it?</p></div>
+    <div class="card orange"><div class="ico">📊</div><h3><span class="step">E</span>Evidence</h3><p><b>One</b> fact, number, or example. Not five.</p></div>
+    <div class="card green"><div class="ico">🎯</div><h3><span class="step">C</span>Call-to-action</h3><p>What now? Exactly what you want them to do.</p></div>
+  </div>
+  <div class="strip key"><b>One CPEC job per slide.</b> Four moves, four slides — Context → Problem → Evidence → Call-to-action.</div>
+</section>
+
+<!-- 5 · THE 25-WORDS RULE: BEFORE/AFTER -->
+<section class="slide" data-notes="This is where the skill lives. Show the before slide — 60 words, full sentences, a wall. Nobody reads it; they zone out. Then the after — 14 words, one idea. Same meaning. The cut IS the skill. The number and the example don't get crammed in — they go on the NEXT slide. Ask them: what got cut? 'In our school there is currently a significant and ongoing problem' becomes nothing. That filler was noise.">
+  <h2>The 25-words rule — the cut <span style="color:var(--gold)">is</span> the skill</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card pink"><h3>❌ Before <span style="font-size:.7em;color:var(--ink-dim)">(60 words — a wall)</span></h3><p style="font-size:.82em">"In our school there is currently a significant and ongoing problem with the amount of food that gets thrown away in the cafeteria every single day, and many students and teachers have noticed this but nobody has actually measured how much food is being wasted or proposed any kind of realistic solution to fix it."</p></div>
+    <div class="card green"><h3>✅ After <span style="font-size:.7em;color:var(--ink-dim)">(14 words — Problem slide)</span></h3><p style="font-size:1.05em;color:var(--ink)"><b>Our cafeteria wastes food daily.</b><br>No one has measured how much — or proposed a fix.</p><p style="margin-top:.7em;font-size:.82em">The number and example go on the <i>next</i> slide, not crammed here.</p></div>
+  </div>
+  <div class="strip warn"><b>Cap: 25 words per slide.</b> Same meaning, half the words — everything cut was filler.</div>
+</section>
+
+<!-- 6 · JUDGMENT CHECKPOINT: WHAT TO CUT -->
+<section class="slide" data-notes="This is the judgment slide — make them do the deciding, not you. Signal is the one idea the audience must leave with. Noise is everything else: hedges, throat-clearing, the second point you snuck in, decoration. The test: read a line aloud — if removing it doesn't change what the audience walks away knowing, it's noise. Cut it. The hardest cut is your favourite sentence that doesn't serve the goal.">
+  <h2>What do you <span style="color:var(--gold)">CUT</span>? Signal vs. noise</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card green"><div class="ico">📡</div><h3>Signal — keep</h3><ul><li>The <b>one idea</b> the audience must leave with</li><li>The single number or example that proves it</li><li>The specific ask in your Call-to-action</li></ul></div>
+    <div class="card pink"><div class="ico">🔇</div><h3>Noise — cut</h3><ul><li>Hedges &amp; throat-clearing: <i>"currently there is an ongoing…"</i></li><li>A <b>second</b> CPEC job jammed onto the slide</li><li>Decoration, clip-art, full sentences as scripts</li></ul></div>
+  </div>
+  <div class="strip judge"><b>The test:</b> read a line aloud — if cutting it doesn't change what they walk away knowing, it's noise. Cut it.</div>
+</section>
+
+<!-- 7 · CONTRAST, ACCESSIBILITY, GROUPING, SHARE -->
+<section class="slide" data-notes="Three quick craft skills, then the online-talk mechanics. Contrast: dark-on-light or light-on-dark, never grey-on-grey — aim 4.5:1, run the checker if unsure, and do the squint test. Grouping: select related objects and group them so they move as one and never drift. Snap-to-grid and alignment guides so nothing is 3px off. Then presenter view versus projection: your notes are for YOU, the audience sees only the slide. Screen-share: share ONE WINDOW, not your whole desktop — a wrong share leaks your tabs to twelve people. Check the shared preview, keep your camera on.">
+  <h2>Make it readable — and share it right</h2>
+  <div class="cards c3" style="flex:1">
+    <div class="card blue"><div class="ico">🌗</div><h3>Contrast &amp; access</h3><p>Dark-on-light or light-on-dark — <b>never</b> grey-on-grey. Aim <b>4.5:1</b>. Squint test: if the title blurs, it fails. Don't rely on colour alone.</p></div>
+    <div class="card orange"><div class="ico">🧲</div><h3>Group &amp; align</h3><p><b>Group</b> related objects so they move as one. <b>Snap-to-grid</b> and alignment guides — nothing 3px off. Tidy layout reads as competence.</p></div>
+    <div class="card green"><div class="ico">🖥️</div><h3>Share &amp; present</h3><p><b>Presenter view</b> = notes for you. Audience sees only the slide. <b>Share one window</b>, not the desktop. Check the preview, camera on.</p></div>
+  </div>
+  <div class="strip warn"><b>Wrong share leaks your tabs to 12 people.</b> Share a single window — verify the shared preview before you talk.</div>
+</section>
+
+<!-- 8 · THINK LIKE A BUILDER -->
+<section class="slide" data-notes="This is the thread slide — connect today back to Session 4's computational thinking. A talk is not a pile of slides; it is a STRUCTURED ARGUMENT. You decompose your message into parts (that's CPEC), you sequence those parts so each one sets up the next, and you cut anything that doesn't serve the goal. That is exactly the problem-solving competency: break the problem down, order the steps, remove what's irrelevant. A good deck is debugged the same way you debug code — strip it to the one path that works.">
+  <span class="weektag" style="color:var(--green);border-color:var(--green);background:rgba(63,185,138,.16)">🛠 THINK LIKE A BUILDER · the thread continues</span>
+  <h2>A talk is a <span style="color:var(--gold)">structured argument</span></h2>
+  <div class="cards c3" style="flex:1">
+    <div class="card green"><div class="ico">🧩</div><h3><span class="step">1</span>Decompose</h3><p>Break your message into parts. CPEC <i>is</i> decomposition — four named jobs instead of one blur.</p></div>
+    <div class="card green"><div class="ico">➡️</div><h3><span class="step">2</span>Sequence</h3><p>Order the parts so each sets up the next: Context before Problem, Evidence before the ask.</p></div>
+    <div class="card green"><div class="ico">✂️</div><h3><span class="step">3</span>Cut</h3><p>Remove anything that doesn't serve the goal — the same instinct you use to debug code down to what works.</p></div>
+  </div>
+  <div class="strip key"><b>PROBLEM-SOLVING competency:</b> decompose → sequence → cut. Build a talk the way you build a solution.</div>
+</section>
+
+<!-- 9 · LIVE DELIVERY IN BREAKOUT ROOMS -->
+<section class="slide" data-notes="This is the heart of the session and the threshold the whole course builds toward — first time on camera. Pre-assigned: 3 rooms of about 4. In each room every student screen-shares and delivers a 3-minute talk; peers post exactly one structure comment and one delivery comment to the shared form. Per-room math: 4 talks times roughly 5 minutes each is about 20 minutes — fits the 35-minute window with buffer. Coach the single biggest fix before rooms open: look at the CAMERA, not the slide. Cloud recording is on so you can review rooms you can't be in; you'll rotate roughly 7 minutes per room. Chat etiquette: mics muted, claps in chat, questions held to the feedback slot.">
+  <h2>Live delivery — in your breakout room <span style="font-size:.55em;color:var(--ink-dim)">(the heart)</span></h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card"><h3>How it runs</h3><ul><li><b>3 rooms of ~4</b> (pre-assigned, mixed levels)</li><li>Each student <b>screen-shares + delivers 3 min</b></li><li>Peers post <b>1 structure + 1 delivery</b> note to the shared form</li><li>~5 min/talk × 4 ≈ 20 min — fits the window</li></ul></div>
+    <div class="card blue"><h3>Online etiquette</h3><ul><li>Mics <b>muted</b> while someone presents</li><li><b>Claps in chat</b> (👏 / "🔥 slide 3") — don't unmute</li><li>Questions held to the <b>feedback slot</b></li><li>Facilitator rotates; <b>cloud recording on</b></li></ul></div>
+  </div>
+  <div class="strip key"><b>The one fix that matters:</b> look at the <i>camera</i>, not the slide. Presenter view is for you — the camera is for your audience.</div>
+</section>
+
+<!-- 10 · ASSIGNMENT 5 + GRADING BAR -->
+<section class="slide" data-notes="Show them the exact rubric you grade with — no secrets. Assignment 5: refine and resubmit your 4-slide deck applying the peer feedback you got, plus a 2-sentence note naming one piece of feedback you applied and what you changed. Scored on structure and contrast, NOT visual flair — no points for animations or stock photos. Live delivery is pass/revise only and low stakes; revise is a re-do, not a penalty. Walk the four rubric levels, and read out the pass/revise bar so the camera-shy know exactly what 'pass' takes.">
+  <h2>Assignment 5 + the grading bar</h2>
+  <div style="display:grid;grid-template-columns:.85fr 1.15fr;gap:1.3em;flex:1;align-items:stretch">
+    <div class="card" style="justify-content:center"><h3>The task</h3><ul style="margin-left:1.1em"><li><b>Refine &amp; resubmit</b> your 4-slide deck, applying peer feedback</li><li>Add a <b>2-sentence note</b>: one piece of feedback you applied + what you changed</li><li>Scored on <b>structure + contrast</b>, not flair — no points for animations or stock photos</li></ul></div>
+    <div style="display:flex;flex-direction:column;justify-content:center">
+      <table>
+        <tr><th>Level</th><th>Presentations competency</th></tr>
+        <tr><td>0 · Missing</td><td>Text walls; sentences on slides; no CPEC order</td></tr>
+        <tr><td>1 · Emerging</td><td>Under 25 words, but order weak / two jobs on one slide</td></tr>
+        <tr><td>2 · Proficient</td><td>Clear CPEC arc, one job per slide; high contrast; grouped &amp; aligned</td></tr>
+        <tr><td>3 · Mastery</td><td>Proficient <b>+</b> confident live delivery <b>+</b> adapts to a question</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="strip"><b>Live delivery — pass / revise (separate, low stakes):</b> <i>Pass</i> = delivered live, screen-shared, ~3 min, looked at camera at least half the time. <i>Revise</i> is a re-do, not a penalty.</div>
+</section>
+
+<!-- 11 · WHERE THIS LEADS: CAREER BEAT -->
+<section class="slide" data-notes="Zoom out. The reason we drill presentations is that every Track you might choose ends with you explaining your work to someone who didn't build it. Data analyst: the chart is useless if you can't tell the story behind it. Web/software dev: you pitch the feature and demo it. AI operations: you explain to non-technical teammates what the system does and why to trust it. Design: you present and defend the choices. CPEC works in all four — same arc, different content.">
+  <h2>Where this leads — <span style="color:var(--gold)">every Track</span> needs it</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card blue"><div class="ico">📈</div><h3>Data &amp; Analytics</h3><p>The chart is useless if you can't tell the story behind it. <b>Evidence → Call-to-action</b> is your daily job.</p></div>
+    <div class="card green"><div class="ico">💻</div><h3>Web &amp; Software</h3><p>You pitch the feature, demo it, defend the trade-offs. A clear three-minute walkthrough wins buy-in.</p></div>
+    <div class="card orange"><div class="ico">🤖</div><h3>AI Operations</h3><p>Explain to non-technical teammates what the system does — and <b>why to trust it</b>. Context first.</p></div>
+    <div class="card pink"><div class="ico">🎨</div><h3>Design</h3><p>You present and defend every choice. "Here's the problem, here's why this solves it" — that's CPEC.</p></div>
+  </div>
+  <div class="strip key"><b>Same arc, every Track:</b> communicating an idea clearly is the skill that makes all the others count.</div>
+</section>
+
+<!-- 12 · CLOSE + EXIT TICKET -->
+<section class="slide" data-notes="End on the win: they got on camera and delivered a live talk — the threshold this whole course is building them across. Exit ticket in chat — one sentence each. Confirm the Assignment 5 due date and the submit link on the portal. Remind them today was low stakes; the capstone delivery is Session 8, and everything they practiced today compounds toward it.">
+  <span class="weektag">EXIT TICKET</span>
+  <p class="big-quote">What did you <span class="hl">cut</span> from your deck — and why was it <span class="hl">noise</span>?</p>
+  <div class="strip key"><b>You delivered a live talk on camera today — that's the threshold.</b> Refine &amp; resubmit Assignment 5 this week. It builds toward the Session 8 capstone delivery.</div>
+</section>
+
+<div id="bar"></div>
+<div id="counter"></div>
+<div id="hint">← → navigate · N speaker notes · P print/PDF</div>
+<div id="notes"><h4>SPEAKER NOTES</h4><div id="notes-body"></div></div>
+<div id="deck-nav"><button onclick="show(i-1)" aria-label="Previous">‹</button><button onclick="show(i+1)" aria-label="Next">›</button></div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  const notes=document.getElementById('notes'),notesBody=document.getElementById('notes-body');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    document.getElementById('counter').textContent=(i+1)+' / '+slides.length;
+    document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+    notesBody.textContent=slides[i].dataset.notes||'(no notes)';
+    location.hash=i+1;
+  }
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(i+1)}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(i-1)}
+    else if(e.key==='Home')show(0);
+    else if(e.key==='End')show(slides.length-1);
+    else if(e.key.toLowerCase()==='n')notes.classList.toggle('show');
+    else if(e.key.toLowerCase()==='p')print();
+  });
+  show(parseInt(location.hash.slice(1))-1||0);
+</script>
+</body>
+</html>

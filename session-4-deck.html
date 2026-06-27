@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 4 — Structured Data, Logic &amp; Forms · Ascent Foundations</title>
+<style>
+  :root{
+    --navy:#101733; --navy-soft:#1c2550;
+    --gold:#b07d10; --gold-bright:#e3b341; --gold-dim:#8a6a17;
+    --bg:#f6f8fd; --bg-accent:#eef2fb; --surface:#ffffff; --card:#ffffff;
+    --ink:#131a36; --ink-dim:#586089;
+    --pink:#e23d68; --orange:#e3742f; --blue:#2f6fed; --green:#1f9d63;
+    --border:rgba(16,23,51,.10); --hairline:rgba(16,23,51,.07);
+    --shadow-sm:0 1px 2px rgba(16,23,51,.05), 0 1px 3px rgba(16,23,51,.06);
+    --shadow-md:0 8px 24px rgba(16,23,51,.08), 0 2px 6px rgba(16,23,51,.05);
+    --shadow-lg:0 24px 60px rgba(16,23,51,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#e9edf6;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink)}
+  .slide{
+    display:none;position:absolute;inset:0;margin:auto;
+    width:min(100vw,177.78vh);height:min(56.25vw,100vh);
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.12) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.07) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+    padding:4% 5%;flex-direction:column;justify-content:center;overflow:hidden;-webkit-font-smoothing:antialiased;
+  }
+  .slide.active{display:flex}
+  /* light decks: clean surfaces, no dark photo backgrounds (the --img is ignored) */
+  .slide.img,.slide.img.hero{
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.14) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.08) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+  }
+  .pill{display:inline-block;border:1.5px solid var(--gold);color:var(--gold);
+    border-radius:999px;padding:.45em 1.1em;font-size:.85em;font-weight:700;
+    letter-spacing:.05em;margin-right:.6em;margin-bottom:.5em;white-space:nowrap}
+  .pill.solid{background:var(--gold-bright);color:#2a1f02;border-color:var(--gold-bright)}
+  .weektag{display:inline-block;background:rgba(227,179,65,.16);border:1px solid rgba(227,179,65,.4);
+    color:var(--gold);border-radius:8px;padding:.3em .95em;font-size:.75em;font-weight:700;
+    letter-spacing:.1em;margin-bottom:.7em;align-self:flex-start;text-transform:uppercase}
+  .weektag .sess{color:var(--ink-dim);letter-spacing:.04em;font-weight:600}
+  h1{font-size:3.1em;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:.4em;color:var(--navy)}
+  h2{font-size:1.9em;font-weight:800;line-height:1.15;letter-spacing:-.01em;margin-bottom:.35em;color:var(--navy)}
+  .lead{font-size:1.15em;color:var(--ink-dim);line-height:1.55;max-width:38em}
+  .big-quote{font-size:2.1em;font-weight:800;line-height:1.25;letter-spacing:-.01em;max-width:20em;margin:0;color:var(--navy)}
+  .big-quote .hl{color:var(--gold)}
+  .section-kicker{display:block;color:var(--gold);font-size:.78em;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.45em}
+  .cards{display:grid;gap:1.1em;margin-top:1.2em;align-content:center}
+  .cards.c3{grid-template-columns:repeat(3,1fr)}
+  .cards.c2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:1.05em 1.15em;display:flex;flex-direction:column;box-shadow:var(--shadow-sm);
+    border-top:3px solid var(--gold-bright)}
+  .card.pink{border-top-color:var(--pink)} .card.orange{border-top-color:var(--orange)}
+  .card.blue{border-top-color:var(--blue)} .card.green{border-top-color:var(--green)}
+  .card .ico{font-size:1.9em;margin-bottom:.25em;line-height:1}
+  .card h3{font-size:1.05em;margin-bottom:.45em;color:var(--navy)}
+  .card h3 .step{color:var(--gold);font-weight:800;margin-right:.35em}
+  .card.pink h3 .step{color:var(--pink)} .card.blue h3 .step{color:var(--blue)} .card.green h3 .step{color:var(--green)}
+  .card p,.card li{font-size:.88em;color:var(--ink-dim);line-height:1.45}
+  .card ul{margin-left:1.1em}
+  .card p b,.card li b{color:var(--navy)}
+  .strip{margin-top:1.2em;background:rgba(47,111,237,.08);border:1px solid rgba(47,111,237,.25);
+    border-radius:12px;padding:.75em 1.1em;font-size:.92em;line-height:1.5;color:var(--ink)}
+  .strip b{color:var(--blue)}
+  .strip.judge{background:rgba(227,179,65,.12);border-color:rgba(227,179,65,.45)} .strip.judge b{color:var(--gold)}
+  .strip.key{background:rgba(31,157,99,.1);border-color:rgba(31,157,99,.35)} .strip.key b{color:var(--green)}
+  .strip.warn{background:rgba(226,61,104,.09);border-color:rgba(226,61,104,.35)} .strip.warn b{color:var(--pink)}
+  .two-strips{display:grid;grid-template-columns:1fr 1fr;gap:.9em;margin-top:1.2em}
+  .two-strips .strip{margin-top:0}
+  .stack{display:flex;flex-direction:column;gap:.6em;margin-top:1.2em}
+  .stack .strip{margin-top:0}
+  table{width:100%;border-collapse:collapse;margin-top:.4em;font-size:.9em}
+  th{text-align:left;color:var(--gold);font-weight:700;padding:.5em .7em;border-bottom:2px solid rgba(227,179,65,.4)}
+  td{padding:.45em .7em;border-bottom:1px solid var(--hairline);color:var(--ink-dim);vertical-align:top;line-height:1.4}
+  td:first-child{color:var(--navy);font-weight:600}
+  td b{color:var(--navy)}
+  .agenda td:first-child{color:var(--gold);font-weight:700;width:6.5em;white-space:nowrap}
+  ul.big{margin:1em 0 0 1.2em;display:flex;flex-direction:column;gap:.55em;font-size:1.02em;line-height:1.5;color:var(--ink-dim)}
+  ul.big b{color:var(--navy)}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;
+    border:2px solid var(--gold);border-radius:50%;color:var(--gold);font-weight:700;margin-right:.6em;flex:none}
+  /* visual helpers (session 1) */
+  .bridge{display:grid;grid-template-columns:1fr auto 1fr;gap:.7em 1.4em;align-items:center;margin:0;max-width:46em}
+  .bridge .h{font-size:.78em;letter-spacing:.1em;font-weight:700;text-transform:uppercase;padding-bottom:.3em;border-bottom:2px solid rgba(227,179,65,.4)}
+  .bridge .h.l{color:var(--ink-dim)} .bridge .h.r{color:var(--gold)}
+  .bridge .b{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:.6em .9em;font-size:1.02em;font-weight:600;box-shadow:var(--shadow-sm);color:var(--navy)}
+  .bridge .b.r{border-color:rgba(227,179,65,.5)}
+  .bridge .arrow{color:var(--gold);font-size:1.3em;text-align:center}
+  .tree{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surface);border:1px solid var(--border);
+    border-radius:14px;padding:1.2em 1.5em;font-size:1.15em;line-height:1.9;margin:0;max-width:24em;box-shadow:var(--shadow-sm)}
+  .tree .f{color:var(--gold)} .tree .file{color:var(--ink-dim)} .tree .i{color:#9aa3c4}
+  .keys{display:flex;gap:1.2em;justify-content:center;margin:0;flex-wrap:wrap}
+  .keycap{background:var(--surface);border:1px solid var(--border);border-bottom-width:4px;border-bottom-color:var(--gold-bright);border-radius:12px;
+    padding:.8em 1em;text-align:center;min-width:7.2em;box-shadow:var(--shadow-sm)}
+  .keycap .k{font-size:1.35em;font-weight:800;color:var(--navy)}
+  .keycap .d{font-size:.82em;color:var(--ink-dim);margin-top:.35em}
+  .keycap.save{border-bottom-color:var(--green)} .keycap.save .k{color:var(--green)}
+  .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1em;margin:0;width:100%}
+  .three-col .col{border-radius:13px;padding:.95em 1.05em;border:1px solid;background:var(--surface);box-shadow:var(--shadow-sm)}
+  .col.cloud{border-color:rgba(47,111,237,.4)} .col.local{border-color:rgba(31,157,99,.4)} .col.nowhere{border-color:rgba(226,61,104,.4)}
+  .three-col h3{font-size:1.05em;margin-bottom:.5em}
+  .col.cloud h3{color:var(--blue)} .col.local h3{color:var(--green)} .col.nowhere h3{color:var(--pink)}
+  .three-col li{font-size:.86em;color:var(--ink-dim);line-height:1.5;margin-left:1.1em}
+  /* flow (portal guide) */
+  .flow{display:flex;align-items:center;gap:.5em;margin:0;flex-wrap:wrap}
+  .flow .step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7em .9em;font-size:.9em;font-weight:600;text-align:center;flex:1;min-width:8em;color:var(--navy);box-shadow:var(--shadow-sm)}
+  .flow .step span{display:block;color:var(--ink-dim);font-size:.78em;font-weight:400;margin-top:.2em}
+  .flow .arr{color:var(--gold);font-size:1.3em}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:2.5em}
+  .stat{background:var(--surface);padding:1.3em 1.4em;display:flex;flex-direction:column;gap:.2em}
+  .stat-value{font-size:1.9em;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.02em}
+  .stat-value span{color:var(--gold)}
+  .stat-label{font-size:.85em;color:var(--ink-dim);line-height:1.4}
+  .quick-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1em}
+  .quick-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.4em;box-shadow:var(--shadow-sm);text-decoration:none;color:inherit;display:block}
+  .quick-card h3{font-size:1.12em;color:var(--navy);margin-bottom:.35em}
+  .quick-card p{color:var(--ink-dim);font-size:.93em;line-height:1.5}
+  .quick-card .more{display:inline-block;margin-top:.8em;color:var(--gold);font-weight:700;font-size:.85em}
+  .ico-badge{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.4em;margin-bottom:.5em;background:rgba(227,179,65,.16)}
+  .ico-badge.blue{background:rgba(47,111,237,.12)} .ico-badge.green{background:rgba(31,157,99,.12)} .ico-badge.pink{background:rgba(226,61,104,.12)}
+  /* check grid (day 0) */
+  .check{display:grid;grid-template-columns:1fr 1fr;gap:.6em 1.6em;margin:0;font-size:1.05em;color:var(--ink-dim)}
+  .check div{padding:.2em 0}
+  .check b{color:var(--navy)}
+  /* footer chrome */
+  #bar{position:fixed;left:0;bottom:0;height:3px;background:var(--gold-bright);width:0;transition:width .2s;z-index:30}
+  #counter{position:fixed;right:14px;bottom:10px;font-size:12px;color:var(--ink-dim);z-index:30}
+  #hint{position:fixed;left:14px;bottom:8px;font-size:11px;color:#9aa3c4;z-index:30}
+  #notes{position:fixed;inset:auto 0 0 0;background:#0e1336;border-top:2px solid var(--gold-bright);
+    padding:1.1em 1.6em 1.4em;max-height:42%;overflow:auto;display:none;z-index:40}
+  #notes.show{display:block}
+  #notes h4{color:var(--gold-bright);font-size:.8em;letter-spacing:.14em;margin-bottom:.5em}
+  #notes-body{font-size:1.02em;line-height:1.6;color:#c2c9e6;max-width:60em}
+  @media print{.slide{display:flex;position:relative;page-break-after:always;width:100%;height:100vh}#bar,#counter,#hint,#notes{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  #deck-nav{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:8px;z-index:35}
+  #deck-nav button{background:var(--surface);border:1px solid var(--border);color:var(--ink);border-radius:9px;width:46px;height:36px;font-size:18px;line-height:1;cursor:pointer;box-shadow:var(--shadow-sm)}
+  #deck-nav button:hover{border-color:var(--gold)}
+  @media print{#deck-nav{display:none}}
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide img hero" style="--img:url('assets/s4/slide-1.svg')" data-notes="Welcome them into Weekend 2. Set the frame in one breath: last sessions you learned to MOVE files and write words; today you learn to make a sheet that does ARITHMETIC for you, collects data through a form, and never lies if you build the rules right. Two competencies live here now — Spreadsheets and the brand-new Problem-Solving thread. Say the WPM thread retires at the top of class today.">
+  <div style="margin-top:1.2em">
+    <span class="weektag">ASCENT FOUNDATIONS · WEEKEND 2 <span class="sess">— Sunday</span></span>
+    <h1>Structured Data, Logic &amp; Forms<br><span style="color:var(--gold)">A spreadsheet is a machine you build</span></h1>
+    <p class="lead">Today you stop typing answers and start building rules that compute them — then you build a form that feeds the machine its data.</p>
+    <div style="margin-top:1.6em">
+      <span class="pill solid">SESSION 4</span>
+      <span class="pill">ONLINE · 120 MIN</span>
+      <span class="pill">COMPETENCY: SPREADSHEETS + PROBLEM-SOLVING</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · BIG IDEA -->
+<section class="slide" data-notes="This is the spine. Say it, then return to it at every block. A calculator gives you one answer; a spreadsheet is a machine you assemble out of rules, and once built it recomputes forever. The form is just the intake hatch that feeds the machine. The whole 'Think Like a Builder' thread starts from this sentence.">
+  <span class="weektag">THE ONE BIG IDEA</span>
+  <p class="big-quote">A spreadsheet isn't a place you <span class="hl">type answers</span>.<br>It's a machine you build out of <span class="hl">rules</span>.</p>
+  <div class="strip key"><b>Why it matters:</b> type a number once and it's just a number. Write a <i>rule</i> and the sheet computes it for every row, forever — and recomputes the moment the data changes.</div>
+</section>
+
+<!-- 3 · AGENDA -->
+<section class="slide" data-notes="Two hours, eight blocks. The 30-minute automation block (25–55) is the spine of the whole quantitative half — protect it; if anything overruns, cut the filter intro, never the live fill-down break. New today: a Forms block (55–70) and the Think-Like-a-Builder moment that names the new Problem-Solving thread. Reserve the last 12 minutes firmly for the capstone-topic pick. The typing thread retires today — mark the trend and move on.">
+  <h2>Today — 120 minutes</h2>
+  <table class="agenda">
+    <tr><td>0–10</td><td>Typing thread (<b>the LAST one</b>) + recap → today builds the quantitative half</td></tr>
+    <tr><td>10–22</td><td>Grid schema &amp; <b>data types</b> · sort · filter · text-wrap</td></tr>
+    <tr><td>22–50</td><td><b>Functions</b> SUM/AVG/COUNT/MIN/MAX · <b>absolute $A$1 vs relative A1</b> + error-spotting drill ⟵ the heart</td></tr>
+    <tr><td>50–62</td><td>Charts: <b>pie / bar / line</b> + axis labelling</td></tr>
+    <tr><td>62–76</td><td><b>Build a validated Google Form</b> that feeds the Sheet</td></tr>
+    <tr><td>76–88</td><td>AI formula assistant — generate, then <b>hand-verify</b></td></tr>
+    <tr><td>88–90</td><td><b>Think Like a Builder</b> — name the new thread</td></tr>
+    <tr><td>90–120</td><td>Start <b>Assignment 4</b> · exit ticket · <b>pick capstone topic</b></td></tr>
+  </table>
+  <div class="strip judge"><b>Judgment checkpoint:</b> When can you trust an AI-suggested formula — and how do you verify it against a hand calculation?</div>
+</section>
+
+<!-- 4 · GRID SCHEMA & DATA TYPES -->
+<section class="slide" data-notes="Type four things live on the shared sheet and let the sheet tell you what kind they are by how they BEHAVE. Numbers right-align and add; dates right-align and do date math; text left-aligns and won't sum; TRUE/FALSE is its own thing. The killer demo: type 12 as text and try to SUM it — nothing. That's why data type is a decision, not decoration. Then sort (and UNDO — sorting one column alone shreds the rows), text-wrap for long cells, and a quick filter preview. Don't drill filter yet; just show it.">
+  <h2>The grid is a schema — every column has a type</h2>
+  <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:1.4em;align-items:center;flex:1">
+    <table style="font-size:.85em">
+      <tr><th>Type</th><th>Example</th><th>How it behaves</th></tr>
+      <tr><td>Text</td><td><code style="color:var(--gold)">Notebook</code></td><td>Left-aligns · won't do math</td></tr>
+      <tr><td>Number</td><td><code style="color:var(--gold)">4.50</code></td><td>Right-aligns · adds, averages</td></tr>
+      <tr><td>Date</td><td><code style="color:var(--gold)">2026-06-17</code></td><td>Right-aligns · does date math</td></tr>
+      <tr><td>Boolean</td><td><code style="color:var(--gold)">TRUE</code></td><td>Yes/no · drives logic later</td></tr>
+    </table>
+    <ul class="big" style="margin-left:0;list-style:none">
+      <li><span class="num">1</span><b>Sort</b> — sort the whole table, never one column. (Sort one column alone → rows shred. Undo immediately.)</li>
+      <li><span class="num">2</span><b>Filter</b> — hide rows that don't match, without deleting them.</li>
+      <li><span class="num">3</span><b>Text-wrap</b> — long cells stay readable instead of spilling.</li>
+    </ul>
+  </div>
+  <div class="strip warn"><b>The trap:</b> type <code>"12"</code> as text and <code>SUM</code> ignores it — the total is silently wrong. Right type, every column.</div>
+</section>
+
+<!-- 5 · FUNCTIONS -->
+<section class="slide" data-notes="Build these live on a tiny 5-row table of prices. Say the shape out loud: equals sign, function name, parentheses, the range. The range is the verb's object — what it acts on. COUNT counts numbers only (great gotcha: COUNT ignores text rows). Have them call out which function answers which question: total spend? SUM. typical item? AVERAGE. how many purchases? COUNT. cheapest / priciest? MIN / MAX. These five primitives cover most of real life.">
+  <h2>Five primitives that replace a calculator</h2>
+  <div class="cards c3" style="flex:0">
+    <div class="card"><div class="ico">∑</div><h3>SUM</h3><p><code style="color:var(--gold)">=SUM(B2:B6)</code><br>Adds the range → total spend.</p></div>
+    <div class="card blue"><div class="ico">x̄</div><h3>AVERAGE</h3><p><code style="color:var(--gold)">=AVERAGE(B2:B6)</code><br>The mean → typical item.</p></div>
+    <div class="card green"><div class="ico">#</div><h3>COUNT</h3><p><code style="color:var(--gold)">=COUNT(B2:B6)</code><br>How many <i>numbers</i> (skips text).</p></div>
+    <div class="card orange"><div class="ico">▽</div><h3>MIN</h3><p><code style="color:var(--gold)">=MIN(B2:B6)</code><br>Smallest → cheapest item.</p></div>
+    <div class="card pink"><div class="ico">△</div><h3>MAX</h3><p><code style="color:var(--gold)">=MAX(B2:B6)</code><br>Largest → priciest item.</p></div>
+    <div class="card"><div class="ico">🧩</div><h3>The shape</h3><p><b>=</b> name <b>(</b> range <b>)</b>. The range is what the rule acts on.</p></div>
+  </div>
+  <div class="strip key"><b>The mindset shift:</b> you don't compute the answer — you <i>describe</i> it, and the sheet computes it for you.</div>
+</section>
+
+<!-- 6 · ABSOLUTE vs RELATIVE (THE CRUX) -->
+<section class="slide" data-notes="THE HEART. Do not explain this abstractly — DO the break live. The tax rate 0.08 lives in B1. In E4 write =D4*B1 (relative), fill down, and let them WATCH it break: on each row B1 slides to B2, B3, B4... now multiplying the subtotal by an item price or a blank cell — plausible-looking nonsense. Pause on the wrong numbers. THEN fix with $B$1: the dollar signs freeze column and row so it always points at the tax cell. The rule of thumb is the takeaway sentence: if a cell should mean the same thing in every row, lock it. F4 cycles the dollar signs. After the fix, run the error-spotting drill in breakouts.">
+  <h2>$A$1 vs A1 — the rule that breaks everything if you skip it</h2>
+  <p class="lead" style="max-width:44em">Tax rate <code style="color:var(--gold)">0.08</code> lives in <b>$B$1</b>. We fill a tax column down. One of these survives the fill-down. One doesn't.</p>
+  <table style="font-size:.86em">
+    <tr><th>Cell</th><th>WRONG — relative <code>B1</code></th><th>What breaks on fill-down</th><th>RIGHT — <code>$B$1</code></th></tr>
+    <tr><td>E4</td><td><code>=D4*B1</code></td><td><b>B1 slides to B5, B6…</b> — now pointing at <i>prices</i>, not the tax rate. Tax = subtotal × a random price, or 0 on a blank cell.</td><td><code>=D4*$B$1</code></td></tr>
+    <tr><td>E5</td><td><code>=D5*B2</code> (slid)</td><td>Multiplies the subtotal by an item price — a plausible-looking wrong number.</td><td><code>=D5*$B$1</code> (stays put)</td></tr>
+  </table>
+  <div class="strip key"><b>The rule:</b> <code>$</code> before the letter locks the column, before the number locks the row, <code>$B$1</code> locks both. <b>If a cell should mean the same thing in every row, lock it.</b> (Press <span style="color:var(--gold)">F4</span> to cycle the <code>$</code>.)</div>
+</section>
+
+<!-- 7 · CHARTS -->
+<section class="slide" data-notes="Three stories, three charts. Pie is for composition — slices of ONE whole, keep it to about six. Bar is for comparison — discrete categories side by side. Line is for time-series — change over ordered time. Build one of each from the same table so they see the data is identical; only the STORY differs. Then hammer the non-negotiable: an unlabelled axis is a lie. Title, axis names, units — every time. A beautiful chart with no labels scores zero.">
+  <h2>Pick the chart that matches the story</h2>
+  <div class="three-col">
+    <div class="col nowhere"><h3>🥧 Pie</h3><ul><li>"What <b>share</b> of my spending is food vs. transport vs. fun?"</li></ul><p style="font-size:.82em;margin-top:.5em;color:var(--pink)">Composition — parts of one whole, ≤ ~6 slices</p></div>
+    <div class="col local"><h3>📊 Bar</h3><ul><li>"Which <b>month</b> did I spend the most?"</li><li>"How do 5 clubs <b>compare</b>?"</li></ul><p style="font-size:.82em;margin-top:.5em;color:var(--green)">Comparison across discrete categories</p></div>
+    <div class="col cloud"><h3>📈 Line</h3><ul><li>"Is my weekly spending <b>trending up</b>?"</li></ul><p style="font-size:.82em;margin-top:.5em;color:var(--blue)">Time-series — change over ordered time</p></div>
+  </div>
+  <div class="strip warn"><b>An unlabelled axis is a lie.</b> Chart title + axis names + units — every time. No labels = it doesn't count.</div>
+</section>
+
+<!-- 8 · FORMS (NEW) -->
+<section class="slide" data-notes="This is NEW to Session 4 — Forms moved here from the old Session 7. The point: a spreadsheet is the machine, but where does its data come from? A form is the validated intake hatch. Build one live in Google Forms: a few field types, mark the important ones required, and add VALIDATION rules so bad data can't get in — a number field that must be positive, a date field, a dropdown so people can't free-type a category three different ways. Then the magic click: Responses → Link to Sheets. Now every submission lands as a new row, typed and clean, ready for the formulas they just learned. Data collection becomes data — automatically.">
+  <h2>Forms — a validated front door for your data</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.4em;align-items:stretch;flex:1">
+    <div class="card blue"><h3>Build the form</h3><ul>
+      <li><b>Short text</b> — item name (required)</li>
+      <li><b>Number</b> — amount · validate <code>&gt; 0</code></li>
+      <li><b>Date</b> — picker, so it's a real date</li>
+      <li><b>Dropdown</b> — category, so it's never free-typed three ways</li>
+      <li><b>Required</b> toggle on the fields that matter</li>
+    </ul></div>
+    <div class="card green"><h3>Feed the sheet</h3><ul>
+      <li>Responses tab → <b>Link to Sheets</b></li>
+      <li>Every submission = <b>one new clean row</b></li>
+      <li>Validation already typed it: numbers are numbers, dates are dates</li>
+      <li>Your SUM / AVERAGE / chart update <b>automatically</b></li>
+    </ul></div>
+  </div>
+  <div class="strip key"><b>Validation is rules at the door.</b> Clean data in → trustworthy machine out. The form turns <i>data collection</i> into <i>data</i>.</div>
+</section>
+
+<!-- 9 · AI FORMULA ASSISTANT (judgment checkpoint) -->
+<section class="slide" data-notes="The judgment checkpoint. Ask the school-approved assistant for a total-column formula on screen. First inspection: is it a real formula =SUM(B2:B16), or did it hardcode the values =4500? Hardcoded answers don't recompute — they're penalized even when the AI suggested them. Second: hand-verify. Re-add three rows by hand: 300 + 150 + 275 = 725, then the full column. If the cell matches, trust it. If not, the range is wrong or a cell is text-not-number. Say the rule aloud: trust is earned by verification, not by the source. Write a one-line verification note in a comment.">
+  <h2>AI gives you a formula — you verify it</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card pink"><h3>🚩 Inspect first</h3><ul>
+      <li>Real formula? <code style="color:var(--green)">=SUM(B2:B16)</code> ✔</li>
+      <li>Or hardcoded? <code style="color:var(--pink)">=4500</code> ✘ — doesn't recompute</li>
+      <li><b>Hardcoded values are penalized</b> even when the AI suggested them</li>
+    </ul></div>
+    <div class="card green"><h3>✅ Then hand-verify</h3><ul>
+      <li>Cell shows <code>4,820</code></li>
+      <li>Re-add 3 rows by hand: <code>300+150+275 = 725</code></li>
+      <li>Re-add the full column → <code>4,820</code>. Match = trust.</li>
+      <li>Mismatch = wrong range or a text-not-number cell</li>
+    </ul></div>
+  </div>
+  <div class="strip judge"><b>The rule:</b> trust is earned by <i>verification</i>, not by the source. Leave a one-line note: "Re-added rows 2–4 (725) and full column (4,820) — matches <code>=SUM(B2:B16)</code>."</div>
+</section>
+
+<!-- 10 · THINK LIKE A BUILDER (thread opener) -->
+<section class="slide" data-notes="THE THREAD OPENER — pause and name it explicitly. Everything they did today was computational thinking, they just didn't have the word. A formula IS an algorithm: a precise recipe a machine runs. To write one you DECOMPOSE — break a calculation into ordered steps (price × qty = subtotal; subtotal × tax = tax owed). Absolute and relative references are RULES about what stays fixed and what moves. And when the fill-down broke, they DEBUGGED — found the rule that was wrong and corrected it. This 'Think Like a Builder' thread runs all the way to Session 8 and is measured by the brand-new PROBLEM-SOLVING competency. Tell them: today you didn't use a calculator, you BUILT one.">
+  <span class="weektag" style="color:var(--green);border-color:var(--green);background:rgba(63,185,138,.16)">NEW THREAD · RUNS TO SESSION 8 ♥</span>
+  <h2>Think Like a Builder</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card green"><h3><span class="step">1</span>A formula is an algorithm</h3><p>A precise recipe a machine runs the same way every time. You didn't use a calculator today — you <b>built one</b>.</p></div>
+    <div class="card green"><h3><span class="step">2</span>Decompose the calculation</h3><p>Break it into ordered steps: <b>price × qty = subtotal</b>, then <b>subtotal × tax = tax owed</b>. One step per rule.</p></div>
+    <div class="card green"><h3><span class="step">3</span>References are rules</h3><p><code>$B$1</code> vs <code>B1</code> is a rule about what <b>stays fixed</b> and what <b>moves</b> as the machine runs.</p></div>
+    <div class="card green"><h3><span class="step">4</span>If it breaks, debug it</h3><p>The fill-down failure wasn't bad luck — find the <b>wrong rule</b>, explain it, fix it. That's debugging.</p></div>
+  </div>
+  <div class="strip key"><b>This thread runs to Session 8</b> and is measured by the new <b>PROBLEM-SOLVING</b> competency. Decompose · rule · debug — for the rest of the course.</div>
+</section>
+
+<!-- 11 · ASSIGNMENT 4 + GRADING BAR -->
+<section class="slide" data-notes="Set this up live so the structure is right before they leave — the absolute-reference cell is where people stall and you're right here. The brief: a validated Google FORM feeding a 15+ row automated ledger, with one absolute reference, filters, one labelled chart, and one AI-assisted plus hand-verified formula. Show them the grading bar — same rubric you grade with. Two competencies now: Spreadsheets AND the new Problem-Solving row, where Emerging just copies a formula, Proficient decomposes the calc into correct steps and rules, and Mastery debugs a broken formula and explains the rule. Best-evidence scoring: grade the strongest correct usage, not the count of cells.">
+  <h2>Assignment 4 — the Automated Ledger (+ a form that feeds it)</h2>
+  <div style="display:grid;grid-template-columns:1fr 1.25fr;gap:1.3em;align-items:stretch;flex:1">
+    <div class="card"><h3>Build it</h3><ul>
+      <li>A <b>validated Google Form</b> feeding a <b>15+ row</b> ledger</li>
+      <li>Correct data types per column (dates as dates)</li>
+      <li>SUM/AVG/COUNT/MIN/MAX — <b>no totals typed by hand</b></li>
+      <li><b>≥ 1 absolute reference</b> (tax / savings rate / cap)</li>
+      <li><b>Filters</b> + <b>one labelled chart</b> matching the story</li>
+      <li>One <b>AI-assisted + hand-verified</b> formula (note included)</li>
+    </ul></div>
+    <table style="font-size:.78em">
+      <tr><th>Level</th><th>SPREADSHEETS</th><th>PROBLEM-SOLVING</th></tr>
+      <tr><td>0 Missing</td><td>Hardcoded values; no real references</td><td>—</td></tr>
+      <tr><td>1 Emerging</td><td>Formulas work but fragile — no absolute refs where needed</td><td>Copies a formula</td></tr>
+      <tr><td>2 Proficient</td><td>Clean primitives + correct rel/abs refs; filters + labelled chart</td><td>Decomposes the calc into correct steps / rules</td></tr>
+      <tr><td>3 Mastery</td><td>+ verifies AI formula (note) + chart matches the story</td><td>Debugs a broken formula + explains the rule</td></tr>
+    </table>
+  </div>
+  <div class="strip"><b>Best-evidence:</b> we grade your strongest correct usage, not the number of cells. Structure over decoration.</div>
+</section>
+
+<!-- 12 · CAPSTONE TOPIC PICK -->
+<section class="slide" data-notes="Reserve this firmly — set a timer so a formula tangent doesn't swallow it. Every student leaves having POSTED a capstone topic to the prompt. Three flavours: a club they'd start, a small business idea, or a community project. It doesn't need to be final or perfect — it needs to be picked, so it can marinate. They have about two weeks of runway; the actual build opens at Session 6. The ledger they build this week is a dress rehearsal for capstone thinking: collect data, structure it, let it compute.">
+  <span class="weektag">RESERVE THIS TIME — POST BEFORE YOU LOG OFF</span>
+  <h2>Pick your capstone topic</h2>
+  <div class="cards c3" style="flex:0">
+    <div class="card blue"><div class="ico">🎟️</div><h3>A club</h3><p>Something you'd want to start or run — a budget, a roster, a schedule to track.</p></div>
+    <div class="card green"><div class="ico">🛍️</div><h3>A small business idea</h3><p>A product or service — pricing, costs, and sales begging for a ledger.</p></div>
+    <div class="card orange"><div class="ico">🌱</div><h3>A community project</h3><p>Something for your school or neighbourhood — sign-ups, donations, impact.</p></div>
+  </div>
+  <div class="strip key"><b>~2 weeks of runway</b> — the build opens at <b>Session 6</b>. Pick it now so it can marinate. Not final, just <i>chosen</i>.</div>
+</section>
+
+<!-- 13 · WHERE THIS LEADS -->
+<section class="slide" data-notes="Connect today's skill to the four Tracks the course leads into. Data plus logic plus forms points most directly at Data & Analytics — that's literally the job: collect clean data, build the rules, tell the story with a chart. It also feeds AI Operations, where you orchestrate AI tools and must verify their output — exactly the hand-verification habit from today. Name all four Tracks so they see the map: Data & Analytics, AI Operations, Software & Web, and Digital Workspace / Productivity. Today was a real taste of the first two.">
+  <h2>Where this leads — your four Tracks</h2>
+  <div class="three-col" style="grid-template-columns:repeat(4,1fr)">
+    <div class="col cloud"><h3>📊 Data &amp; Analytics</h3><ul><li><b>Strong fit.</b> Collect, structure, compute, visualize — today, exactly.</li></ul></div>
+    <div class="col local"><h3>🤖 AI Operations</h3><ul><li>Orchestrate AI tools and <b>verify their output</b> — your hand-check habit.</li></ul></div>
+    <div class="col nowhere" style="border-color:var(--orange);background:rgba(232,128,79,.08)"><h3 style="color:var(--orange)">💻 Software &amp; Web</h3><ul><li>Formula = algorithm. The builder mindset starts here.</li></ul></div>
+    <div class="col" style="border-color:var(--gold);background:rgba(227,179,65,.08)"><h3 style="color:var(--gold)">🗂️ Digital Workspace</h3><ul><li>Forms + sheets = the everyday productivity backbone.</li></ul></div>
+  </div>
+  <div class="strip key"><b>Today was a real taste</b> of Data &amp; Analytics and AI Operations. Four Tracks, one builder's mindset.</div>
+</section>
+
+<!-- 14 · CLOSE + EXIT TICKET -->
+<section class="slide" data-notes="End on the builder win: today you stopped typing answers and started building a machine that computes them — and a form that feeds it. Exit ticket in chat. Confirm the assignment due date and the submit link on /learn. Confirm everyone posted a capstone topic. The typing thread retires today — celebrate the trend going up. Next: the builder thread continues toward Session 8.">
+  <span class="weektag">EXIT TICKET</span>
+  <p class="big-quote">"Your AI gave you <span class="hl">=SUM(B2:B16)</span>.<br>Name one thing you'd check before trusting it."</p>
+  <div class="strip key"><b>You didn't use a calculator today — you built one,</b> and a form to feed it. Finish Assignment 4 this week. Post your capstone topic before you go. The builder thread continues to Session 8.</div>
+</section>
+
+<div id="bar"></div>
+<div id="counter"></div>
+<div id="hint">← → navigate · N speaker notes · P print/PDF</div>
+<div id="notes"><h4>SPEAKER NOTES</h4><div id="notes-body"></div></div>
+<div id="deck-nav"><button onclick="show(i-1)" aria-label="Previous">‹</button><button onclick="show(i+1)" aria-label="Next">›</button></div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  const notes=document.getElementById('notes'),notesBody=document.getElementById('notes-body');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    document.getElementById('counter').textContent=(i+1)+' / '+slides.length;
+    document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+    notesBody.textContent=slides[i].dataset.notes||'(no notes)';
+    location.hash=i+1;
+  }
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(i+1)}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(i-1)}
+    else if(e.key==='Home')show(0);
+    else if(e.key==='End')show(slides.length-1);
+    else if(e.key.toLowerCase()==='n')notes.classList.toggle('show');
+    else if(e.key.toLowerCase()==='p')print();
+  });
+  show(parseInt(location.hash.slice(1))-1||0);
+</script>
+</body>
+</html>

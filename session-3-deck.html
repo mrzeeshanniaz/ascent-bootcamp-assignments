@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 3 — Documents &amp; Semantic Typography · Ascent Foundations</title>
+<style>
+  :root{
+    --navy:#101733; --navy-soft:#1c2550;
+    --gold:#b07d10; --gold-bright:#e3b341; --gold-dim:#8a6a17;
+    --bg:#f6f8fd; --bg-accent:#eef2fb; --surface:#ffffff; --card:#ffffff;
+    --ink:#131a36; --ink-dim:#586089;
+    --pink:#e23d68; --orange:#e3742f; --blue:#2f6fed; --green:#1f9d63;
+    --border:rgba(16,23,51,.10); --hairline:rgba(16,23,51,.07);
+    --shadow-sm:0 1px 2px rgba(16,23,51,.05), 0 1px 3px rgba(16,23,51,.06);
+    --shadow-md:0 8px 24px rgba(16,23,51,.08), 0 2px 6px rgba(16,23,51,.05);
+    --shadow-lg:0 24px 60px rgba(16,23,51,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#e9edf6;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink)}
+  .slide{
+    display:none;position:absolute;inset:0;margin:auto;
+    width:min(100vw,177.78vh);height:min(56.25vw,100vh);
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.12) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.07) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+    padding:4% 5%;flex-direction:column;justify-content:center;overflow:hidden;-webkit-font-smoothing:antialiased;
+  }
+  .slide.active{display:flex}
+  /* light decks: clean surfaces, no dark photo backgrounds (the --img is ignored) */
+  .slide.img,.slide.img.hero{
+    background:
+      radial-gradient(1100px 560px at 86% -8%, rgba(227,179,65,.14) 0%, rgba(246,248,253,0) 58%),
+      radial-gradient(820px 520px at 0% 0%, rgba(47,111,237,.08) 0%, rgba(246,248,253,0) 55%),
+      var(--bg);
+  }
+  .pill{display:inline-block;border:1.5px solid var(--gold);color:var(--gold);
+    border-radius:999px;padding:.45em 1.1em;font-size:.85em;font-weight:700;
+    letter-spacing:.05em;margin-right:.6em;margin-bottom:.5em;white-space:nowrap}
+  .pill.solid{background:var(--gold-bright);color:#2a1f02;border-color:var(--gold-bright)}
+  .weektag{display:inline-block;background:rgba(227,179,65,.16);border:1px solid rgba(227,179,65,.4);
+    color:var(--gold);border-radius:8px;padding:.3em .95em;font-size:.75em;font-weight:700;
+    letter-spacing:.1em;margin-bottom:.7em;align-self:flex-start;text-transform:uppercase}
+  .weektag .sess{color:var(--ink-dim);letter-spacing:.04em;font-weight:600}
+  h1{font-size:3.1em;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:.4em;color:var(--navy)}
+  h2{font-size:1.9em;font-weight:800;line-height:1.15;letter-spacing:-.01em;margin-bottom:.35em;color:var(--navy)}
+  .lead{font-size:1.15em;color:var(--ink-dim);line-height:1.55;max-width:38em}
+  .big-quote{font-size:2.1em;font-weight:800;line-height:1.25;letter-spacing:-.01em;max-width:20em;margin:0;color:var(--navy)}
+  .big-quote .hl{color:var(--gold)}
+  .section-kicker{display:block;color:var(--gold);font-size:.78em;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.45em}
+  .cards{display:grid;gap:1.1em;margin-top:1.2em;align-content:center}
+  .cards.c3{grid-template-columns:repeat(3,1fr)}
+  .cards.c2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:1.05em 1.15em;display:flex;flex-direction:column;box-shadow:var(--shadow-sm);
+    border-top:3px solid var(--gold-bright)}
+  .card.pink{border-top-color:var(--pink)} .card.orange{border-top-color:var(--orange)}
+  .card.blue{border-top-color:var(--blue)} .card.green{border-top-color:var(--green)}
+  .card .ico{font-size:1.9em;margin-bottom:.25em;line-height:1}
+  .card h3{font-size:1.05em;margin-bottom:.45em;color:var(--navy)}
+  .card h3 .step{color:var(--gold);font-weight:800;margin-right:.35em}
+  .card.pink h3 .step{color:var(--pink)} .card.blue h3 .step{color:var(--blue)} .card.green h3 .step{color:var(--green)}
+  .card p,.card li{font-size:.88em;color:var(--ink-dim);line-height:1.45}
+  .card ul{margin-left:1.1em}
+  .card p b,.card li b{color:var(--navy)}
+  .strip{margin-top:1.2em;background:rgba(47,111,237,.08);border:1px solid rgba(47,111,237,.25);
+    border-radius:12px;padding:.75em 1.1em;font-size:.92em;line-height:1.5;color:var(--ink)}
+  .strip b{color:var(--blue)}
+  .strip.judge{background:rgba(227,179,65,.12);border-color:rgba(227,179,65,.45)} .strip.judge b{color:var(--gold)}
+  .strip.key{background:rgba(31,157,99,.1);border-color:rgba(31,157,99,.35)} .strip.key b{color:var(--green)}
+  .strip.warn{background:rgba(226,61,104,.09);border-color:rgba(226,61,104,.35)} .strip.warn b{color:var(--pink)}
+  .two-strips{display:grid;grid-template-columns:1fr 1fr;gap:.9em;margin-top:1.2em}
+  .two-strips .strip{margin-top:0}
+  .stack{display:flex;flex-direction:column;gap:.6em;margin-top:1.2em}
+  .stack .strip{margin-top:0}
+  table{width:100%;border-collapse:collapse;margin-top:.4em;font-size:.9em}
+  th{text-align:left;color:var(--gold);font-weight:700;padding:.5em .7em;border-bottom:2px solid rgba(227,179,65,.4)}
+  td{padding:.45em .7em;border-bottom:1px solid var(--hairline);color:var(--ink-dim);vertical-align:top;line-height:1.4}
+  td:first-child{color:var(--navy);font-weight:600}
+  td b{color:var(--navy)}
+  .agenda td:first-child{color:var(--gold);font-weight:700;width:6.5em;white-space:nowrap}
+  ul.big{margin:1em 0 0 1.2em;display:flex;flex-direction:column;gap:.55em;font-size:1.02em;line-height:1.5;color:var(--ink-dim)}
+  ul.big b{color:var(--navy)}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;
+    border:2px solid var(--gold);border-radius:50%;color:var(--gold);font-weight:700;margin-right:.6em;flex:none}
+  /* visual helpers (session 1) */
+  .bridge{display:grid;grid-template-columns:1fr auto 1fr;gap:.7em 1.4em;align-items:center;margin:0;max-width:46em}
+  .bridge .h{font-size:.78em;letter-spacing:.1em;font-weight:700;text-transform:uppercase;padding-bottom:.3em;border-bottom:2px solid rgba(227,179,65,.4)}
+  .bridge .h.l{color:var(--ink-dim)} .bridge .h.r{color:var(--gold)}
+  .bridge .b{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:.6em .9em;font-size:1.02em;font-weight:600;box-shadow:var(--shadow-sm);color:var(--navy)}
+  .bridge .b.r{border-color:rgba(227,179,65,.5)}
+  .bridge .arrow{color:var(--gold);font-size:1.3em;text-align:center}
+  .tree{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surface);border:1px solid var(--border);
+    border-radius:14px;padding:1.2em 1.5em;font-size:1.15em;line-height:1.9;margin:0;max-width:24em;box-shadow:var(--shadow-sm)}
+  .tree .f{color:var(--gold)} .tree .file{color:var(--ink-dim)} .tree .i{color:#9aa3c4}
+  .keys{display:flex;gap:1.2em;justify-content:center;margin:0;flex-wrap:wrap}
+  .keycap{background:var(--surface);border:1px solid var(--border);border-bottom-width:4px;border-bottom-color:var(--gold-bright);border-radius:12px;
+    padding:.8em 1em;text-align:center;min-width:7.2em;box-shadow:var(--shadow-sm)}
+  .keycap .k{font-size:1.35em;font-weight:800;color:var(--navy)}
+  .keycap .d{font-size:.82em;color:var(--ink-dim);margin-top:.35em}
+  .keycap.save{border-bottom-color:var(--green)} .keycap.save .k{color:var(--green)}
+  .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1em;margin:0;width:100%}
+  .three-col .col{border-radius:13px;padding:.95em 1.05em;border:1px solid;background:var(--surface);box-shadow:var(--shadow-sm)}
+  .col.cloud{border-color:rgba(47,111,237,.4)} .col.local{border-color:rgba(31,157,99,.4)} .col.nowhere{border-color:rgba(226,61,104,.4)}
+  .three-col h3{font-size:1.05em;margin-bottom:.5em}
+  .col.cloud h3{color:var(--blue)} .col.local h3{color:var(--green)} .col.nowhere h3{color:var(--pink)}
+  .three-col li{font-size:.86em;color:var(--ink-dim);line-height:1.5;margin-left:1.1em}
+  /* flow (portal guide) */
+  .flow{display:flex;align-items:center;gap:.5em;margin:0;flex-wrap:wrap}
+  .flow .step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7em .9em;font-size:.9em;font-weight:600;text-align:center;flex:1;min-width:8em;color:var(--navy);box-shadow:var(--shadow-sm)}
+  .flow .step span{display:block;color:var(--ink-dim);font-size:.78em;font-weight:400;margin-top:.2em}
+  .flow .arr{color:var(--gold);font-size:1.3em}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:2.5em}
+  .stat{background:var(--surface);padding:1.3em 1.4em;display:flex;flex-direction:column;gap:.2em}
+  .stat-value{font-size:1.9em;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.02em}
+  .stat-value span{color:var(--gold)}
+  .stat-label{font-size:.85em;color:var(--ink-dim);line-height:1.4}
+  .quick-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1em}
+  .quick-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.4em;box-shadow:var(--shadow-sm);text-decoration:none;color:inherit;display:block}
+  .quick-card h3{font-size:1.12em;color:var(--navy);margin-bottom:.35em}
+  .quick-card p{color:var(--ink-dim);font-size:.93em;line-height:1.5}
+  .quick-card .more{display:inline-block;margin-top:.8em;color:var(--gold);font-weight:700;font-size:.85em}
+  .ico-badge{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.4em;margin-bottom:.5em;background:rgba(227,179,65,.16)}
+  .ico-badge.blue{background:rgba(47,111,237,.12)} .ico-badge.green{background:rgba(31,157,99,.12)} .ico-badge.pink{background:rgba(226,61,104,.12)}
+  /* check grid (day 0) */
+  .check{display:grid;grid-template-columns:1fr 1fr;gap:.6em 1.6em;margin:0;font-size:1.05em;color:var(--ink-dim)}
+  .check div{padding:.2em 0}
+  .check b{color:var(--navy)}
+  /* footer chrome */
+  #bar{position:fixed;left:0;bottom:0;height:3px;background:var(--gold-bright);width:0;transition:width .2s;z-index:30}
+  #counter{position:fixed;right:14px;bottom:10px;font-size:12px;color:var(--ink-dim);z-index:30}
+  #hint{position:fixed;left:14px;bottom:8px;font-size:11px;color:#9aa3c4;z-index:30}
+  #notes{position:fixed;inset:auto 0 0 0;background:#0e1336;border-top:2px solid var(--gold-bright);
+    padding:1.1em 1.6em 1.4em;max-height:42%;overflow:auto;display:none;z-index:40}
+  #notes.show{display:block}
+  #notes h4{color:var(--gold-bright);font-size:.8em;letter-spacing:.14em;margin-bottom:.5em}
+  #notes-body{font-size:1.02em;line-height:1.6;color:#c2c9e6;max-width:60em}
+  @media print{.slide{display:flex;position:relative;page-break-after:always;width:100%;height:100vh}#bar,#counter,#hint,#notes{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  #deck-nav{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:8px;z-index:35}
+  #deck-nav button{background:var(--surface);border:1px solid var(--border);color:var(--ink);border-radius:9px;width:46px;height:36px;font-size:18px;line-height:1;cursor:pointer;box-shadow:var(--shadow-sm)}
+  #deck-nav button:hover{border-color:var(--gold)}
+  @media print{#deck-nav{display:none}}
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide img hero" style="--img:url('assets/s3/slide-1.svg')" data-notes="Welcome them back for the second weekend. Session 2 taught them where files live and how to recover them — today we make the content inside those files well-built. Frame the arc: a document isn't decorated, it's structured. By the end they'll write for two readers they never see: a screen reader and a tired human at midnight.">
+  <div style="margin-top:1.2em">
+    <span class="weektag">ASCENT FOUNDATIONS · WEEKEND 2 <span class="sess">— Saturday</span></span>
+    <h1>Documents &amp;<br><span style="color:var(--gold)">Semantic Typography</span></h1>
+    <p class="lead">A document isn't decorated — it's <b style="color:var(--ink)">built</b>. Today you stop fighting the page and start structuring meaning the machine can read.</p>
+    <div style="margin-top:1.6em">
+      <span class="pill solid">SESSION 3</span>
+      <span class="pill">ONLINE · 120 MIN</span>
+      <span class="pill">COMPETENCY: DOCUMENTS</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · BIG IDEA -->
+<section class="slide" data-notes="This is the spine. Structure you can't see is doing the work — until you reflow text, add a section, or hand it to a screen reader, and the fake structure collapses. Say the line, then return to it at every block: the heading that looks bold to you announces 'heading level 1' to someone who can't see the screen. You're writing for them, and for the tired human reading at midnight.">
+  <span class="weektag">THE ONE BIG IDEA</span>
+  <p class="big-quote">Structure is <span class="hl">invisible</span> until it breaks.<br>Write for <span class="hl">screen readers</span> and <span class="hl">tired humans</span>.</p>
+  <div class="strip key"><b>Why it matters:</b> spacing typed by hand and bold-text-as-heading <i>look</i> fine — until text reflows or someone can't see the screen. Real structure survives both.</div>
+</section>
+
+<!-- 3 · AGENDA -->
+<section class="slide" data-notes="Two hours, eight blocks. Protect the accessibility block (50–70) — it's the heart and where the 'creator, not consumer' identity forms. If the layout demo runs long, trim table-building detail, never the screen-reader moment. The judgment checkpoint today: when is an AI first draft acceptable-with-disclosure vs. plagiarism.">
+  <h2>Today — 120 minutes</h2>
+  <table class="agenda">
+    <tr><td>0–10</td><td><b>Typing thread</b> (S1–4) + recap: where files live → today we build the content inside</td></tr>
+    <tr><td>10–30</td><td><b>Layout engines</b>: formatting marks, native page breaks, page geometry, auto-save</td></tr>
+    <tr><td>30–50</td><td><b>Semantic architecture</b>: H1–H3 styles, nested lists, tables, inline images</td></tr>
+    <tr><td>50–70</td><td><b>Accessibility as a creator skill</b> — alt text · contrast · heading order ⟵ the heart</td></tr>
+    <tr><td>70–85</td><td><b>PDF export</b> (locked) + sharing tiers: Viewer / Commenter / Editor</td></tr>
+    <tr><td>85–100</td><td><b>AI drafting</b> — judgment: disclosed draft vs. plagiarism</td></tr>
+    <tr><td>100–115</td><td>Start <b>Assignment 3</b> — set H1, share at Viewer with facilitator</td></tr>
+    <tr><td>115–120</td><td>Exit ticket + close</td></tr>
+  </table>
+  <div class="strip judge"><b>Judgment checkpoint:</b> When is an AI-generated first draft acceptable (and disclosed) vs. plagiarism?</div>
+</section>
+
+<!-- 4 · LAYOUT ENGINES -->
+<section class="slide" data-notes="Screen-share the staged 'bad document' and turn on formatting marks so the cohort SEES a column of pilcrows from repeated Enter. Then build the same gap with one native page break — one mark, not twenty. Show page geometry: margins and page size are settings, not something you type around. Prove auto-save by closing the tab and reopening untouched. Name the failure: spacing typed by hand breaks the moment text reflows.">
+  <h2>Stop fighting the layout engine 📐</h2>
+  <div class="bridge">
+    <div class="h l">Fighting it (before)</div><div></div><div class="h r">Using it (after)</div>
+    <div class="b">↵↵↵↵↵↵ to reach page 2</div><div class="arrow">→</div><div class="b r">⤓ One native page break</div>
+    <div class="b">Drag margins by eye</div><div class="arrow">→</div><div class="b r">📏 Set page geometry once</div>
+    <div class="b">"Did I press save?"</div><div class="arrow">→</div><div class="b r">💾 Auto-save, always on</div>
+    <div class="b">Breaks when text reflows</div><div class="arrow">→</div><div class="b r">🔁 Survives every edit</div>
+  </div>
+  <div class="strip warn"><b>Turn on formatting marks</b> and a stack of empty paragraphs (¶¶¶¶¶) appears. <b>Spacing typed by hand breaks the moment text reflows.</b></div>
+</section>
+
+<!-- 5 · SEMANTIC ARCHITECTURE -->
+<section class="slide" data-notes="Guided build on screen-share. Apply REAL H1 (title) → H2 (sections) → H3 (subsections) using heading STYLES, not big bold text. The proof: open the document outline / map and watch it populate live as you apply styles — bold text never appears there. Add a nested list, a 3-column table, an inline image. The core message: headings beat manual big/bold because the machine can read them and they reflow safely.">
+  <h2>Build meaning, not just looks</h2>
+  <table>
+    <tr><th>Fake structure (before)</th><th>Semantic (after)</th><th>Why it wins</th></tr>
+    <tr><td>Title at 24pt, bold, centered</td><td><b>H1</b> heading style</td><td>Appears in the outline; reader announces "heading level 1"</td></tr>
+    <tr><td>Section = bold text on a line</td><td><b>H2</b> heading style</td><td>Reflows safely; auto table-of-contents works</td></tr>
+    <tr><td>Sub-point = underlined bold</td><td><b>H3</b> heading style</td><td>Preserves order H1→H2→H3 for assistive tech</td></tr>
+    <tr><td>Hand-formatted bullets &amp; a pasted grid</td><td><b>Nested list</b> + real <b>table</b> + inline <b>image</b></td><td>Structured objects the engine understands and re-lays-out</td></tr>
+  </table>
+  <div class="strip key"><b>The live proof:</b> open the document outline / map — only <i>real</i> headings show up there. Big bold text never does.</div>
+</section>
+
+<!-- 6 · ACCESSIBILITY (the heart) -->
+<section class="slide" data-notes="THE HEART. Frame it as empathy, not compliance: alt text is for the classmate using a screen reader; contrast and font size are for the tired human reading at midnight. Demo the screen reader actually reading bad alt ('image1.png') vs good alt — the difference IS the lesson. Then walk the four checks. Protect these 20 minutes even if the layout demo ran long.">
+  <span class="weektag" style="color:var(--green);border-color:var(--green);background:rgba(63,185,138,.16)">THE HEART OF THE SESSION ♥</span>
+  <h2>Accessibility is a creator skill</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card green"><div class="ico">🔊</div><h3>Alt text — describe the <i>information</i></h3><ul><li><b>Bad:</b> "chart" · "image1.png" · "logo.jpg 2400x600"</li><li><b>Good:</b> "Bar chart: recycling rose 20%→65%, 2020–2025"</li><li><b>Decorative</b> divider? Mark empty <code style="color:var(--gold)">alt=""</code> — don't read noise</li></ul></div>
+    <div class="card blue"><div class="ico">🌓</div><h3>The other three checks</h3><ul><li><b>Contrast:</b> light-grey text on white <b>fails</b> tired eyes</li><li><b>Heading order:</b> never skip H1 → H3</li><li><b>Font size:</b> body ≥ 11–12pt, readable at midnight</li></ul></div>
+  </div>
+  <div class="strip key"><b>Empathy, not a checklist:</b> you're writing for the classmate on a screen reader and the tired human reading late. Describe what a sighted reader <i>gains</i> from the image.</div>
+</section>
+
+<!-- 7 · PDF EXPORT + SHARING TIERS -->
+<section class="slide" data-notes="Export a locked PDF — layout frozen, not re-editable — for anything final or sent outward. Then walk the three permission tiers and demo the danger live: a link set to 'anyone with the link can edit' is accidental public exposure. Have every student share their in-progress doc with you at Viewer, live, this block — watch for the 'anyone with the link' default and flag it on the spot. Permission flow is muscle memory, not a reading.">
+  <h2>Lock it, then share it carefully 🔒</h2>
+  <table>
+    <tr><th>Scenario</th><th>Tier</th><th>Why</th></tr>
+    <tr><td>Team co-writing a group report</td><td><b style="color:var(--green)">Editor</b></td><td>Everyone must change content</td></tr>
+    <tr><td>Teacher giving feedback on your draft</td><td><b style="color:var(--blue)">Commenter</b></td><td>Suggests without altering your text</td></tr>
+    <tr><td>Final report sent to a parent to read</td><td><b style="color:var(--gold)">Viewer</b></td><td>Read-only; no accidental edits</td></tr>
+    <tr><td>Study guide for the whole grade</td><td><b style="color:var(--gold)">Viewer</b> (named)</td><td>Wide read access — <i>not</i> "anyone with the link"</td></tr>
+  </table>
+  <div class="strip warn"><b>Export a locked PDF</b> for anything final (layout frozen). <b>And:</b> "anyone with the link can edit" = accidental public exposure. Scope it, every time.</div>
+</section>
+
+<!-- 8 · AI DRAFTING — JUDGMENT -->
+<section class="slide" data-notes="The judgment checkpoint. Work the four rows as a class. The rule: structure and verification are YOURS. A disclosed AI draft you've checked and rewritten is acceptable; passing unverified AI prose as your own is plagiarism — and if AI invented a fact or citation you didn't check, that's an integrity failure too. Use only the one school-approved AI assistant, modelling the disclosure rule. This ties forward directly to the Session 6 AI policy.">
+  <h2>AI drafting — disclose or plagiarize? 🤖</h2>
+  <table>
+    <tr><th>Situation</th><th>Verdict</th><th>Why</th></tr>
+    <tr><td>AI drafts an outline; you write &amp; verify the prose, note "outline drafted with AI"</td><td><b style="color:var(--green)">Disclose — OK</b></td><td>Structure is a tool; the thinking is yours</td></tr>
+    <tr><td>AI writes a paragraph; you fact-check, rewrite in your voice, cite the assist</td><td><b style="color:var(--green)">Disclose — OK</b></td><td>Verified + transformed + disclosed</td></tr>
+    <tr><td>AI writes the report; you paste it unchanged, unverified, no mention</td><td><b style="color:var(--pink)">Plagiarism</b></td><td>Unverified AI prose passed as your own</td></tr>
+    <tr><td>AI invents a "fact" / citation; you submit it unchecked</td><td><b style="color:var(--pink)">Integrity fail</b></td><td>No verification = the errors aren't honestly yours</td></tr>
+  </table>
+  <div class="strip judge"><b>The rule:</b> structure and verification are <i>yours</i>. Disclosed + checked + rewritten = OK. Unverified prose passed off as your own = plagiarism. <i>(More in the Session 6 AI policy.)</i></div>
+</section>
+
+<!-- 9 · ASSIGNMENT 3 + GRADING BAR -->
+<section class="slide" data-notes="Start it in class — set the H1 and share at Viewer with you before they leave, so the permission flow is rehearsed not discovered at the deadline. Show the grading bar openly: same checklist you grade with, no secrets. Structure over styling. Note this scores the DOCUMENTS competency on a best-evidence, 4-level rubric.">
+  <h2>Assignment 3 — a 2-page semantic report</h2>
+  <div class="cards c2" style="flex:1">
+    <div class="card"><h3>Build &amp; submit</h3><ul><li>Real <b>H1–H3 headings</b> (styles, not big/bold)</li><li><b>Native page break</b> between page 1 and 2 — no Enter-stacks</li><li>≥ one <b>table</b> + one <b>inline image with alt text</b></li><li>Export a <b>locked PDF</b> and attach it</li><li>Share the source at the <b>correct tier</b> (facilitator = Viewer/Commenter)</li></ul></div>
+    <div class="card green"><h3>The grading bar <span style="font-size:.7em;color:var(--ink-dim)">(DOCUMENTS · no secrets)</span></h3><ul><li><b>0 Missing:</b> flat text, no headings; or no PDF/share</li><li><b>1 Emerging:</b> headings skip levels or faked; manual spacing remains</li><li><b>2 Proficient:</b> semantic H1–H3 in order, native breaks, real list + table, locked PDF</li><li><b>3 Mastery:</b> + alt text, accessible contrast &amp; sizes, correct tiers <i>explained</i></li></ul></div>
+  </div>
+  <div class="strip"><b>Structure over styling</b> — you grade against this same bar. A pretty wall of bold text is still Level 1.</div>
+</section>
+
+<!-- 10 · WHERE THIS LEADS (career beat) -->
+<section class="slide" data-notes="Lift their eyes. Semantic structure and accessibility aren't a school chore — they're literally how the web and software are built. The same H1/H2/alt-text discipline becomes HTML headings, ARIA labels, and component hierarchy. Name the four Ascent Tracks so they start picturing where Foundations leads — especially Design and Web &amp; Software, which live and die on exactly this skill.">
+  <h2>Where this leads 🧭</h2>
+  <p class="lead">Headings, alt text and document maps aren't busywork — they're the <b style="color:var(--ink)">same discipline</b> that builds the web. H1/H2 → HTML headings · alt text → ARIA labels · outline → component hierarchy.</p>
+  <div class="three-col">
+    <div class="col cloud"><h3>🎨 Design (UI/UX)</h3><ul><li>Hierarchy &amp; readability</li><li>Accessible-by-default</li><li>Contrast &amp; type scale</li></ul></div>
+    <div class="col local"><h3>💻 Web &amp; Software</h3><ul><li>Semantic HTML</li><li>ARIA / screen readers</li><li>Component structure</li></ul></div>
+    <div class="col nowhere" style="border-color:var(--gold);background:rgba(227,179,65,.08)"><h3 style="color:var(--gold)">📊 Data · 🤖 AI Ops</h3><ul><li>Clear structured reports</li><li>Verified, disclosed AI use</li><li>Documentation that lasts</li></ul></div>
+  </div>
+  <div class="strip key"><b>Four Ascent Tracks:</b> Data &amp; Analytics · Web &amp; Software · AI Operations · Design. Today's skill is the <i>foundation</i> under Design and Web &amp; Software especially.</div>
+</section>
+
+<!-- 11 · CLOSE -->
+<section class="slide" data-notes="End on the through-line. Exit ticket in chat: name one thing repeated-Enter breaks that a native page break doesn't (reflow, page count, a clean TOC, accessibility). Confirm Assignment 3 due date and that they've already shared at Viewer with you. Tomorrow / next session opens the 'Think Like a Builder' thread — but not today.">
+  <span class="weektag">EXIT TICKET</span>
+  <p class="big-quote">Name one thing <span class="hl">repeated-Enter</span> breaks that a <span class="hl">native page break</span> doesn't.</p>
+  <div class="strip key"><b>You built for two readers you'll never see today — the screen reader and the tired human.</b> Finish Assignment 3 this week; you've already shared it at Viewer with me.</div>
+</section>
+
+<div id="bar"></div>
+<div id="counter"></div>
+<div id="hint">← → navigate · N speaker notes · P print/PDF</div>
+<div id="notes"><h4>SPEAKER NOTES</h4><div id="notes-body"></div></div>
+<div id="deck-nav"><button onclick="show(i-1)" aria-label="Previous">‹</button><button onclick="show(i+1)" aria-label="Next">›</button></div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  const notes=document.getElementById('notes'),notesBody=document.getElementById('notes-body');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    document.getElementById('counter').textContent=(i+1)+' / '+slides.length;
+    document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+    notesBody.textContent=slides[i].dataset.notes||'(no notes)';
+    location.hash=i+1;
+  }
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(i+1)}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(i-1)}
+    else if(e.key==='Home')show(0);
+    else if(e.key==='End')show(slides.length-1);
+    else if(e.key.toLowerCase()==='n')notes.classList.toggle('show');
+    else if(e.key.toLowerCase()==='p')print();
+  });
+  show(parseInt(location.hash.slice(1))-1||0);
+</script>
+</body>
+</html>
