@@ -35,6 +35,8 @@
   .hl{color:var(--gold)}
   /* cover */
   .cover{align-items:center;justify-content:center;text-align:center}
+  .cover-logo{width:5rem;height:5rem;margin-bottom:1.2rem}
+  .logo-mark{width:1.2em;height:1.2em;vertical-align:-0.27em;margin-right:.45em}
   .cover .logo{font-size:7em;font-weight:800;letter-spacing:-.04em;line-height:.95;color:var(--navy)}
   .cover .logo .dot{color:var(--gold-bright)}
   .cover .word{margin-top:.15em;font-size:1.7em;font-weight:700;letter-spacing:.42em;
@@ -81,6 +83,7 @@
 <body>
 
 <section class="slide cover hero active" data-notes="Open on this cover for a beat (let any intro/music breathe), then advance and start talking.">
+  <svg class="cover-logo" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#101733"/><text x="30" y="33" text-anchor="middle" dominant-baseline="central" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-weight="800" font-size="40" fill="#fff">A</text><circle cx="48" cy="44" r="6" fill="#e3b341"/></svg>
   <div class="logo">Ascent<span class="dot">.</span></div>
   <div class="word">Bootcamp</div>
   <div class="rule"></div>
@@ -173,7 +176,7 @@
   <p class="lead">Free · weekends · certificate by SwiftRoc · ascentbootcamp.com/start</p>
 </section>
 
-<footer><span class="brand">Ascent Foundations · by SwiftRoc</span><span>ascentbootcamp.com</span></footer>
+<footer><span class="brand"><svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#101733"/><text x="30" y="33" text-anchor="middle" dominant-baseline="central" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-weight="800" font-size="40" fill="#fff">A</text><circle cx="48" cy="44" r="6" fill="#e3b341"/></svg>Ascent Foundations · by SwiftRoc</span><span>ascentbootcamp.com</span></footer>
 
 <div class="hint">← → to move · N for speaker notes</div>
 <div class="nav"><button onclick="move(-1)">‹ Prev</button><button onclick="toggleNotes()">Notes (N)</button><button onclick="move(1)">Next ›</button></div>

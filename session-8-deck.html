@@ -141,6 +141,9 @@
   #deck-nav button{background:var(--surface);border:1px solid var(--border);color:var(--ink);border-radius:9px;width:46px;height:36px;font-size:18px;line-height:1;cursor:pointer;box-shadow:var(--shadow-sm)}
   #deck-nav button:hover{border-color:var(--gold)}
   @media print{#deck-nav{display:none}}
+  #brandmark{position:fixed;left:18px;top:14px;z-index:32}
+  #brandmark svg{width:30px;height:30px;display:block}
+  @media print{#brandmark{display:none}}
 </style>
 </head>
 <body>
@@ -314,6 +317,7 @@
   <div class="strip key"><b>You proved all of it — and you have the artifact to show it.</b> Resubmissions stay open before final scoring. Welcome to Track-ready. 🎓</div>
 </section>
 
+<div id="brandmark"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#101733"/><text x="30" y="33" text-anchor="middle" dominant-baseline="central" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-weight="800" font-size="40" fill="#fff">A</text><circle cx="48" cy="44" r="6" fill="#e3b341"/></svg></div>
 <div id="bar"></div>
 <div id="counter"></div>
 <div id="hint">← → navigate · N speaker notes · P print/PDF</div>
